@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Reseller 1</title>
+</head>
+<body>
+    <h1>QR Code untuk Reseller 1</h1>
+    <div id="qrcode"></div>
+
+    <!-- QRCode.js Library -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+    <script>
+        // Membuat QR Code untuk Reseller 1 dengan id_reseller khusus
+        var qrCode = new QRCode(document.getElementById("qrcode"), {
+            text: "https://rionasari.github.io/reseller-form/?id_reseller=OB1q_NIW8W_PUS0LeNM",  // Ganti dengan URL form Anda
+            width: 128,
+            height: 128,
+        });
+    </script>
+</body>
+</html>
