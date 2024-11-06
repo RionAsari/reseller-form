@@ -52,6 +52,7 @@
                 const order = orders[orderId];
                 const orderElement = document.createElement('div');
                 orderElement.innerHTML = `
+                    <p><strong>Nama Reseller:</strong> ${order.resellerName}</p>
                     <p><strong>Nama:</strong> ${order.name}</p>
                     <p><strong>Alamat:</strong> ${order.address}</p>
                     <p><strong>Telepon:</strong> ${order.phone}</p>
