@@ -25,9 +25,10 @@
         <button type="submit">Kirim</button>
     </form>
 
-    <!-- Firebase SDK (CDN) -->
+    <!-- Firebase SDK (Non-Module CDN version) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
 
     <script>
         // Konfigurasi Firebase
@@ -45,6 +46,7 @@
         // Inisialisasi Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const analytics = firebase.analytics();
 
         // Mendapatkan id_reseller dari URL
         const urlParams = new URLSearchParams(window.location.search);
