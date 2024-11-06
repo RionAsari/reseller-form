@@ -9,7 +9,8 @@
     <h1>Formulir Pembelian</h1>
     <form id="customerForm">
         <input type="hidden" id="resellerId" name="id_reseller">
-        
+        <p><strong>Reseller: </strong><span id="resellerName"></span></p>
+
         <label for="name">Nama:</label>
         <input type="text" id="name" name="name" required><br><br>
 
@@ -50,6 +51,18 @@
         const urlParams = new URLSearchParams(window.location.search);
         const resellerId = urlParams.get('id_reseller');
         document.getElementById('resellerId').value = resellerId;
+
+        // Menentukan nama reseller berdasarkan id_reseller
+        const resellerNames = {
+            "OB1q_NIW8W_PUS0LeNM": "Rion Asari",
+            "XY3r_LPT9G_KNHU1hb3": "Mia Putri",
+            "LN9w_MH9Z8i5A4gfv7k": "Andre Junaidi",
+            "9WVz_J5LQ4B0J1cZTly": "Siti Aisyah",
+            "O7Np_qVZ1W3G7hG4X5y": "Budi Santoso"
+        };
+
+        const resellerName = resellerNames[resellerId] || "Reseller Tidak Ditemukan";
+        document.getElementById('resellerName').textContent = resellerName;
 
         // Menyimpan data ke Firebase saat form disubmit
         document.getElementById('customerForm').addEventListener('submit', function(event) {
