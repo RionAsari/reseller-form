@@ -7,7 +7,9 @@
 </head>
 <body>
     <h1>Formulir Pembelian</h1>
-    <form id="customerForm" method="GET" action="https://docs.google.com/forms/d/e/1FAIpQLScFfF4c7Rh_9NkUE7yGGf_xG5UkQHFT3C3G95ZoQDF_6t3KEg/viewform"> <!-- contoh form action -->
+    <form id="customerForm">
+        <input type="hidden" id="resellerId" name="id_reseller">
+        
         <label for="name">Nama:</label>
         <input type="text" id="name" name="name" required><br><br>
 
@@ -22,5 +24,57 @@
 
         <button type="submit">Kirim</button>
     </form>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-database.js"></script>
+
+    <script>
+        // Konfigurasi Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Inisialisasi Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Mendapatkan id_reseller dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const resellerId = urlParams.get('id_reseller');
+        document.getElementById('resellerId').value = resellerId;
+
+        // Menyimpan data ke Firebase saat form disubmit
+        document.getElementById('customerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Ambil data dari form
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const item = document.getElementById('item').value;
+
+            // Simpan ke Firebase
+            database.ref('orders').push({
+                resellerId: resellerId,
+                name: name,
+                address: address,
+                phone: phone,
+                item: item,
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                alert('Data berhasil disimpan!');
+                document.getElementById('customerForm').reset();
+            }).catch(error => {
+                console.error('Error menyimpan data:', error);
+            });
+        });
+    </script>
 </body>
 </html>
