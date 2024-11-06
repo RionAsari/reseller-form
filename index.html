@@ -25,12 +25,11 @@
         <button type="submit">Kirim</button>
     </form>
 
-    <!-- Firebase SDK (Non-Module CDN version) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-    <script>
         // Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
@@ -44,9 +43,8 @@
         };
 
         // Inisialisasi Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const analytics = firebase.analytics();
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
         // Mendapatkan id_reseller dari URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -64,7 +62,7 @@
             const item = document.getElementById('item').value;
 
             // Simpan ke Firebase
-            database.ref('orders').push({
+            push(ref(database, 'orders'), {
                 resellerId: resellerId,
                 name: name,
                 address: address,
