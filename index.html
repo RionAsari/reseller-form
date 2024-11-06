@@ -74,7 +74,7 @@
             const phone = document.getElementById('phone').value;
             const item = document.getElementById('item').value;
 
-            // Simpan ke Firebase
+            // Simpan data ke Firebase
             push(ref(database, 'orders'), {
                 resellerId: resellerId,
                 resellerName: resellerName,  // Simpan nama reseller
