@@ -21,7 +21,11 @@
         <input type="tel" id="phone" name="phone" required><br><br>
 
         <label for="item">Barang yang ingin dibeli:</label>
-        <input type="text" id="item" name="item" required><br><br>
+        <select id="item" name="item" required>
+            <option value="" disabled selected>Pilih barang</option>
+            <option value="Mobil Bekas">Mobil Bekas</option>
+            <option value="Mobil Baru">Mobil Baru</option>
+        </select><br><br>
 
         <button type="submit">Kirim</button>
     </form>
