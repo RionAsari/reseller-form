@@ -88,8 +88,12 @@
                 item: item,
                 timestamp: new Date().toISOString()
             }).then(() => {
+                // Menampilkan notifikasi sukses
                 alert('Data berhasil disimpan!');
-                document.getElementById('customerForm').reset();
+
+                // Arahkan ke halaman lain setelah submit (misalnya halaman terima kasih)
+                window.location.href = "halaman_terima_kasih.html"; // Ganti dengan URL halaman tujuan
+
             }).catch(error => {
                 console.error('Error menyimpan data:', error);
             });
