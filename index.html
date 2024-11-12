@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pembelian</title>
+    <title>Formulir Pengajuan</title>
 </head>
 <body>
-    <h1>Formulir Pembelian</h1>
+    <h1>Formulir Pengajuan Produk</h1>
     <form id="customerForm">
         <input type="hidden" id="resellerId" name="id_reseller">
         <p><strong>Reseller: </strong><span id="resellerName"></span></p>
@@ -20,9 +20,9 @@
         <label for="phone">Nomor Telepon:</label>
         <input type="tel" id="phone" name="phone" required><br><br>
 
-        <label for="item">Barang yang ingin dibeli:</label>
-        <select id="item" name="item" required>
-            <option value="" disabled selected>Pilih barang</option>
+        <label for="product">Produk yang ingin diajukan:</label>
+        <select id="product" name="product" required>
+            <option value="" disabled selected>Pilih produk</option>
             <option value="Mobil Bekas">Mobil Bekas</option>
             <option value="Mobil Baru">Mobil Baru</option>
         </select><br><br>
@@ -76,7 +76,7 @@
             const name = document.getElementById('name').value;
             const address = document.getElementById('address').value;
             const phone = document.getElementById('phone').value;
-            const item = document.getElementById('item').value;
+            const product = document.getElementById('product').value;
 
             // Simpan data ke Firebase
             push(ref(database, 'orders'), {
@@ -85,7 +85,7 @@
                 name: name,
                 address: address,
                 phone: phone,
-                item: item,
+                product: product,
                 timestamp: new Date().toISOString()
             }).then(() => {
                 // Menampilkan notifikasi sukses
