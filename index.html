@@ -40,10 +40,10 @@
             const address = document.getElementById("address").value;
             const phone = document.getElementById("phone").value;
             const item = document.getElementById("item").value;
-            const dp = document.getElementById("dp").value;
+            const dp = document.getElementById("dp").value; // dp is still a string here
             const resellerName = document.getElementById("resellerName").value;
 
-            // Push data to Firebase
+            // Push data to Firebase (ensure dp is treated as string)
             const orderRef = ref(database, 'orders');
             push(orderRef, {
                 resellerName: resellerName,
@@ -51,7 +51,7 @@
                 address: address,
                 phone: phone,
                 item: item,
-                dp: dp,
+                dp: dp.toString(), // Ensure dp is treated as a string
                 timestamp: Date.now()
             }).then(() => {
                 alert("Pesanan berhasil dikirim!");
