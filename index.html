@@ -5,8 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Pesanan Reseller</title>
     <!-- Firebase scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
+            authDomain: "reseller-form-a616f.firebaseapp.com",
+            databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "reseller-form-a616f",
+            storageBucket: "reseller-form-a616f.appspot.com",
+            messagingSenderId: "194922134187",
+            appId: "1:194922134187:web:6e2421004dc4ba580195ee",
+            measurementId: "G-NHLWZHWWEW"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Get resellerName from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const resellerName = urlParams.get('resellerName');
+        document.getElementById("resellerName").value = resellerName; // Automatically set the reseller name
+
+        // Handle form submission
+        const form = document.getElementById("order-form");
+        form.onsubmit = function(event) {
+            event.preventDefault();
+
+            // Collect form data
+            const name = document.getElementById("name").value;
+            const address = document.getElementById("address").value;
+            const phone = document.getElementById("phone").value;
+            const item = document.getElementById("item").value;
+            const dp = document.getElementById("dp").value;
+            const resellerName = document.getElementById("resellerName").value;
+
+            // Push data to Firebase
+            const orderRef = ref(database, 'orders');
+            push(orderRef, {
+                resellerName: resellerName,
+                name: name,
+                address: address,
+                phone: phone,
+                item: item,
+                dp: dp,
+                timestamp: Date.now()
+            }).then(() => {
+                alert("Pesanan berhasil dikirim!");
+                form.reset();  // Reset the form after submission
+            }).catch((error) => {
+                alert("Error: " + error.message);
+            });
+        };
+    </script>
 </head>
 <body>
     <h1>Form Pesanan Reseller</h1>
@@ -38,67 +92,5 @@
 
         <button type="submit">Kirim Pesanan</button>
     </form>
-
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-            authDomain: "reseller-form-a616f.firebaseapp.com",
-            databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "reseller-form-a616f",
-            storageBucket: "reseller-form-a616f.appspot.com",
-            messagingSenderId: "194922134187",
-            appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-            measurementId: "G-NHLWZHWWEW"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Get resellerName from URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const resellerName = urlParams.get('resellerName');
-        document.getElementById("resellerName").value = resellerName; // Automatically set the reseller name
-
-        // Get form and input elements
-        const form = document.getElementById("order-form");
-        const nameInput = document.getElementById("name");
-        const addressInput = document.getElementById("address");
-        const phoneInput = document.getElementById("phone");
-        const itemInput = document.getElementById("item");
-        const dpInput = document.getElementById("dp");
-        const resellerNameInput = document.getElementById("resellerName");
-
-        // Handle form submission
-        form.onsubmit = function(event) {
-            event.preventDefault();
-
-            // Collect input values
-            const name = nameInput.value;
-            const address = addressInput.value;
-            const phone = phoneInput.value;
-            const item = itemInput.value;
-            const dp = dpInput.value;
-            const resellerName = resellerNameInput.value;
-
-            // Push data to Firebase
-            const orderRef = database.ref('orders');
-            orderRef.push({
-                resellerName: resellerName,
-                name: name,
-                address: address,
-                phone: phone,
-                item: item,
-                dp: dp,
-                timestamp: Date.now()
-            }).then(() => {
-                alert("Pesanan berhasil dikirim!");
-                form.reset();  // Reset the form after submission
-            }).catch((error) => {
-                alert("Error: " + error.message);
-            });
-        };
-    </script>
 </body>
 </html>
