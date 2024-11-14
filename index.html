@@ -3,90 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Form</title>
-    
-    <!-- Firebase SDK v9 -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <title>Formulir Pengajuan</title>
+</head>
+<body>
+    <h1>Formulir Pengajuan Produk</h1>
+    <form id="customerForm">
+        <input type="hidden" id="resellerId" name="id_reseller">
+        <p><strong>Reseller: </strong><span id="resellerName"></span></p>
 
-    <script>
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+        <label for="name">Nama:</label>
+        <input type="text" id="name" name="name" required><br><br>
 
-        // Firebase configuration
+        <label for="address">Alamat:</label>
+        <input type="text" id="address" name="address" required><br><br>
+
+        <label for="phone">Nomor Telepon:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <label for="product">Produk yang ingin diajukan:</label>
+        <select id="product" name="product" required>
+            <option value="" disabled selected>Pilih produk</option>
+            <option value="Mobil Bekas">Mobil Bekas</option>
+            <option value="Mobil Baru">Mobil Baru</option>
+        </select><br><br>
+
+        <button type="submit">Kirim</button>
+    </form>
+
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+        // Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
             authDomain: "reseller-form-a616f.firebaseapp.com",
             databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "reseller-form-a616f",
-            storageBucket: "reseller-form-a616f.appspot.com",
+            storageBucket: "reseller-form-a616f.firebasestorage.app",
             messagingSenderId: "194922134187",
             appId: "1:194922134187:web:6e2421004dc4ba580195ee",
             measurementId: "G-NHLWZHWWEW"
         };
 
-        // Initialize Firebase
+        // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        function sendDataToFirebase(name, address, phone, product, dp, resellerId) {
-            const customersRef = ref(database, 'customers/');
-            push(customersRef, {
+        // Mendapatkan id_reseller dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const resellerId = urlParams.get('id_reseller');
+        document.getElementById('resellerId').value = resellerId;
+
+        // Menentukan nama reseller berdasarkan id_reseller
+        const resellerNames = {
+            "XY3r_LPT9G_KNHU1hb3": "Ardi",  // Ardi di posisi pertama
+            "OB1q_NIW8W_PUS0LeNM": "Rusdi",  // Rusdi di posisi kedua
+            "LN9w_MH9Z8i5A4gfv7k": "Si Imut",
+            "9WVz_J5LQ4B0J1cZTly": "Amba",
+            "O7Np_qVZ1W3G7hG4X5y": "Boyolali"
+        };
+
+        const resellerName = resellerNames[resellerId] || "Reseller Tidak Ditemukan";
+        document.getElementById('resellerName').textContent = resellerName;
+
+        // Menyimpan data ke Firebase saat form disubmit
+        document.getElementById('customerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Ambil data dari form
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const product = document.getElementById('product').value;
+
+            // Simpan data ke Firebase
+            push(ref(database, 'orders'), {
+                resellerId: resellerId,
+                resellerName: resellerName,  // Simpan nama reseller
                 name: name,
                 address: address,
                 phone: phone,
                 product: product,
-                dp: dp,
-                resellerId: resellerId
+                timestamp: new Date().toISOString()
             }).then(() => {
-                alert("Data has been submitted successfully!");
-            }).catch((error) => {
-                alert("Error: " + error.message);
+                // Menampilkan notifikasi sukses
+                alert('Data berhasil disimpan!');
+
+                // Arahkan ke halaman terima kasih (GitHub Pages)
+                window.location.href = "terima_kasih.html"; // Ganti dengan URL sesuai dengan struktur repo di GitHub Pages
+
+            }).catch(error => {
+                console.error('Error menyimpan data:', error);
             });
-        }
-    </script>
-</head>
-<body>
-    <h1>Customer Form</h1>
-    <form id="customerForm">
-        <label for="name">Nama:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-
-        <label for="address">Alamat:</label><br>
-        <input type="text" id="address" name="address" required><br><br>
-
-        <label for="phone">Nomor Telepon:</label><br>
-        <input type="tel" id="phone" name="phone" required><br><br>
-
-        <label for="product">Produk:</label><br>
-        <select id="product" name="product" required>
-            <option value="Motor Baru">Motor Baru</option>
-            <option value="Motor Bekas">Motor Bekas</option>
-            <option value="Mobil Baru">Mobil Baru</option>
-            <option value="Mobil Bekas">Mobil Bekas</option>
-            <option value="Umroh">Umroh</option>
-        </select><br><br>
-
-        <label for="dp">DP:</label><br>
-        <input type="number" id="dp" name="dp" required><br><br>
-
-        <input type="hidden" id="resellerId" name="resellerId" value="">
-        
-        <button type="submit">Submit</button>
-    </form>
-
-    <script>
-        document.getElementById("customerForm").onsubmit = function(e) {
-            e.preventDefault();
-            const name = document.getElementById("name").value;
-            const address = document.getElementById("address").value;
-            const phone = document.getElementById("phone").value;
-            const product = document.getElementById("product").value;
-            const dp = document.getElementById("dp").value;
-            const resellerId = new URLSearchParams(window.location.search).get('resellerId');
-            // Send data to Firebase
-            sendDataToFirebase(name, address, phone, product, dp, resellerId);
-        };
+        });
     </script>
 </body>
 </html>
