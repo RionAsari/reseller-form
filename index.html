@@ -1,9 +1,10 @@
+<!-- Formulir Web -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pengajuan</title>
+    <title>Formulir Pengajuan Produk</title>
 </head>
 <body>
     <h1>Formulir Pengajuan Produk</h1>
@@ -30,72 +31,57 @@
         <button type="submit">Kirim</button>
     </form>
 
-    <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-        // Konfigurasi Firebase
+        // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-            authDomain: "reseller-form-a616f.firebaseapp.com",
-            databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "reseller-form-a616f",
-            storageBucket: "reseller-form-a616f.firebasestorage.app",
-            messagingSenderId: "194922134187",
-            appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-            measurementId: "G-NHLWZHWWEW"
+            apiKey: "AIzaSy...",
+            authDomain: "yourapp.firebaseapp.com",
+            databaseURL: "https://yourapp.firebaseio.com",
+            projectId: "yourapp",
+            storageBucket: "yourapp.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcd1234",
+            measurementId: "G-XYZ12345"
         };
 
-        // Inisialisasi Firebase
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Mendapatkan id_reseller dari URL
+        // Get resellerId and resellerName from URL
         const urlParams = new URLSearchParams(window.location.search);
         const resellerId = urlParams.get('id_reseller');
+        const resellerName = urlParams.get('reseller_name');
         document.getElementById('resellerId').value = resellerId;
-
-        // Menentukan nama reseller berdasarkan id_reseller
-        const resellerNames = {
-            "XY3r_LPT9G_KNHU1hb3": "Ardi",  // Ardi di posisi pertama
-            "OB1q_NIW8W_PUS0LeNM": "Rusdi",  // Rusdi di posisi kedua
-            "LN9w_MH9Z8i5A4gfv7k": "Si Imut",
-            "9WVz_J5LQ4B0J1cZTly": "Amba",
-            "O7Np_qVZ1W3G7hG4X5y": "Boyolali"
-        };
-
-        const resellerName = resellerNames[resellerId] || "Reseller Tidak Ditemukan";
         document.getElementById('resellerName').textContent = resellerName;
 
-        // Menyimpan data ke Firebase saat form disubmit
+        // Submit form data to Firebase under "orders"
         document.getElementById('customerForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Ambil data dari form
             const name = document.getElementById('name').value;
             const address = document.getElementById('address').value;
             const phone = document.getElementById('phone').value;
             const product = document.getElementById('product').value;
+            const timestamp = new Date().toISOString();
 
-            // Simpan data ke Firebase
+            // Push data to "orders"
             push(ref(database, 'orders'), {
-                resellerId: resellerId,
-                resellerName: resellerName,  // Simpan nama reseller
-                name: name,
-                address: address,
-                phone: phone,
-                product: product,
-                timestamp: new Date().toISOString()
+                name,
+                address,
+                phone,
+                product,
+                resellerId,
+                resellerName,
+                timestamp
             }).then(() => {
-                // Menampilkan notifikasi sukses
                 alert('Data berhasil disimpan!');
-
-                // Arahkan ke halaman terima kasih (GitHub Pages)
-                window.location.href = "terima_kasih.html"; // Ganti dengan URL sesuai dengan struktur repo di GitHub Pages
-
+                window.location.href = "terima_kasih.html";
             }).catch(error => {
-                console.error('Error menyimpan data:', error);
+                console.error('Error:', error);
             });
         });
     </script>
