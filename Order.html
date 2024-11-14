@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesanan dari Reseller</title>
+    <title>Data Pesanan dari Reseller</title>
 </head>
 <body>
     <h1>Pesanan dari Reseller</h1>
@@ -12,9 +12,9 @@
     <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getDatabase, ref, query, orderByChild, equalTo, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-        // Firebase configuration
+        // Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
             authDomain: "reseller-form-a616f.firebaseapp.com",
@@ -26,20 +26,18 @@
             measurementId: "G-NHLWZHWWEW"
         };
 
-        // Initialize Firebase
+        // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Get resellerName from URL params
+        // Mendapatkan resellerName dari URL jika ingin filter berdasarkan reseller
         const urlParams = new URLSearchParams(window.location.search);
-        const resellerName = urlParams.get('resellerName'); // Get resellerName from URL
+        const resellerName = urlParams.get('resellerName'); // Assuming you use resellerName for filter
 
-        // Query Firebase to get orders related to resellerName
         const ordersRef = ref(database, 'orders');
-        const ordersQuery = query(ordersRef, orderByChild('resellerName'), equalTo(resellerName));
 
-        // Display orders in the page
-        onValue(ordersQuery, (snapshot) => {
+        // Mengambil semua data pesanan dan menampilkannya
+        onValue(ordersRef, (snapshot) => {
             const orders = snapshot.val();
             const ordersList = document.getElementById('orders-list');
 
@@ -48,9 +46,13 @@
                 return;
             }
 
-            ordersList.innerHTML = '';
+            ordersList.innerHTML = ''; // Clear the list before adding new data
             Object.keys(orders).forEach((orderId) => {
                 const order = orders[orderId];
+
+                // If filtering by reseller, only show orders from the specified reseller
+                if (resellerName && order.resellerName !== resellerName) return;
+
                 const orderElement = document.createElement('div');
                 orderElement.innerHTML = `
                     <p><strong>Nama Reseller:</strong> ${order.resellerName}</p>
@@ -58,7 +60,6 @@
                     <p><strong>Alamat:</strong> ${order.address}</p>
                     <p><strong>Telepon:</strong> ${order.phone}</p>
                     <p><strong>Barang:</strong> ${order.item}</p>
-                    <p><strong>DP:</strong> ${order.dp}</p>
                     <p><strong>Waktu Pemesanan:</strong> ${new Date(order.timestamp).toLocaleString()}</p>
                     <hr>
                 `;
