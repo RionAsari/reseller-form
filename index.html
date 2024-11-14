@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Form</title>
     
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK v9 -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
 
     <script>
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
@@ -23,11 +26,12 @@
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
         function sendDataToFirebase(name, address, phone, product, dp, resellerId) {
-            database.ref('customers/').push({
+            const customersRef = ref(database, 'customers/');
+            push(customersRef, {
                 name: name,
                 address: address,
                 phone: phone,
