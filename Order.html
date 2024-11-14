@@ -3,97 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pesanan</title>
+    <title>Pesanan dari Reseller</title>
 </head>
 <body>
-    <h1>Form Pesanan Reseller</h1>
-    <form id="order-form">
-        <label for="name">Nama Lengkap:</label>
-        <input type="text" id="name" required><br><br>
+    <h1>Pesanan dari Reseller</h1>
+    <div id="orders-list"></div>
 
-        <label for="address">Alamat:</label>
-        <input type="text" id="address" required><br><br>
-
-        <label for="phone">Nomor Telepon:</label>
-        <input type="tel" id="phone" required><br><br>
-
-        <label for="item">Barang:</label>
-        <select id="item" required>
-            <option value="Motor Baru">Motor Baru</option>
-            <option value="Motor Bekas">Motor Bekas</option>
-            <option value="Mobil Baru">Mobil Baru</option>
-            <option value="Mobil Bekas">Mobil Bekas</option>
-            <option value="Umroh">Umroh</option>
-        </select><br><br>
-
-        <label for="dp">DP:</label>
-        <input type="number" id="dp" required><br><br>
-
-        <input type="hidden" id="resellerId" value="1234"> <!-- Ganti dengan reseller ID yang sesuai -->
-        
-        <button type="submit">Kirim Pesanan</button>
-    </form>
-
+    <!-- Firebase SDK (Modular) -->
     <script type="module">
-        // Import Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+        import { getDatabase, ref, query, orderByChild, equalTo, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-        // Konfigurasi Firebase
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
             authDomain: "reseller-form-a616f.firebaseapp.com",
             databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "reseller-form-a616f",
-            storageBucket: "reseller-form-a616f.firebasestorage.app",
+            storageBucket: "reseller-form-a616f.appspot.com",
             messagingSenderId: "194922134187",
             appId: "1:194922134187:web:6e2421004dc4ba580195ee",
             measurementId: "G-NHLWZHWWEW"
         };
 
-        // Inisialisasi Firebase
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Ambil form dan elemen-elemen input
-        const form = document.getElementById("order-form");
-        const nameInput = document.getElementById("name");
-        const addressInput = document.getElementById("address");
-        const phoneInput = document.getElementById("phone");
-        const itemInput = document.getElementById("item");
-        const dpInput = document.getElementById("dp");
-        const resellerIdInput = document.getElementById("resellerId");
+        // Get resellerName from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const resellerName = urlParams.get('resellerName'); // Get resellerName from URL
 
-        // Fungsi untuk mengirim data ke Firebase
-        form.onsubmit = function(event) {
-            event.preventDefault(); // Mencegah form melakukan refresh halaman
+        // Query Firebase to get orders related to resellerName
+        const ordersRef = ref(database, 'orders');
+        const ordersQuery = query(ordersRef, orderByChild('resellerName'), equalTo(resellerName));
 
-            const name = nameInput.value;
-            const address = addressInput.value;
-            const phone = phoneInput.value;
-            const item = itemInput.value;
-            const dp = dpInput.value;
-            const resellerId = resellerIdInput.value;
+        // Display orders in the page
+        onValue(ordersQuery, (snapshot) => {
+            const orders = snapshot.val();
+            const ordersList = document.getElementById('orders-list');
 
-            // Referensi ke path 'orders' dalam Realtime Database
-            const ordersRef = ref(database, 'orders');
-            push(ordersRef, {
-                resellerId: resellerId,
-                name: name,
-                address: address,
-                phone: phone,
-                item: item,
-                dp: dp,
-                timestamp: Date.now()
-            })
-            .then(() => {
-                alert("Pesanan berhasil dikirim!");
-                form.reset(); // Reset form setelah submit
-            })
-            .catch((error) => {
-                alert("Terjadi kesalahan: " + error.message);
+            if (!orders) {
+                ordersList.innerHTML = '<p>Tidak ada data.</p>';
+                return;
+            }
+
+            ordersList.innerHTML = '';
+            Object.keys(orders).forEach((orderId) => {
+                const order = orders[orderId];
+                const orderElement = document.createElement('div');
+                orderElement.innerHTML = `
+                    <p><strong>Nama Reseller:</strong> ${order.resellerName}</p>
+                    <p><strong>Nama:</strong> ${order.name}</p>
+                    <p><strong>Alamat:</strong> ${order.address}</p>
+                    <p><strong>Telepon:</strong> ${order.phone}</p>
+                    <p><strong>Barang:</strong> ${order.item}</p>
+                    <p><strong>DP:</strong> ${order.dp}</p>
+                    <p><strong>Waktu Pemesanan:</strong> ${new Date(order.timestamp).toLocaleString()}</p>
+                    <hr>
+                `;
+                ordersList.appendChild(orderElement);
             });
-        };
+        });
     </script>
 </body>
 </html>
