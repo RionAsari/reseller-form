@@ -33,8 +33,8 @@
         <label for="dp">DP:</label>
         <input type="number" id="dp" required><br><br>
 
-        <!-- Reseller ID hidden input, set via URL -->
-        <input type="hidden" id="resellerId"><br><br>
+        <!-- Reseller Name hidden input, set via URL -->
+        <input type="hidden" id="resellerName"><br><br>
 
         <button type="submit">Kirim Pesanan</button>
     </form>
@@ -56,10 +56,10 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Get resellerId from URL params
+        // Get resellerName from URL params
         const urlParams = new URLSearchParams(window.location.search);
-        const resellerId = urlParams.get('resellerId');
-        document.getElementById("resellerId").value = resellerId; // Automatically set the reseller ID
+        const resellerName = urlParams.get('resellerName');
+        document.getElementById("resellerName").value = resellerName; // Automatically set the reseller name
 
         // Get form and input elements
         const form = document.getElementById("order-form");
@@ -68,7 +68,7 @@
         const phoneInput = document.getElementById("phone");
         const itemInput = document.getElementById("item");
         const dpInput = document.getElementById("dp");
-        const resellerIdInput = document.getElementById("resellerId");
+        const resellerNameInput = document.getElementById("resellerName");
 
         // Handle form submission
         form.onsubmit = function(event) {
@@ -80,12 +80,12 @@
             const phone = phoneInput.value;
             const item = itemInput.value;
             const dp = dpInput.value;
-            const resellerId = resellerIdInput.value;
+            const resellerName = resellerNameInput.value;
 
             // Push data to Firebase
             const orderRef = database.ref('orders');
             orderRef.push({
-                resellerId: resellerId,
+                resellerName: resellerName,
                 name: name,
                 address: address,
                 phone: phone,
