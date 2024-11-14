@@ -26,10 +26,13 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function sendDataToFirebase(name, email, resellerId) {
+        function sendDataToFirebase(name, address, phone, product, dp, resellerId) {
             database.ref('customers/').push({
                 name: name,
-                email: email,
+                address: address,
+                phone: phone,
+                product: product,
+                dp: dp,
                 resellerId: resellerId
             }).then(() => {
                 alert("Data has been submitted successfully!");
@@ -42,12 +45,27 @@
 <body>
     <h1>Customer Form</h1>
     <form id="customerForm">
-        <label for="name">Name:</label><br>
+        <label for="name">Nama:</label><br>
         <input type="text" id="name" name="name" required><br><br>
-        
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
-        
+
+        <label for="address">Alamat:</label><br>
+        <input type="text" id="address" name="address" required><br><br>
+
+        <label for="phone">Nomor Telepon:</label><br>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <label for="product">Produk:</label><br>
+        <select id="product" name="product" required>
+            <option value="Motor Baru">Motor Baru</option>
+            <option value="Motor Bekas">Motor Bekas</option>
+            <option value="Mobil Baru">Mobil Baru</option>
+            <option value="Mobil Bekas">Mobil Bekas</option>
+            <option value="Umroh">Umroh</option>
+        </select><br><br>
+
+        <label for="dp">DP:</label><br>
+        <input type="number" id="dp" name="dp" required><br><br>
+
         <input type="hidden" id="resellerId" name="resellerId" value="">
         
         <button type="submit">Submit</button>
@@ -57,10 +75,13 @@
         document.getElementById("customerForm").onsubmit = function(e) {
             e.preventDefault();
             const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
+            const address = document.getElementById("address").value;
+            const phone = document.getElementById("phone").value;
+            const product = document.getElementById("product").value;
+            const dp = document.getElementById("dp").value;
             const resellerId = new URLSearchParams(window.location.search).get('resellerId');
             // Send data to Firebase
-            sendDataToFirebase(name, email, resellerId);
+            sendDataToFirebase(name, address, phone, product, dp, resellerId);
         };
     </script>
 </body>
