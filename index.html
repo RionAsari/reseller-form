@@ -30,58 +30,70 @@
         <button type="submit">Kirim</button>
     </form>
 
+    <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
+        // Konfigurasi Firebase
         const firebaseConfig = {
-            apiKey: "your-api-key",
-            authDomain: "your-auth-domain",
-            databaseURL: "your-database-url",
-            projectId: "your-project-id",
-            storageBucket: "your-storage-bucket",
-            messagingSenderId: "your-messaging-sender-id",
-            appId: "your-app-id",
-            measurementId: "your-measurement-id"
+            apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
+            authDomain: "reseller-form-a616f.firebaseapp.com",
+            databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "reseller-form-a616f",
+            storageBucket: "reseller-form-a616f.firebasestorage.app",
+            messagingSenderId: "194922134187",
+            appId: "1:194922134187:web:6e2421004dc4ba580195ee",
+            measurementId: "G-NHLWZHWWEW"
         };
 
+        // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
+        // Mendapatkan id_reseller dari URL
         const urlParams = new URLSearchParams(window.location.search);
         const resellerId = urlParams.get('id_reseller');
         document.getElementById('resellerId').value = resellerId;
 
-        const resellerNameRef = ref(database, 'resellers/' + resellerId);
-        get(resellerNameRef).then(snapshot => {
-            if (snapshot.exists()) {
-                document.getElementById('resellerName').textContent = snapshot.val();
-            } else {
-                document.getElementById('resellerName').textContent = "Reseller Tidak Ditemukan";
-            }
-        }).catch(error => {
-            console.error("Error fetching reseller name:", error);
-        });
+        // Menentukan nama reseller berdasarkan id_reseller
+        const resellerNames = {
+            "XY3r_LPT9G_KNHU1hb3": "Ardi",  // Ardi di posisi pertama
+            "OB1q_NIW8W_PUS0LeNM": "Rusdi",  // Rusdi di posisi kedua
+            "LN9w_MH9Z8i5A4gfv7k": "Si Imut",
+            "9WVz_J5LQ4B0J1cZTly": "Amba",
+            "O7Np_qVZ1W3G7hG4X5y": "Boyolali"
+        };
 
+        const resellerName = resellerNames[resellerId] || "Reseller Tidak Ditemukan";
+        document.getElementById('resellerName').textContent = resellerName;
+
+        // Menyimpan data ke Firebase saat form disubmit
         document.getElementById('customerForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
+            // Ambil data dari form
             const name = document.getElementById('name').value;
             const address = document.getElementById('address').value;
             const phone = document.getElementById('phone').value;
             const product = document.getElementById('product').value;
 
+            // Simpan data ke Firebase
             push(ref(database, 'orders'), {
                 resellerId: resellerId,
-                resellerName: document.getElementById('resellerName').textContent,
+                resellerName: resellerName,  // Simpan nama reseller
                 name: name,
                 address: address,
                 phone: phone,
                 product: product,
                 timestamp: new Date().toISOString()
             }).then(() => {
+                // Menampilkan notifikasi sukses
                 alert('Data berhasil disimpan!');
-                window.location.href = "terima_kasih.html";
+
+                // Arahkan ke halaman terima kasih (GitHub Pages)
+                window.location.href = "terima_kasih.html"; // Ganti dengan URL sesuai dengan struktur repo di GitHub Pages
+
             }).catch(error => {
                 console.error('Error menyimpan data:', error);
             });
