@@ -48,24 +48,27 @@
 
             ordersList.innerHTML = ''; // Clear the list before adding new data
             Object.keys(orders).forEach((orderId) => {
-                const order = orders[orderId];
+    const order = orders[orderId];
 
-                // If filtering by reseller, only show orders from the specified reseller
-                if (resellerName && order.resellerName !== resellerName) return;
+    if (resellerName && order.resellerName !== resellerName) return;
 
-                const orderElement = document.createElement('div');
-                orderElement.innerHTML = `
-                    <p><strong>Nama Reseller:</strong> ${order.resellerName}</p>
-                    <p><strong>Nama:</strong> ${order.name}</p>
-                    <p><strong>Alamat:</strong> ${order.address}</p>
-                    <p><strong>Telepon:</strong> ${order.phone}</p>
-                    <p><strong>Barang:</strong> ${order.item}</p>
-                    <p><strong>DP:</strong> ${order.dp}</p> <!-- DP is now an integer -->
-                    <p><strong>Waktu Pemesanan:</strong> ${new Date(order.timestamp).toLocaleString()}</p>
-                    <hr>
-                `;
-                ordersList.appendChild(orderElement);
-            });
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+    const formattedDate = new Intl.DateTimeFormat('id-ID', options).format(new Date(order.timestamp));
+
+    const orderElement = document.createElement('div');
+    orderElement.innerHTML = `
+        <p><strong>Nama Reseller:</strong> ${order.resellerName}</p>
+        <p><strong>Nama:</strong> ${order.name}</p>
+        <p><strong>Alamat:</strong> ${order.address}</p>
+        <p><strong>Telepon:</strong> ${order.phone}</p>
+        <p><strong>Barang:</strong> ${order.item}</p>
+        <p><strong>DP:</strong> ${order.dp}</p>
+        <p><strong>Waktu Pemesanan:</strong> ${formattedDate}</p>
+        <hr>
+    `;
+    ordersList.appendChild(orderElement);
+});
+
         });
     </script>
 </body>
