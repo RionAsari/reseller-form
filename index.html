@@ -26,10 +26,18 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Get resellerName from URL params
+        // Get reseller data from URL params
         const urlParams = new URLSearchParams(window.location.search);
         const resellerName = urlParams.get('resellerName');
-        document.getElementById("resellerName").value = resellerName; // Automatically set the reseller name
+        const resellerEmail = urlParams.get('resellerEmail');
+        const resellerPhone = urlParams.get('resellerPhone');
+
+        // Set input values if available
+        document.addEventListener("DOMContentLoaded", function() {
+            if (resellerName) document.getElementById("resellerName").value = resellerName;
+            if (resellerEmail) document.getElementById("resellerEmail").value = resellerEmail;
+            if (resellerPhone) document.getElementById("resellerPhone").value = resellerPhone;
+        });
 
         // Handle form submission
         const form = document.getElementById("order-form");
@@ -43,33 +51,35 @@
             const item = document.getElementById("item").value;
             const dp = parseInt(document.getElementById("dp").value, 10); // Convert DP to int
             const resellerName = document.getElementById("resellerName").value;
+            const resellerEmail = document.getElementById("resellerEmail").value;
+            const resellerPhone = document.getElementById("resellerPhone").value;
 
-            // Check if DP is a valid number
+            // Validation checks
             if (isNaN(dp)) {
                 alert("DP harus berupa angka!");
-                return; // Prevent form submission if DP is invalid
+                return;
             }
-
-            // Check if phone is a valid number
             if (isNaN(phone)) {
                 alert("Nomor telepon harus berupa angka!");
-                return; // Prevent form submission if phone is invalid
+                return;
             }
 
-            // Push data to Firebase (ensure dp is treated as integer)
+            // Push data to Firebase
             const orderRef = ref(database, 'orders');
             push(orderRef, {
                 resellerName: resellerName,
+                resellerEmail: resellerEmail,
+                resellerPhone: resellerPhone,
                 name: name,
                 address: address,
                 phone: phone,
                 item: item,
-                dp: dp, // Send DP as an integer
+                dp: dp,
                 timestamp: Date.now()
             })
             .then(() => {
                 window.location.replace("terima_kasih.html");
-                form.reset();  // Reset the form after submission
+                form.reset();
             })
             .catch((error) => {
                 alert("Error: " + error.message);
@@ -82,11 +92,9 @@
         <div class="logo">
             <img src="css/image.png"/>
         </div>
-        <div class="form-title">
-        Form Pengajuan
-        </div>
+        <div class="form-title">Form Pengajuan</div>
         <form class="form-container" id="order-form">
-            <!-- Input fields for the form -->
+
             <label for="name">Nama Lengkap :</label>
             <input type="text" id="name" required><br><br>
 
@@ -96,7 +104,7 @@
             <label for="phone">Nomor Telepon :</label>
             <input type="tel" id="phone" required><br><br>
 
-            <label for="item" style="width: 250px;">Barang :</label>
+            <label for="item">Barang :</label>
             <select id="item" required>
                 <option value="Motor Baru">Motor Baru</option>
                 <option value="Motor Bekas">Motor Bekas</option>
@@ -108,8 +116,9 @@
             <label for="dp">DP :</label>
             <input type="number" id="dp" required><br><br>
 
-            <!-- Reseller Name hidden input, set via URL -->
-            <input type="hidden" id="resellerName"><br><br>
+            <input type="hidden" id="resellerName">
+            <input type="hidden" id="resellerEmail">
+            <input type="hidden" id="resellerPhone">
 
             <button class="submit-button">Kirim</button>
         </form>
