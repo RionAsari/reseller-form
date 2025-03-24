@@ -52,12 +52,10 @@
             Object.keys(orders).forEach((orderId) => {
                 const order = orders[orderId];
 
-                // Filter orders by resellerName, resellerEmail, and resellerPhone
-                if (
-                    (resellerName && order.resellerName !== resellerName) ||
-                    (resellerEmail && order.resellerEmail !== resellerEmail) ||
-                    (resellerPhone && order.resellerPhone !== resellerPhone)
-                ) {
+                // Filter hanya jika parameter diberikan di URL (biar tidak memfilter yang kosong)
+                if ((resellerName && order.resellerName !== resellerName) ||
+                    (resellerEmail && order.resellerEmail && order.resellerEmail !== resellerEmail) ||
+                    (resellerPhone && order.resellerPhone && order.resellerPhone !== resellerPhone)) {
                     return;
                 }
 
