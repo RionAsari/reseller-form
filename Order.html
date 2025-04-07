@@ -97,14 +97,13 @@
                     <p><strong>Telepon Reseller:</strong> ${order.resellerPhone || '-'}</p>
                     <p><strong>Nama Pelanggan:</strong> ${order.name || '-'}</p>
                     <p><strong>Email Pelanggan:</strong> ${order.email || '-'}</p>
-                    <p><strong>Alamat:</strong> ${order.address || '-'}</p>
                     <p><strong>Alamat Domisili:</strong> ${order.domicile || '-'}</p>
                     <p><strong>Kode Pos:</strong> ${order.postalCode || '-'}</p>
                     <p><strong>Jenis Pekerjaan:</strong> ${order.job || '-'}</p>
                     <p><strong>Pendapatan per Bulan:</strong> ${order.income ? 'Rp ' + formatRupiah(order.income) : '-'}</p>
                     <p><strong>Angsuran Lain:</strong> ${order.installment || '-'}</p>
                     <p><strong>Telepon:</strong> ${order.phone || '-'}</p>
-                    <p><strong>Barang:</strong> ${order.item || '-'}</p>
+                    <p><strong>Jenis Pinjaman:</strong> ${order.item || '-'}</p>
                     <p><strong>DP:</strong> ${order.dp ? 'Rp ' + formatRupiah(order.dp) : '-'}</p>
                     <p><strong>Waktu Pemesanan:</strong> ${formatDate(order.timestamp)}</p>
                 `;

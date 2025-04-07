@@ -44,7 +44,6 @@
 
       const name = document.getElementById("name").value;
       const email = document.getElementById("email").value.trim();
-      const address = document.getElementById("address").value;
       const domicile = document.getElementById("domicile").value;
       const postalCode = document.getElementById("postalCode").value;
       const job = document.getElementById("job").value;
@@ -85,7 +84,6 @@
         resellerPhone,
         name,
         email,
-        address,
         domicile,
         postalCode,
         job,
@@ -120,11 +118,8 @@
       <label for="email">Email :</label>
       <input type="email" id="email" placeholder="Contoh: budi@email.com" required><br><br>
 
-      <label for="address">Alamat :</label>
-      <input type="text" id="address" placeholder="Contoh: Jl. Mawar No.10, Surabaya" required><br><br>
-
       <label for="domicile">Alamat Domisili :</label>
-      <input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo"><br><br>
+      <input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo" required><br><br>
 
       <label for="postalCode">Kode Pos :</label>
       <input type="text" id="postalCode" maxlength="5" pattern="\d{5}" title="Masukkan 5 angka" placeholder="Contoh: 60234" required><br><br>
@@ -141,9 +136,9 @@
       <label for="phone">Nomor Telepon :</label>
       <input type="tel" id="phone" inputmode="numeric" pattern="\d*" placeholder="Contoh: 081234567890" required><br><br>
 
-      <label for="item">Barang :</label>
+      <label for="item">Jenis Pinjaman :</label>
       <select id="item" required>
-        <option value="">-- Pilih Barang --</option>
+        <option value="">-- Pilih Jenis Pinjaman --</option>
         <option value="Motor Baru">Motor Baru</option>
         <option value="Motor Bekas">Motor Bekas</option>
         <option value="Mobil Baru">Mobil Baru</option>
