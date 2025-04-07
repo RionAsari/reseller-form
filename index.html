@@ -1,131 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="css/main.css" rel="stylesheet" type="text/css" />
-  <title>Form Pengajuan</title>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <title>Form Pengajuan</title>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-      authDomain: "reseller-form-a616f.firebaseapp.com",
-      databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "reseller-form-a616f",
-      storageBucket: "reseller-form-a616f.appspot.com",
-      messagingSenderId: "194922134187",
-      appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-      measurementId: "G-NHLWZHWWEW"
-    };
+    <!-- Firebase scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
+            authDomain: "reseller-form-a616f.firebaseapp.com",
+            databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "reseller-form-a616f",
+            storageBucket: "reseller-form-a616f.appspot.com",
+            messagingSenderId: "194922134187",
+            appId: "1:194922134187:web:6e2421004dc4ba580195ee",
+            measurementId: "G-NHLWZHWWEW"
+        };
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const resellerName = urlParams.get('resellerName');
-    const resellerEmail = urlParams.get('resellerEmail');
-    const resellerPhone = urlParams.get('resellerPhone');
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
-    document.addEventListener("DOMContentLoaded", function () {
-      if (resellerName) document.getElementById("resellerName").value = resellerName;
-      if (resellerEmail) document.getElementById("resellerEmail").value = resellerEmail;
-      if (resellerPhone) document.getElementById("resellerPhone").value = resellerPhone;
-    });
+        const urlParams = new URLSearchParams(window.location.search);
+        const resellerName = urlParams.get('resellerName');
+        const resellerEmail = urlParams.get('resellerEmail');
+        const resellerPhone = urlParams.get('resellerPhone');
 
-    const form = document.getElementById("order-form");
-    form.onsubmit = function (event) {
-      event.preventDefault();
+        document.addEventListener("DOMContentLoaded", function() {
+            if (resellerName) document.getElementById("resellerName").value = resellerName;
+            if (resellerEmail) document.getElementById("resellerEmail").value = resellerEmail;
+            if (resellerPhone) document.getElementById("resellerPhone").value = resellerPhone;
+        });
 
-      const namaLengkap = document.getElementById("name").value;
-      const alamatDomisili = document.getElementById("address").value;
-      const kodePos = document.getElementById("postalcode").value;
-      const jenisPekerjaan = document.getElementById("occupation").value;
-      const noTelepon = document.getElementById("phone").value;
-      const jenisPinjaman = document.getElementById("item").value;
-      const pendapatanBulanan = document.getElementById("dp").value;
-      const angsuranLain = document.getElementById("otherInstallments").value;
-      const email = document.getElementById("resellerEmail").value;
+        const form = document.getElementById("order-form");
+        form.onsubmit = function(event) {
+            event.preventDefault();
 
-      if (isNaN(parseInt(pendapatanBulanan))) {
-        alert("DP harus berupa angka!");
-        return;
-      }
-      if (isNaN(parseInt(noTelepon))) {
-        alert("Nomor telepon harus berupa angka!");
-        return;
-      }
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const domisili = document.getElementById("domisili").value.trim();
+            const kodePos = document.getElementById("kodePos").value.trim();
+            const pekerjaan = document.getElementById("pekerjaan").value.trim();
+            const pendapatan = parseInt(document.getElementById("pendapatan").value, 10);
+            const angsuran = document.getElementById("angsuran").value.trim();
+            const phone = parseInt(document.getElementById("phone").value);
+            const item = document.getElementById("item").value;
+            const dp = parseInt(document.getElementById("dp").value, 10);
+            const resellerName = document.getElementById("resellerName").value;
+            const resellerEmail = document.getElementById("resellerEmail").value;
+            const resellerPhone = document.getElementById("resellerPhone").value;
 
-      const orderRef = ref(database, 'reseller-form');
-      push(orderRef, {
-        namaLengkap: namaLengkap,
-        noTelepon: noTelepon,
-        email: email,
-        alamatDomisili: alamatDomisili,
-        kodePos: kodePos,
-        jenisPekerjaan: jenisPekerjaan,
-        pendapatanBulanan: pendapatanBulanan,
-        jenisPinjaman: jenisPinjaman,
-        angsuranLain: angsuranLain,
-        timestamp: Date.now()
-      })
-      .then(() => {
-        window.location.replace("terima_kasih.html");
-        form.reset();
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
-    };
-  </script>
+            // Validasi tambahan
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("Format email tidak valid.");
+                return;
+            }
+            if (isNaN(dp)) {
+                alert("DP harus berupa angka!");
+                return;
+            }
+            if (isNaN(phone)) {
+                alert("Nomor telepon harus berupa angka!");
+                return;
+            }
+            if (kodePos.length !== 5 || isNaN(kodePos)) {
+                alert("Kode pos harus 5 digit angka.");
+                return;
+            }
+            if (isNaN(pendapatan)) {
+                alert("Pendapatan harus berupa angka!");
+                return;
+            }
+
+            // Push ke Firebase
+            const orderRef = ref(database, 'orders');
+            push(orderRef, {
+                resellerName: resellerName,
+                resellerEmail: resellerEmail,
+                resellerPhone: resellerPhone,
+                name: name,
+                email: email,
+                address: address,
+                domisili: domisili,
+                kodePos: kodePos,
+                pekerjaan: pekerjaan,
+                pendapatan: pendapatan,
+                angsuran: angsuran,
+                phone: phone,
+                item: item,
+                dp: dp,
+                timestamp: Date.now()
+            })
+            .then(() => {
+                window.location.replace("terima_kasih.html");
+                form.reset();
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+            });
+        };
+    </script>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">
-      <img src="css/image.png"/>
+    <div class="container">
+        <div class="logo">
+            <img src="css/image.png"/>
+        </div>
+        <div class="form-title">Form Pengajuan</div>
+        <form class="form-container" id="order-form">
+
+            <label for="name">Nama Lengkap :</label>
+            <input type="text" id="name" required><br><br>
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" required><br><br>
+
+            <label for="address">Alamat :</label>
+            <input type="text" id="address" required><br><br>
+
+            <label for="domisili">Alamat Domisili :</label>
+            <input type="text" id="domisili" required><br><br>
+
+            <label for="kodePos">Kode Pos :</label>
+            <input type="text" id="kodePos" required><br><br>
+
+            <label for="pekerjaan">Jenis Pekerjaan :</label>
+            <input type="text" id="pekerjaan" required><br><br>
+
+            <label for="pendapatan">Pendapatan per Bulan :</label>
+            <input type="number" id="pendapatan" required><br><br>
+
+            <label for="angsuran">Angsuran Lain (jika ada) :</label>
+            <input type="text" id="angsuran"><br><br>
+
+            <label for="phone">Nomor Telepon :</label>
+            <input type="tel" id="phone" required><br><br>
+
+            <label for="item">Barang :</label>
+            <select id="item" required>
+                <option value="Motor Baru">Motor Baru</option>
+                <option value="Motor Bekas">Motor Bekas</option>
+                <option value="Mobil Baru">Mobil Baru</option>
+                <option value="Mobil Bekas">Mobil Bekas</option>
+                <option value="Umroh">Umroh</option>
+            </select><br><br>
+
+            <label for="dp">DP :</label>
+            <input type="number" id="dp" required><br><br>
+
+            <input type="hidden" id="resellerName">
+            <input type="hidden" id="resellerEmail">
+            <input type="hidden" id="resellerPhone">
+
+            <button class="submit-button">Kirim</button>
+        </form>
     </div>
-    <div class="form-title">Form Pengajuan</div>
-    <form class="form-container" id="order-form">
-
-      <label for="name">Nama Lengkap :</label>
-      <input type="text" id="name" required><br><br>
-
-      <label for="phone">Nomor Telepon :</label>
-      <input type="tel" id="phone" required><br><br>
-
-      <label for="resellerEmail">Email :</label>
-      <input type="email" id="resellerEmail" required><br><br>
-
-      <label for="address">Alamat Domisili :</label>
-      <input type="text" id="address" required><br><br>
-
-      <label for="postalcode">Kode Pos :</label>
-      <input type="text" id="postalcode" required><br><br>
-
-      <label for="occupation">Jenis Pekerjaan :</label>
-      <input type="text" id="occupation" required><br><br>
-
-      <label for="dp">Pendapatan / Bulan :</label>
-      <input type="number" id="dp" required><br><br>
-
-      <label for="item">Jenis Pinjaman :</label>
-      <select id="item" required>
-        <option value="Motor Baru">Motor Baru</option>
-        <option value="Motor Bekas">Motor Bekas</option>
-        <option value="Mobil Baru">Mobil Baru</option>
-        <option value="Mobil Bekas">Mobil Bekas</option>
-        <option value="Umroh">Umroh</option>
-      </select><br><br>
-
-      <label for="otherInstallments">Angsuran Lain (jika ada) :</label>
-      <input type="text" id="otherInstallments"><br><br>
-
-      <input type="hidden" id="resellerName">
-      <input type="hidden" id="resellerPhone">
-
-      <button class="submit-button">Kirim</button>
-    </form>
-  </div>
 </body>
 </html>

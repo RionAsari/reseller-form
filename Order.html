@@ -26,7 +26,6 @@
             measurementId: "G-NHLWZHWWEW"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
@@ -52,10 +51,10 @@
             Object.keys(orders).forEach((orderId) => {
                 const order = orders[orderId];
 
-                // Filter hanya jika parameter diberikan di URL (biar tidak memfilter yang kosong)
+                // Filter hanya jika parameter diberikan di URL
                 if ((resellerName && order.resellerName !== resellerName) ||
-                    (resellerEmail && order.resellerEmail && order.resellerEmail !== resellerEmail) ||
-                    (resellerPhone && order.resellerPhone && order.resellerPhone !== resellerPhone)) {
+                    (resellerEmail && order.resellerEmail !== resellerEmail) ||
+                    (resellerPhone && order.resellerPhone !== resellerPhone)) {
                     return;
                 }
 
@@ -67,13 +66,20 @@
                     <p><strong>Nama Reseller:</strong> ${order.resellerName || 'Tidak tersedia'}</p>
                     <p><strong>Email Reseller:</strong> ${order.resellerEmail || 'Tidak tersedia'}</p>
                     <p><strong>Telepon Reseller:</strong> ${order.resellerPhone || 'Tidak tersedia'}</p>
-                    <p><strong>Nama:</strong> ${order.name}</p>
-                    <p><strong>Alamat:</strong> ${order.address}</p>
-                    <p><strong>Telepon:</strong> ${order.phone}</p>
-                    <p><strong>Barang:</strong> ${order.item}</p>
-                    <p><strong>DP:</strong> ${order.dp}</p>
-                    <p><strong>Waktu Pemesanan:</strong> ${formattedDate}</p>
                     <hr>
+                    <p><strong>Nama Pemesan:</strong> ${order.name}</p>
+                    <p><strong>Email Pemesan:</strong> ${order.email}</p>
+                    <p><strong>Alamat:</strong> ${order.address}</p>
+                    <p><strong>Alamat Domisili:</strong> ${order.domisili}</p>
+                    <p><strong>Kode Pos:</strong> ${order.kodePos}</p>
+                    <p><strong>Pekerjaan:</strong> ${order.pekerjaan}</p>
+                    <p><strong>Pendapatan/Bulan:</strong> Rp${parseInt(order.pendapatan).toLocaleString('id-ID')}</p>
+                    <p><strong>Angsuran Lain:</strong> ${order.angsuran || '-'}</p>
+                    <p><strong>Nomor Telepon:</strong> ${order.phone}</p>
+                    <p><strong>Barang:</strong> ${order.item}</p>
+                    <p><strong>DP:</strong> Rp${parseInt(order.dp).toLocaleString('id-ID')}</p>
+                    <p><strong>Waktu Pemesanan:</strong> ${formattedDate}</p>
+                    <hr><br>
                 `;
                 ordersList.appendChild(orderElement);
             });
