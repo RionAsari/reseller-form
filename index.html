@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="css/main.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="css/main.css" rel="stylesheet" type="text/css"/>
   <title>Form Pengajuan</title>
 
   <script type="module">
@@ -34,11 +34,27 @@
       if (resellerEmail) document.getElementById("resellerEmail").value = resellerEmail;
       if (resellerPhone) document.getElementById("resellerPhone").value = resellerPhone;
 
-      // Format angka otomatis
       function formatNumberInput(inputElement) {
         inputElement.addEventListener("input", function () {
-          let value = this.value.replace(/\D/g, "");
-          this.value = new Intl.NumberFormat('id-ID').format(value);
+          const cursorPos = this.selectionStart;
+          const rawValue = this.value.replace(/[^\d]/g, "");
+
+          if (rawValue === "") {
+            this.value = "";
+            return;
+          }
+
+          const formatted = new Intl.NumberFormat('id-ID').format(parseInt(rawValue, 10));
+          this.value = formatted;
+
+          this.setSelectionRange(cursorPos, cursorPos);
+        });
+
+        inputElement.addEventListener("blur", function () {
+          const rawValue = this.value.replace(/[^\d]/g, "");
+          if (rawValue) {
+            this.value = new Intl.NumberFormat('id-ID').format(parseInt(rawValue, 10));
+          }
         });
       }
 
