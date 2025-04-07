@@ -30,7 +30,6 @@
     const resellerPhone = urlParams.get('resellerPhone');
 
     document.addEventListener("DOMContentLoaded", function () {
-      // Isi field hidden dari URL
       if (resellerName) document.getElementById("resellerName").value = resellerName;
       if (resellerEmail) document.getElementById("resellerEmail").value = resellerEmail;
       if (resellerPhone) document.getElementById("resellerPhone").value = resellerPhone;
@@ -39,16 +38,8 @@
         inputElement.addEventListener("input", function () {
           this.value = this.value.replace(/[^\d]/g, "");
         });
-
-        inputElement.addEventListener("keypress", function (e) {
-          const char = String.fromCharCode(e.which);
-          if (!/[0-9]/.test(char)) {
-            e.preventDefault();
-          }
-        });
       }
 
-      // Terapkan hanya angka ke input tertentu
       allowOnlyNumbers(document.getElementById("pendapatan"));
       allowOnlyNumbers(document.getElementById("dp"));
       allowOnlyNumbers(document.getElementById("kodePos"));
@@ -66,7 +57,7 @@
       const kodePos = document.getElementById("kodePos").value.trim();
       const pekerjaan = document.getElementById("pekerjaan").value.trim();
       const pendapatanRaw = document.getElementById("pendapatan").value.trim();
-      const angsuran = document.getElementById("angsuran").value.trim(); // angsuran bebas teks
+      const angsuran = document.getElementById("angsuran").value.trim();
       const phone = parseInt(document.getElementById("phone").value);
       const item = document.getElementById("item").value;
       const dpRaw = document.getElementById("dp").value.trim();
@@ -148,19 +139,19 @@
       <input type="text" id="domisili" required><br><br>
 
       <label for="kodePos">Kode Pos :</label>
-      <input type="text" id="kodePos" required><br><br>
+      <input type="text" id="kodePos" inputmode="numeric" pattern="\d*" required><br><br>
 
       <label for="pekerjaan">Jenis Pekerjaan :</label>
       <input type="text" id="pekerjaan" required><br><br>
 
       <label for="pendapatan">Pendapatan per Bulan :</label>
-      <input type="text" id="pendapatan" required><br><br>
+      <input type="text" id="pendapatan" inputmode="numeric" pattern="\d*" required><br><br>
 
       <label for="angsuran">Angsuran Lain (jika ada) :</label>
       <input type="text" id="angsuran"><br><br>
 
       <label for="phone">Nomor Telepon :</label>
-      <input type="tel" id="phone" required><br><br>
+      <input type="tel" id="phone" inputmode="numeric" pattern="\d*" required><br><br>
 
       <label for="item">Barang :</label>
       <select id="item" required>
@@ -172,7 +163,7 @@
       </select><br><br>
 
       <label for="dp">DP :</label>
-      <input type="text" id="dp" required><br><br>
+      <input type="text" id="dp" inputmode="numeric" pattern="\d*" required><br><br>
 
       <input type="hidden" id="resellerName">
       <input type="hidden" id="resellerEmail">
