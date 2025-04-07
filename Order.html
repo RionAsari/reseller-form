@@ -28,6 +28,10 @@
     strong {
       color: #333;
     }
+
+    hr {
+      margin: 15px 0;
+    }
   </style>
 </head>
 <body>
@@ -98,16 +102,16 @@
           <p><strong>Email Reseller:</strong> ${order.resellerEmail || '-'}</p>
           <p><strong>Telepon Reseller:</strong> ${order.resellerPhone || '-'}</p>
           <hr>
-          <p><strong>Nama Pemesan:</strong> ${order.name}</p>
-          <p><strong>Email Pemesan:</strong> ${order.email}</p>
-          <p><strong>Alamat:</strong> ${order.address}</p>
-          <p><strong>Alamat Domisili:</strong> ${order.domisili}</p>
-          <p><strong>Kode Pos:</strong> ${order.kodePos}</p>
-          <p><strong>Pekerjaan:</strong> ${order.pekerjaan}</p>
+          <p><strong>Nama Pemesan:</strong> ${order.name || '-'}</p>
+          <p><strong>Email Pemesan:</strong> ${order.email || '-'}</p>
+          <p><strong>Alamat:</strong> ${order.address || '-'}</p>
+          <p><strong>Alamat Domisili:</strong> ${order.domisili || '-'}</p>
+          <p><strong>Kode Pos:</strong> ${order.kodePos || '-'}</p>
+          <p><strong>Pekerjaan:</strong> ${order.pekerjaan || '-'}</p>
           <p><strong>Pendapatan/Bulan:</strong> ${formatRupiah(order.pendapatan)}</p>
           <p><strong>Angsuran Lain:</strong> ${order.angsuran || '-'}</p>
-          <p><strong>Nomor Telepon:</strong> ${order.phone}</p>
-          <p><strong>Barang:</strong> ${order.item}</p>
+          <p><strong>Nomor Telepon:</strong> ${order.phone || '-'}</p>
+          <p><strong>Barang:</strong> ${order.item || '-'}</p>
           <p><strong>DP:</strong> ${formatRupiah(order.dp)}</p>
           <p><strong>Waktu Pemesanan:</strong> ${formattedDate}</p>
           <p><strong>Status Pengajuan:</strong> ${status}</p>

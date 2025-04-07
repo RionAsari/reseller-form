@@ -36,18 +36,20 @@
 
       function formatNumberInput(inputElement) {
         inputElement.addEventListener("input", function () {
-          const cursorPos = this.selectionStart;
-          const rawValue = this.value.replace(/[^\d]/g, "");
-
-          if (rawValue === "") {
+          const cleaned = this.value.replace(/[^\d]/g, "");
+          if (cleaned === "") {
             this.value = "";
             return;
           }
-
-          const formatted = new Intl.NumberFormat('id-ID').format(parseInt(rawValue, 10));
+          const formatted = new Intl.NumberFormat('id-ID').format(parseInt(cleaned, 10));
           this.value = formatted;
+        });
 
-          this.setSelectionRange(cursorPos, cursorPos);
+        inputElement.addEventListener("keypress", function (e) {
+          const char = String.fromCharCode(e.which);
+          if (!/[0-9]/.test(char)) {
+            e.preventDefault();
+          }
         });
 
         inputElement.addEventListener("blur", function () {
@@ -58,8 +60,24 @@
         });
       }
 
+      function allowOnlyNumbers(inputElement) {
+        inputElement.addEventListener("keypress", function (e) {
+          const char = String.fromCharCode(e.which);
+          if (!/[0-9]/.test(char)) {
+            e.preventDefault();
+          }
+        });
+
+        inputElement.addEventListener("input", function () {
+          this.value = this.value.replace(/[^\d]/g, "");
+        });
+      }
+
       formatNumberInput(document.getElementById("dp"));
       formatNumberInput(document.getElementById("pendapatan"));
+      allowOnlyNumbers(document.getElementById("phone"));
+      allowOnlyNumbers(document.getElementById("kodePos"));
+      allowOnlyNumbers(document.getElementById("angsuran"));
     });
 
     const form = document.getElementById("order-form");
