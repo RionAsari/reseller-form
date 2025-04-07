@@ -61,6 +61,8 @@
                 const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
                 const formattedDate = new Intl.DateTimeFormat('id-ID', options).format(new Date(order.timestamp));
 
+                const status = order.status || 'Belum Dikonfirmasi';
+
                 const orderElement = document.createElement('div');
                 orderElement.innerHTML = `
                     <p><strong>Nama Reseller:</strong> ${order.resellerName || 'Tidak tersedia'}</p>
@@ -79,6 +81,7 @@
                     <p><strong>Barang:</strong> ${order.item}</p>
                     <p><strong>DP:</strong> Rp${parseInt(order.dp).toLocaleString('id-ID')}</p>
                     <p><strong>Waktu Pemesanan:</strong> ${formattedDate}</p>
+                    <p><strong>Status Pengajuan:</strong> ${status}</p>
                     <hr><br>
                 `;
                 ordersList.appendChild(orderElement);
