@@ -62,63 +62,77 @@
     const resellerPhone = urlParams.get('resellerPhone') || "";
 
     const ordersRef = ref(database, 'orders');
+    const ordersList = document.getElementById('orders-list');
 
-    onValue(ordersRef, (snapshot) => {
-      const orders = snapshot.val();
-      const ordersList = document.getElementById('orders-list');
+    const formatRupiah = (value) => {
+      const num = parseInt(value);
+      return isNaN(num) ? '-' : 'Rp' + num.toLocaleString('id-ID');
+    };
 
-      if (!orders) {
-        ordersList.innerHTML = '<p>Tidak ada data.</p>';
-        return;
-      }
+    const escapeHTML = (str) => {
+      if (typeof str !== 'string') return str;
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    };
 
-      ordersList.innerHTML = '';
+    try {
+      onValue(ordersRef, (snapshot) => {
+        const orders = snapshot.val();
+        ordersList.innerHTML = '';
 
-      Object.keys(orders).forEach((orderId) => {
-        const order = orders[orderId];
-
-        // Filter jika ada parameter dari URL
-        if ((resellerName && order.resellerName !== resellerName) ||
-            (resellerEmail && order.resellerEmail !== resellerEmail) ||
-            (resellerPhone && order.resellerPhone !== resellerPhone)) {
+        if (!orders) {
+          ordersList.textContent = 'Tidak ada data.';
           return;
         }
 
-        const formatRupiah = (value) => {
-          const num = parseInt(value);
-          return isNaN(num) ? '-' : 'Rp' + num.toLocaleString('id-ID');
-        };
+        Object.keys(orders).forEach((orderId) => {
+          const order = orders[orderId];
 
-        const formattedDate = new Intl.DateTimeFormat('id-ID', {
-          day: '2-digit', month: '2-digit', year: 'numeric',
-          hour: '2-digit', minute: '2-digit'
-        }).format(new Date(order.timestamp));
+          // Filter berdasarkan reseller
+          if ((resellerName && order.resellerName !== resellerName) ||
+              (resellerEmail && order.resellerEmail !== resellerEmail) ||
+              (resellerPhone && order.resellerPhone !== resellerPhone)) {
+            return;
+          }
 
-        const status = order.status || 'Belum Dikonfirmasi';
+          const formattedDate = new Intl.DateTimeFormat('id-ID', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+          }).format(new Date(order.timestamp));
 
-        const orderElement = document.createElement('div');
-        orderElement.innerHTML = `
-          <p><strong>Nama Reseller:</strong> ${order.resellerName || '-'}</p>
-          <p><strong>Email Reseller:</strong> ${order.resellerEmail || '-'}</p>
-          <p><strong>Telepon Reseller:</strong> ${order.resellerPhone || '-'}</p>
-          <hr>
-          <p><strong>Nama Pemesan:</strong> ${order.name || '-'}</p>
-          <p><strong>Email Pemesan:</strong> ${order.email || '-'}</p>
-          <p><strong>Alamat:</strong> ${order.address || '-'}</p>
-          <p><strong>Alamat Domisili:</strong> ${order.domisili || '-'}</p>
-          <p><strong>Kode Pos:</strong> ${order.kodePos || '-'}</p>
-          <p><strong>Pekerjaan:</strong> ${order.pekerjaan || '-'}</p>
-          <p><strong>Pendapatan/Bulan:</strong> ${formatRupiah(order.pendapatan)}</p>
-          <p><strong>Angsuran Lain:</strong> ${order.angsuran || '-'}</p>
-          <p><strong>Nomor Telepon:</strong> ${order.phone || '-'}</p>
-          <p><strong>Barang:</strong> ${order.item || '-'}</p>
-          <p><strong>DP:</strong> ${formatRupiah(order.dp)}</p>
-          <p><strong>Waktu Pemesanan:</strong> ${formattedDate}</p>
-          <p><strong>Status Pengajuan:</strong> ${status}</p>
-        `;
-        ordersList.appendChild(orderElement);
+          const status = order.status || 'Belum Dikonfirmasi';
+
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <p><strong>Nama Reseller:</strong> ${escapeHTML(order.resellerName || '-')}</p>
+            <p><strong>Email Reseller:</strong> ${escapeHTML(order.resellerEmail || '-')}</p>
+            <p><strong>Telepon Reseller:</strong> ${escapeHTML(order.resellerPhone || '-')}</p>
+            <hr>
+            <p><strong>Nama Pemesan:</strong> ${escapeHTML(order.name || '-')}</p>
+            <p><strong>Email Pemesan:</strong> ${escapeHTML(order.email || '-')}</p>
+            <p><strong>Alamat:</strong> ${escapeHTML(order.address || '-')}</p>
+            <p><strong>Alamat Domisili:</strong> ${escapeHTML(order.domisili || '-')}</p>
+            <p><strong>Kode Pos:</strong> ${escapeHTML(order.kodePos || '-')}</p>
+            <p><strong>Pekerjaan:</strong> ${escapeHTML(order.pekerjaan || '-')}</p>
+            <p><strong>Pendapatan/Bulan:</strong> ${formatRupiah(order.pendapatan)}</p>
+            <p><strong>Angsuran Lain:</strong> ${escapeHTML(order.angsuran || '-')}</p>
+            <p><strong>Nomor Telepon:</strong> ${escapeHTML(order.phone || '-')}</p>
+            <p><strong>Barang:</strong> ${escapeHTML(order.item || '-')}</p>
+            <p><strong>DP:</strong> ${formatRupiah(order.dp)}</p>
+            <p><strong>Waktu Pemesanan:</strong> ${formattedDate}</p>
+            <p><strong>Status Pengajuan:</strong> ${escapeHTML(status)}</p>
+          `;
+          ordersList.appendChild(div);
+        });
       });
-    });
+    } catch (err) {
+      ordersList.textContent = 'Terjadi kesalahan saat memuat data.';
+      console.error("Firebase error:", err);
+    }
   </script>
 </body>
 </html>
