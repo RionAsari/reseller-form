@@ -77,7 +77,8 @@
       formatNumberInput(document.getElementById("pendapatan"));
       allowOnlyNumbers(document.getElementById("phone"));
       allowOnlyNumbers(document.getElementById("kodePos"));
-      allowOnlyNumbers(document.getElementById("angsuran"));
+      // ⛔️ HAPUS LINE DI BAWAH INI - angsuran ga ikut diformat/dibatasi
+      // allowOnlyNumbers(document.getElementById("angsuran"));
     });
 
     const form = document.getElementById("order-form");
@@ -91,7 +92,7 @@
       const kodePos = document.getElementById("kodePos").value.trim();
       const pekerjaan = document.getElementById("pekerjaan").value.trim();
       const pendapatanRaw = document.getElementById("pendapatan").value.replace(/\./g, "");
-      const angsuran = document.getElementById("angsuran").value.trim();
+      const angsuran = document.getElementById("angsuran").value.trim(); // angsuran masuk apa adanya
       const phone = parseInt(document.getElementById("phone").value);
       const item = document.getElementById("item").value;
       const dpRaw = document.getElementById("dp").value.replace(/\./g, "");
