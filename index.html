@@ -30,25 +30,29 @@
     const resellerPhone = urlParams.get('resellerPhone');
 
     document.addEventListener("DOMContentLoaded", function () {
+      // Isi field hidden dari URL
       if (resellerName) document.getElementById("resellerName").value = resellerName;
       if (resellerEmail) document.getElementById("resellerEmail").value = resellerEmail;
       if (resellerPhone) document.getElementById("resellerPhone").value = resellerPhone;
 
-      const numericFields = ["pendapatan", "dp", "kodePos", "phone"];
-      numericFields.forEach((id) => {
-        const el = document.getElementById(id);
-
-        el.addEventListener("input", function () {
+      function allowOnlyNumbers(inputElement) {
+        inputElement.addEventListener("input", function () {
           this.value = this.value.replace(/[^\d]/g, "");
         });
 
-        el.addEventListener("keypress", function (e) {
+        inputElement.addEventListener("keypress", function (e) {
           const char = String.fromCharCode(e.which);
           if (!/[0-9]/.test(char)) {
             e.preventDefault();
           }
         });
-      });
+      }
+
+      // Terapkan hanya angka ke input tertentu
+      allowOnlyNumbers(document.getElementById("pendapatan"));
+      allowOnlyNumbers(document.getElementById("dp"));
+      allowOnlyNumbers(document.getElementById("kodePos"));
+      allowOnlyNumbers(document.getElementById("phone"));
     });
 
     const form = document.getElementById("order-form");
@@ -62,8 +66,8 @@
       const kodePos = document.getElementById("kodePos").value.trim();
       const pekerjaan = document.getElementById("pekerjaan").value.trim();
       const pendapatanRaw = document.getElementById("pendapatan").value.trim();
-      const angsuran = document.getElementById("angsuran").value.trim(); // angsuran bisa teks
-      const phone = parseInt(document.getElementById("phone").value.trim());
+      const angsuran = document.getElementById("angsuran").value.trim(); // angsuran bebas teks
+      const phone = parseInt(document.getElementById("phone").value);
       const item = document.getElementById("item").value;
       const dpRaw = document.getElementById("dp").value.trim();
       const resellerName = document.getElementById("resellerName").value;
@@ -113,13 +117,13 @@
         dp,
         timestamp: Date.now()
       })
-        .then(() => {
-          window.location.replace("terima_kasih.html");
-          form.reset();
-        })
-        .catch((error) => {
-          alert("Error: " + error.message);
-        });
+      .then(() => {
+        window.location.replace("terima_kasih.html");
+        form.reset();
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
     };
   </script>
 </head>
