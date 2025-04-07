@@ -73,10 +73,10 @@
         });
       }
 
-      formatNumberInput(document.getElementById("pendapatan")); // hanya pendapatan diformat
+      formatNumberInput(document.getElementById("pendapatan"));
+      formatNumberInput(document.getElementById("dp"));
       allowOnlyNumbers(document.getElementById("phone"));
       allowOnlyNumbers(document.getElementById("kodePos"));
-      // angsuran tidak dibatasi, bebas isi teks
     });
 
     const form = document.getElementById("order-form");
@@ -89,11 +89,11 @@
       const domisili = document.getElementById("domisili").value.trim();
       const kodePos = document.getElementById("kodePos").value.trim();
       const pekerjaan = document.getElementById("pekerjaan").value.trim();
-      const pendapatanRaw = document.getElementById("pendapatan").value.replace(/\./g, "");
-      const angsuran = document.getElementById("angsuran").value.trim(); // angsuran masuk apa adanya
+      const pendapatanRaw = document.getElementById("pendapatan").value.replace(/\./g, "").replace(/,/g, "");
+      const angsuran = document.getElementById("angsuran").value.trim();
       const phone = parseInt(document.getElementById("phone").value);
       const item = document.getElementById("item").value;
-      const dpRaw = document.getElementById("dp").value.replace(/\./g, "");
+      const dpRaw = document.getElementById("dp").value.replace(/\./g, "").replace(/,/g, "");
       const resellerName = document.getElementById("resellerName").value;
       const resellerEmail = document.getElementById("resellerEmail").value;
       const resellerPhone = document.getElementById("resellerPhone").value;
