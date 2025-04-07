@@ -37,7 +37,6 @@
     });
 
     const form = document.getElementById("order-form");
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     form.onsubmit = function (event) {
@@ -116,34 +115,35 @@
     <form class="form-container" id="order-form">
 
       <label for="name">Nama Lengkap :</label>
-      <input type="text" id="name" required><br><br>
+      <input type="text" id="name" placeholder="Contoh: Budi Santoso" required><br><br>
 
       <label for="email">Email :</label>
-      <input type="email" id="email" required><br><br>
+      <input type="email" id="email" placeholder="Contoh: budi@email.com" required><br><br>
 
       <label for="address">Alamat :</label>
-      <input type="text" id="address" required><br><br>
+      <input type="text" id="address" placeholder="Contoh: Jl. Mawar No.10, Surabaya" required><br><br>
 
       <label for="domicile">Alamat Domisili :</label>
-      <input type="text" id="domicile"><br><br>
+      <input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo"><br><br>
 
       <label for="postalCode">Kode Pos :</label>
-      <input type="text" id="postalCode" maxlength="5" pattern="\d{5}" title="Masukkan 5 angka" required><br><br>
+      <input type="text" id="postalCode" maxlength="5" pattern="\d{5}" title="Masukkan 5 angka" placeholder="Contoh: 60234" required><br><br>
 
       <label for="job">Jenis Pekerjaan :</label>
-      <input type="text" id="job"><br><br>
+      <input type="text" id="job" placeholder="Contoh: Karyawan Swasta"><br><br>
 
       <label for="income">Pendapatan per Bulan:</label>
-      <input type="text" id="income" placeholder="Contoh: 1 juta, 500 ribu" required><br><br>
+      <input type="text" id="income" placeholder="Contoh: 5 juta, 2.5 juta" required><br><br>
 
       <label for="installment">Angsuran Lain (jika ada):</label>
-      <input type="text" id="installment"><br><br>
+      <input type="text" id="installment" placeholder="Contoh: Kredit HP 300 ribu"><br><br>
 
       <label for="phone">Nomor Telepon :</label>
-      <input type="tel" id="phone" inputmode="numeric" pattern="\d*" required><br><br>
+      <input type="tel" id="phone" inputmode="numeric" pattern="\d*" placeholder="Contoh: 081234567890" required><br><br>
 
       <label for="item">Barang :</label>
       <select id="item" required>
+        <option value="">-- Pilih Barang --</option>
         <option value="Motor Baru">Motor Baru</option>
         <option value="Motor Bekas">Motor Bekas</option>
         <option value="Mobil Baru">Mobil Baru</option>
@@ -152,7 +152,7 @@
       </select><br><br>
 
       <label for="dp">DP :</label>
-      <input type="text" id="dp" placeholder="Contoh: 500 ribu, 1 juta" required><br><br>
+      <input type="text" id="dp" placeholder="Contoh: 1 juta, 750 ribu" required><br><br>
 
       <input type="hidden" id="resellerName">
       <input type="hidden" id="resellerEmail">
