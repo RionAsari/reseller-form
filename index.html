@@ -73,12 +73,10 @@
         });
       }
 
-      formatNumberInput(document.getElementById("dp"));
-      formatNumberInput(document.getElementById("pendapatan"));
+      formatNumberInput(document.getElementById("pendapatan")); // hanya pendapatan diformat
       allowOnlyNumbers(document.getElementById("phone"));
       allowOnlyNumbers(document.getElementById("kodePos"));
-      // ⛔️ HAPUS LINE DI BAWAH INI - angsuran ga ikut diformat/dibatasi
-      // allowOnlyNumbers(document.getElementById("angsuran"));
+      // angsuran tidak dibatasi, bebas isi teks
     });
 
     const form = document.getElementById("order-form");
