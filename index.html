@@ -44,37 +44,36 @@
         form.onsubmit = function(event) {
             event.preventDefault();
 
-            // Collect form data
-            const name = document.getElementById("name").value;
-            const address = document.getElementById("address").value;
-            const phone = parseInt(document.getElementById("phone").value);
-            const item = document.getElementById("item").value;
-            const dp = parseInt(document.getElementById("dp").value, 10); // Convert DP to int
-            const resellerName = document.getElementById("resellerName").value;
-            const resellerEmail = document.getElementById("resellerEmail").value;
-            const resellerPhone = document.getElementById("resellerPhone").value;
+            const namaLengkap = document.getElementById("name").value;
+            const alamatDomisili = document.getElementById("address").value;
+            const noTelepon = document.getElementById("phone").value;
+            const jenisPinjaman = document.getElementById("item").value;
+            const pendapatanBulanan = document.getElementById("dp").value;
 
-            // Validation checks
-            if (isNaN(dp)) {
+            const resellerEmail = document.getElementById("resellerEmail").value;
+
+            // Validasi angka
+            if (isNaN(parseInt(pendapatanBulanan))) {
                 alert("DP harus berupa angka!");
                 return;
             }
-            if (isNaN(phone)) {
+            if (isNaN(parseInt(noTelepon))) {
                 alert("Nomor telepon harus berupa angka!");
                 return;
             }
 
-            // Push data to Firebase
-            const orderRef = ref(database, 'orders');
+            // Push data ke Firebase
+            const orderRef = ref(database, 'reseller-form');
             push(orderRef, {
-                resellerName: resellerName,
-                resellerEmail: resellerEmail,
-                resellerPhone: resellerPhone,
-                name: name,
-                address: address,
-                phone: phone,
-                item: item,
-                dp: dp,
+                namaLengkap: namaLengkap,
+                noTelepon: noTelepon,
+                email: resellerEmail,
+                alamatDomisili: alamatDomisili,
+                kodePos: "-",
+                jenisPekerjaan: "-",
+                pendapatanBulanan: pendapatanBulanan,
+                jenisPinjaman: jenisPinjaman,
+                angsuranLain: "-",
                 timestamp: Date.now()
             })
             .then(() => {
