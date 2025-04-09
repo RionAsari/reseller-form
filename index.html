@@ -51,7 +51,6 @@
       const installment = document.getElementById("installment").value;
       const phone = document.getElementById("phone").value.trim();
       const item = document.getElementById("item").value;
-      const dp = document.getElementById("dp").value.trim();
 
       const resellerName = document.getElementById("resellerName").value;
       const resellerEmail = document.getElementById("resellerEmail").value;
@@ -91,7 +90,6 @@
         installment,
         phone,
         item,
-        dp,
         timestamp: Date.now()
       })
         .then(() => {
@@ -143,11 +141,8 @@
         <option value="Motor Bekas">Motor Bekas</option>
         <option value="Mobil Baru">Mobil Baru</option>
         <option value="Mobil Bekas">Mobil Bekas</option>
-        <option value="Umroh">Umroh</option>
+        <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
       </select><br><br>
-
-      <label for="dp">DP :</label>
-      <input type="text" id="dp" placeholder="Contoh: 1 juta, 750 ribu" required><br><br>
 
       <input type="hidden" id="resellerName">
       <input type="hidden" id="resellerEmail">
