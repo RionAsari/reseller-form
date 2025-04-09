@@ -1,124 +1,133 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pesanan dari Reseller</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
-            background-color: #f4f6f8;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Data Pesanan dari Reseller</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background-color: #f4f6f8;
+    }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
 
-        #orders-list > div {
-            background: #fff;
-            border-left: 6px solid #4CAF50;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
+    #orders-list > div {
+      background: #fff;
+      border-left: 6px solid #4CAF50;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
 
-        p {
-            margin: 6px 0;
-            font-size: 14px;
-        }
+    p {
+      margin: 6px 0;
+      font-size: 14px;
+    }
 
-        strong {
-            color: #555;
-        }
-    </style>
+    strong {
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-    <h1>Pesanan dari Reseller</h1>
-    <div id="orders-list"></div>
+  <h1>Pesanan dari Reseller</h1>
+  <div id="orders-list"></div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-            authDomain: "reseller-form-a616f.firebaseapp.com",
-            databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "reseller-form-a616f",
-            storageBucket: "reseller-form-a616f.appspot.com",
-            messagingSenderId: "194922134187",
-            appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-            measurementId: "G-NHLWZHWWEW"
-        };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
+      authDomain: "reseller-form-a616f.firebaseapp.com",
+      databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "reseller-form-a616f",
+      storageBucket: "reseller-form-a616f.appspot.com",
+      messagingSenderId: "194922134187",
+      appId: "1:194922134187:web:6e2421004dc4ba580195ee",
+      measurementId: "G-NHLWZHWWEW"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const resellerName = urlParams.get('resellerName') || "";
-        const resellerEmail = urlParams.get('resellerEmail') || "";
-        const resellerPhone = urlParams.get('resellerPhone') || "";
+    const urlParams = new URLSearchParams(window.location.search);
+    const resellerName = urlParams.get('resellerName') || "";
+    const resellerEmail = urlParams.get('resellerEmail') || "";
+    const resellerPhone = urlParams.get('resellerPhone') || "";
 
-        const ordersRef = ref(database, 'orders');
+    const ordersRef = ref(database, 'orders');
 
-        const formatRupiah = (value) => new Intl.NumberFormat('id-ID').format(value);
+    const formatRupiah = (value) => {
+      if (!value) return "-";
+      const clean = parseInt(value.toString().replace(/\D/g, ''));
+      return new Intl.NumberFormat('id-ID').format(clean);
+    };
 
-        const formatDate = (timestamp) => {
-            if (!timestamp) return "-";
-            const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-            return new Intl.DateTimeFormat('id-ID', options).format(new Date(timestamp));
-        };
+    const formatDate = (timestamp) => {
+      if (!timestamp) return "-";
+      const options = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      return new Intl.DateTimeFormat('id-ID', options).format(new Date(timestamp));
+    };
 
-        const ordersList = document.getElementById('orders-list');
+    const ordersList = document.getElementById('orders-list');
 
-        onValue(ordersRef, (snapshot) => {
-            const data = snapshot.val();
-            ordersList.innerHTML = '';
+    onValue(ordersRef, (snapshot) => {
+      const data = snapshot.val();
+      ordersList.innerHTML = '';
 
-            if (!data) {
-                ordersList.innerHTML = '<p>Tidak ada data pesanan.</p>';
-                return;
-            }
+      if (!data) {
+        ordersList.innerHTML = '<p>Tidak ada data pesanan.</p>';
+        return;
+      }
 
-            Object.entries(data).forEach(([orderId, order]) => {
-                const isMatch = (!resellerName || order.resellerName === resellerName) &&
-                                (!resellerEmail || order.resellerEmail === resellerEmail) &&
-                                (!resellerPhone || order.resellerPhone === resellerPhone);
+      Object.entries(data).forEach(([orderId, order]) => {
+        const isMatch = (!resellerName || order.resellerName === resellerName) &&
+                        (!resellerEmail || order.resellerEmail === resellerEmail) &&
+                        (!resellerPhone || order.resellerPhone === resellerPhone);
 
-                if (!isMatch) return;
+        if (!isMatch) return;
 
-                const item = `
-                    <p><strong>Nama Reseller:</strong> ${order.resellerName || '-'}</p>
-                    <p><strong>Email Reseller:</strong> ${order.resellerEmail || '-'}</p>
-                    <p><strong>Telepon Reseller:</strong> ${order.resellerPhone || '-'}</p>
-                    <p><strong>Nama Pelanggan:</strong> ${order.name || '-'}</p>
-                    <p><strong>Email Pelanggan:</strong> ${order.email || '-'}</p>
-                    <p><strong>Alamat Domisili:</strong> ${order.domicile || '-'}</p>
-                    <p><strong>Kode Pos:</strong> ${order.postalCode || '-'}</p>
-                    <p><strong>Jenis Pekerjaan:</strong> ${order.job || '-'}</p>
-                    <p><strong>Pendapatan per Bulan:</strong> ${order.income ? 'Rp ' + formatRupiah(order.income) : '-'}</p>
-                    <p><strong>Angsuran Lain:</strong> ${order.installment || '-'}</p>
-                    <p><strong>Telepon:</strong> ${order.phone || '-'}</p>
-                    <p><strong>Jenis Pinjaman:</strong> ${order.item || '-'}</p>
-                    <p><strong>DP:</strong> ${order.dp ? 'Rp ' + formatRupiah(order.dp) : '-'}</p>
-                    <p><strong>Waktu Pemesanan:</strong> ${formatDate(order.timestamp)}</p>
-                `;
+        const item = `
+          <p><strong>Nama Reseller:</strong> ${order.resellerName || '-'}</p>
+          <p><strong>Email Reseller:</strong> ${order.resellerEmail || '-'}</p>
+          <p><strong>Telepon Reseller:</strong> ${order.resellerPhone || '-'}</p>
+          <p><strong>Nama Pelanggan:</strong> ${order.name || '-'}</p>
+          <p><strong>Email Pelanggan:</strong> ${order.email || '-'}</p>
+          <p><strong>Alamat Domisili:</strong> ${order.domicile || '-'}</p>
+          <p><strong>Kode Pos:</strong> ${order.postalCode || '-'}</p>
+          <p><strong>Jenis Pekerjaan:</strong> ${order.job || '-'}</p>
+          <p><strong>Pendapatan per Bulan:</strong> ${order.income ? 'Rp ' + formatRupiah(order.income) : '-'}</p>
+          <p><strong>Angsuran Lain:</strong> ${order.installment || '-'}</p>
+          <p><strong>Telepon:</strong> ${order.phone || '-'}</p>
+          <p><strong>Jenis Pinjaman:</strong> ${order.item || '-'}</p>
+          <p><strong>Waktu Pemesanan:</strong> ${formatDate(order.timestamp)}</p>
+        `;
 
-                const orderElement = document.createElement('div');
-                orderElement.innerHTML = item;
-                ordersList.appendChild(orderElement);
-            });
+        const orderElement = document.createElement('div');
+        orderElement.innerHTML = item;
+        ordersList.appendChild(orderElement);
+      });
 
-            if (ordersList.innerHTML === '') {
-                ordersList.innerHTML = '<p>Tidak ada data pesanan untuk reseller ini.</p>';
-            }
-        }, (error) => {
-            ordersList.innerHTML = `<p>Gagal mengambil data: ${error.message}</p>`;
-        });
-    </script>
+      if (ordersList.innerHTML === '') {
+        ordersList.innerHTML = '<p>Tidak ada data pesanan untuk reseller ini.</p>';
+      }
+    }, (error) => {
+      ordersList.innerHTML = `<p>Gagal mengambil data: ${error.message}</p>`;
+    });
+  </script>
 </body>
 </html>
