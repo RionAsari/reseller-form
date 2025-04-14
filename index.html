@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,14 +26,14 @@
     const database = getDatabase(app);
 
     const urlParams = new URLSearchParams(window.location.search);
-    const resellerName = urlParams.get('resellerName');
-    const resellerEmail = urlParams.get('resellerEmail');
-    const resellerPhone = urlParams.get('resellerPhone');
+    const agentName = urlParams.get('agentName');
+    const agentEmail = urlParams.get('agentEmail');
+    const agentPhone = urlParams.get('agentPhone');
 
     document.addEventListener("DOMContentLoaded", function () {
-      if (resellerName) document.getElementById("resellerName").value = resellerName;
-      if (resellerEmail) document.getElementById("resellerEmail").value = resellerEmail;
-      if (resellerPhone) document.getElementById("resellerPhone").value = resellerPhone;
+      if (agentName) document.getElementById("agentName").value = agentName;
+      if (agentEmail) document.getElementById("agentEmail").value = agentEmail;
+      if (agentPhone) document.getElementById("agentPhone").value = agentPhone;
     });
 
     const form = document.getElementById("order-form");
@@ -52,9 +52,9 @@
       const phone = document.getElementById("phone").value.trim();
       const item = document.getElementById("item").value;
 
-      const resellerName = document.getElementById("resellerName").value;
-      const resellerEmail = document.getElementById("resellerEmail").value;
-      const resellerPhone = document.getElementById("resellerPhone").value;
+      const agentName = document.getElementById("agentName").value;
+      const agentEmail = document.getElementById("agentEmail").value;
+      const agentPhone = document.getElementById("agentPhone").value;
 
       if (!/^\d{5}$/.test(postalCode)) {
         alert("Kode Pos harus terdiri dari 5 angka!");
@@ -71,16 +71,16 @@
         return;
       }
 
-      if (resellerEmail && !emailRegex.test(resellerEmail)) {
-        alert("Format email reseller tidak valid!");
+      if (agentEmail && !emailRegex.test(agentEmail)) {
+        alert("Format email agent tidak valid!");
         return;
       }
 
       const orderRef = ref(database, 'orders');
       push(orderRef, {
-        resellerName,
-        resellerEmail,
-        resellerPhone,
+        agentName,
+        agentEmail,
+        agentPhone,
         name,
         email,
         domicile,
@@ -144,9 +144,9 @@
         <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
       </select><br><br>
 
-      <input type="hidden" id="resellerName">
-      <input type="hidden" id="resellerEmail">
-      <input type="hidden" id="resellerPhone">
+      <input type="hidden" id="agentName">
+      <input type="hidden" id="agentEmail">
+      <input type="hidden" id="agentPhone">
 
       <button class="submit-button">Kirim</button>
     </form>

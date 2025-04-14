@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Data Pesanan dari Reseller</title>
+  <title>Data Pesanan dari Agent</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -37,7 +37,7 @@
   </style>
 </head>
 <body>
-  <h1>Pesanan dari Reseller</h1>
+  <h1>Pesanan dari Agent</h1>
   <div id="orders-list"></div>
 
   <script type="module">
@@ -59,9 +59,9 @@
     const database = getDatabase(app);
 
     const urlParams = new URLSearchParams(window.location.search);
-    const resellerName = urlParams.get('resellerName') || "";
-    const resellerEmail = urlParams.get('resellerEmail') || "";
-    const resellerPhone = urlParams.get('resellerPhone') || "";
+    const agentName = urlParams.get('resellerName') || "";
+    const agentEmail = urlParams.get('resellerEmail') || "";
+    const agentPhone = urlParams.get('resellerPhone') || "";
 
     const ordersRef = ref(database, 'orders');
 
@@ -95,16 +95,16 @@
       }
 
       Object.entries(data).forEach(([orderId, order]) => {
-        const isMatch = (!resellerName || order.resellerName === resellerName) &&
-                        (!resellerEmail || order.resellerEmail === resellerEmail) &&
-                        (!resellerPhone || order.resellerPhone === resellerPhone);
+        const isMatch = (!agentName || order.resellerName === agentName) &&
+                        (!agentEmail || order.resellerEmail === agentEmail) &&
+                        (!agentPhone || order.resellerPhone === agentPhone);
 
         if (!isMatch) return;
 
         const item = `
-          <p><strong>Nama Reseller:</strong> ${order.resellerName || '-'}</p>
-          <p><strong>Email Reseller:</strong> ${order.resellerEmail || '-'}</p>
-          <p><strong>Telepon Reseller:</strong> ${order.resellerPhone || '-'}</p>
+          <p><strong>Nama Agent:</strong> ${order.resellerName || '-'}</p>
+          <p><strong>Email Agent:</strong> ${order.resellerEmail || '-'}</p>
+          <p><strong>Telepon Agent:</strong> ${order.resellerPhone || '-'}</p>
           <p><strong>Nama Pelanggan:</strong> ${order.name || '-'}</p>
           <p><strong>Email Pelanggan:</strong> ${order.email || '-'}</p>
           <p><strong>Alamat Domisili:</strong> ${order.domicile || '-'}</p>
@@ -123,7 +123,7 @@
       });
 
       if (ordersList.innerHTML === '') {
-        ordersList.innerHTML = '<p>Tidak ada data pesanan untuk reseller ini.</p>';
+        ordersList.innerHTML = '<p>Tidak ada data pesanan untuk agent ini.</p>';
       }
     }, (error) => {
       ordersList.innerHTML = `<p>Gagal mengambil data: ${error.message}</p>`;
