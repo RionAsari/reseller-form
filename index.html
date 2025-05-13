@@ -13,138 +13,129 @@
     .step-active { color: green; }
   </style>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-      authDomain: "reseller-form-a616f.firebaseapp.com",
-      databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "reseller-form-a616f",
-      storageBucket: "reseller-form-a616f.appspot.com",
-      messagingSenderId: "194922134187",
-      appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-      measurementId: "G-NHLWZHWWEW"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
+    authDomain: "reseller-form-a616f.firebaseapp.com",
+    databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "reseller-form-a616f",
+    storageBucket: "reseller-form-a616f.appspot.com",
+    messagingSenderId: "194922134187",
+    appId: "1:194922134187:web:6e2421004dc4ba580195ee",
+    measurementId: "G-NHLWZHWWEW"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const storage = getStorage(app, "gs://reseller-form-a616f.appspot.com");
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const storage = getStorage(app, "gs://reseller-form-a616f.appspot.com");
 
-    let step = 1;
+  let step = 1;
 
-    document.addEventListener("DOMContentLoaded", function () {
-      showStep(1);
+  document.addEventListener("DOMContentLoaded", function () {
+    showStep(1);
 
-      // Ambil data agent dari URL dan simpan di hidden input
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('agentName')) document.getElementById("agentName").value = urlParams.get('agentName');
-      if (urlParams.get('agentEmail')) document.getElementById("agentEmail").value = urlParams.get('agentEmail');
-      if (urlParams.get('agentPhone')) document.getElementById("agentPhone").value = urlParams.get('agentPhone');
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('agentName')) document.getElementById("agentName").value = urlParams.get('agentName');
+    if (urlParams.get('agentEmail')) document.getElementById("agentEmail").value = urlParams.get('agentEmail');
+    if (urlParams.get('agentPhone')) document.getElementById("agentPhone").value = urlParams.get('agentPhone');
 
-      document.getElementById("item").addEventListener("change", function () {
-        const merkDiv = document.getElementById("merkKendaraanDiv");
-        if (this.value.includes("AMANAH")) {
-          merkDiv.classList.add("hidden");
-        } else {
-          merkDiv.classList.remove("hidden");
-        }
-      });
-
-      document.getElementById("next1").addEventListener("click", () => {
-        showStep(2);
-      });
-
-      document.getElementById("next2").addEventListener("click", () => {
-        showStep(3);
-      });
-
-      document.getElementById("back2").addEventListener("click", () => {
-        showStep(1);
-      });
-
-      document.getElementById("back3").addEventListener("click", () => {
-        showStep(2);
-      });
-
-      document.getElementById("consent").addEventListener("change", function () {
-        document.getElementById("submitBtn").disabled = !this.checked;
-      });
-
-      document.getElementById("order-form").addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        const data = {
-          agentName: document.getElementById("agentName").value,
-          agentEmail: document.getElementById("agentEmail").value,
-          agentPhone: document.getElementById("agentPhone").value,
-          name: document.getElementById("name").value,
-          email: document.getElementById("email").value.trim(),
-          domicile: document.getElementById("domicile").value,
-          postalCode: document.getElementById("postalCode").value,
-          job: document.getElementById("job").value,
-          income: document.getElementById("income").value.trim(),
-          installment: document.getElementById("installment").value,
-          phone: document.getElementById("phone").value.trim(),
-          item: document.getElementById("item").value,
-          nominal: document.getElementById("nominal").value,
-          dp: document.getElementById("dp").value,
-          merk: document.getElementById("merk").value,
-          timestamp: Date.now()
-        };
-
-        const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
-        const fileUploads = {};
-
-        // Menampilkan indikator loading
-        document.getElementById("loading").style.display = "block";
-
-        for (const id of fileFields) {
-          const file = document.getElementById(id).files[0];
-          if (file) {
-            try {
-              const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
-              // Tunggu sampai upload selesai
-              await uploadBytes(storageRef, file);
-              // Ambil URL file setelah upload selesai
-              const url = await getDownloadURL(storageRef);
-              fileUploads[id] = url;
-            } catch (error) {
-              alert(`Gagal mengupload file ${id}: ${error.message}`);
-              document.getElementById("loading").style.display = "none"; // Menyembunyikan indikator loading
-              return; // stop proses submit jika gagal upload
-            }
-          }
-        }
-
-        Object.assign(data, fileUploads);
-
-        const orderRef = ref(database, 'orders');
-        push(orderRef, data)
-          .then(() => {
-            alert("Pengajuan berhasil diajukan!");
-            document.getElementById("order-form").reset();
-            window.location.href = "terima_kasih.html";
-          })
-          .catch(err => alert("Gagal mengirim data: " + err.message))
-          .finally(() => {
-            document.getElementById("loading").style.display = "none"; // Menyembunyikan indikator loading setelah submit
-          });
-      });
+    document.getElementById("item").addEventListener("change", function () {
+      const merkDiv = document.getElementById("merkKendaraanDiv");
+      if (this.value.includes("AMANAH")) {
+        merkDiv.classList.add("hidden");
+      } else {
+        merkDiv.classList.remove("hidden");
+      }
     });
 
-    function showStep(n) {
-      step = n;
-      for (let i = 1; i <= 3; i++) {
-        document.getElementById(`step${i}`).classList.add("hidden");
-        document.getElementById(`step-indicator-${i}`).classList.remove("step-active");
+    document.getElementById("next1").addEventListener("click", () => showStep(2));
+    document.getElementById("next2").addEventListener("click", () => showStep(3));
+    document.getElementById("back2").addEventListener("click", () => showStep(1));
+    document.getElementById("back3").addEventListener("click", () => showStep(2));
+
+    document.getElementById("consent").addEventListener("change", function () {
+      document.getElementById("submitBtn").disabled = !this.checked;
+    });
+
+    document.getElementById("order-form").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const data = {
+        agentName: document.getElementById("agentName").value,
+        agentEmail: document.getElementById("agentEmail").value,
+        agentPhone: document.getElementById("agentPhone").value,
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value.trim(),
+        domicile: document.getElementById("domicile").value,
+        postalCode: document.getElementById("postalCode").value,
+        job: document.getElementById("job").value,
+        income: document.getElementById("income").value.trim(),
+        installment: document.getElementById("installment").value,
+        phone: document.getElementById("phone").value.trim(),
+        item: document.getElementById("item").value,
+        nominal: document.getElementById("nominal").value,
+        dp: document.getElementById("dp").value,
+        merk: document.getElementById("merk").value,
+        timestamp: Date.now()
+      };
+
+      const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
+      const fileUploads = {};
+
+      document.getElementById("loading").style.display = "block";
+
+      for (const id of fileFields) {
+        const fileInput = document.getElementById(id);
+        const file = fileInput.files[0];
+        const statusEl = document.getElementById(`upload-status-${id}`);
+
+        if (file) {
+          try {
+            statusEl.textContent = "Mengunggah...";
+            const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(storageRef);
+            fileUploads[id] = url;
+            statusEl.textContent = "Selesai ✅";
+          } catch (error) {
+            statusEl.textContent = "Gagal ❌";
+            alert(`Gagal mengupload file ${id}: ${error.message}`);
+            document.getElementById("loading").style.display = "none";
+            return;
+          }
+        }
       }
-      document.getElementById(`step${n}`).classList.remove("hidden");
-      document.getElementById(`step-indicator-${n}`).classList.add("step-active");
+
+      Object.assign(data, fileUploads);
+
+      const orderRef = ref(database, 'orders');
+      push(orderRef, data)
+        .then(() => {
+          alert("Pengajuan berhasil diajukan!");
+          document.getElementById("order-form").reset();
+          window.location.href = "terima_kasih.html";
+        })
+        .catch(err => alert("Gagal mengirim data: " + err.message))
+        .finally(() => {
+          document.getElementById("loading").style.display = "none";
+        });
+    });
+  });
+
+  function showStep(n) {
+    step = n;
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById(`step${i}`).classList.add("hidden");
+      document.getElementById(`step-indicator-${i}`).classList.remove("step-active");
     }
-  </script>
+    document.getElementById(`step${n}`).classList.remove("hidden");
+    document.getElementById(`step-indicator-${n}`).classList.add("step-active");
+  }
+</script>
 </head>
 
 <body>
@@ -221,23 +212,29 @@
 
       <!-- Step 3 -->
       <div id="step3" class="hidden">
-        <label>Upload Foto KTP:</label>
-        <input type="file" id="ktp" accept="image/*"><br><br>
+      <label>Upload Foto KTP:</label>
+      <input type="file" id="ktp" accept="image/*">
+      <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto KK:</label>
-        <input type="file" id="kk" accept="image/*"><br><br>
+      <label>Upload Foto KK:</label>
+      <input type="file" id="kk" accept="image/*">
+      <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto Slip Gaji:</label>
-        <input type="file" id="slipgaji" accept="image/*"><br><br>
+      <label>Upload Foto Slip Gaji:</label>
+      <input type="file" id="slipgaji" accept="image/*">
+      <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto NPWP:</label>
-        <input type="file" id="npwp" accept="image/*"><br><br>
+      <label>Upload Foto NPWP:</label>
+      <input type="file" id="npwp" accept="image/*">
+      <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto BPKB:</label>
-        <input type="file" id="bpkb" accept="image/*"><br><br>
+      <label>Upload Foto BPKB:</label>
+      <input type="file" id="bpkb" accept="image/*">
+      <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto STNK:</label>
-        <input type="file" id="stnk" accept="image/*"><br><br>
+      <label>Upload Foto STNK:</label>
+      <input type="file" id="stnk" accept="image/*">
+      <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
 
         <label>
           <input type="checkbox" id="consent"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses
