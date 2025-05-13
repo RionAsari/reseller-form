@@ -88,12 +88,17 @@
 
       document.getElementById("loading").style.display = "block";
 
-      for (const id of fileFields) {
+      const uploadTasks = fileFields.map(async (id) => {
         const fileInput = document.getElementById(id);
         const file = fileInput.files[0];
         const statusEl = document.getElementById(`upload-status-${id}`);
 
         if (file) {
+          if (file.size > 10 * 1024 * 1024) { // lebih dari 10MB
+            statusEl.textContent = "Ukuran file terlalu besar ❌";
+            throw new Error(`Ukuran file ${id} melebihi 10MB.`);
+          }
+
           try {
             statusEl.textContent = "Mengunggah...";
             const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
@@ -103,11 +108,17 @@
             statusEl.textContent = "Selesai ✅";
           } catch (error) {
             statusEl.textContent = "Gagal ❌";
-            alert(`Gagal mengupload file ${id}: ${error.message}`);
-            document.getElementById("loading").style.display = "none";
-            return;
+            throw new Error(`Gagal mengupload file ${id}: ${error.message}`);
           }
         }
+      });
+
+      try {
+        await Promise.all(uploadTasks); // tunggu semua selesai
+      } catch (err) {
+        alert(err.message);
+        document.getElementById("loading").style.display = "none";
+        return;
       }
 
       Object.assign(data, fileUploads);
