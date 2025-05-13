@@ -3,19 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="css/main.css" rel="stylesheet" />
   <title>Form Pengajuan</title>
-  <link rel="stylesheet" href="css/style.css"/>
+
+  <style>
+    .hidden { display: none; }
+    .step-indicator { margin-bottom: 20px; font-weight: bold; }
+    .step-indicator span { margin-right: 10px; }
+    .step-active { color: green; }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
+      authDomain: "reseller-form-a616f.firebaseapp.com",
+      databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "reseller-form-a616f",
+      storageBucket: "reseller-form-a616f.appspot.com",
+      messagingSenderId: "194922134187",
+      appId: "1:194922134187:web:6e2421004dc4ba580195ee",
+      measurementId: "G-NHLWZHWWEW"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const storage = getStorage(app);
+
+    let step = 1;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      showStep(1);
+
+      document.getElementById("item").addEventListener("change", function () {
+        const merkDiv = document.getElementById("merkKendaraanDiv");
+        if (this.value.includes("AMANAH")) {
+          merkDiv.classList.add("hidden");
+        } else {
+          merkDiv.classList.remove("hidden");
+        }
+      });
+
+      document.getElementById("next1").addEventListener("click", () => {
+        showStep(2);
+      });
+
+      document.getElementById("next2").addEventListener("click", () => {
+        showStep(3);
+      });
+
+      document.getElementById("back2").addEventListener("click", () => {
+        showStep(1);
+      });
+
+      document.getElementById("back3").addEventListener("click", () => {
+        showStep(2);
+      });
+
+      document.getElementById("consent").addEventListener("change", function () {
+        document.getElementById("submitBtn").disabled = !this.checked;
+      });
+
+      document.getElementById("order-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const data = {
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value.trim(),
+          domicile: document.getElementById("domicile").value,
+          postalCode: document.getElementById("postalCode").value,
+          job: document.getElementById("job").value,
+          income: document.getElementById("income").value.trim(),
+          installment: document.getElementById("installment").value,
+          phone: document.getElementById("phone").value.trim(),
+          item: document.getElementById("item").value,
+          nominal: document.getElementById("nominal").value,
+          dp: document.getElementById("dp").value,
+          merk: document.getElementById("merk").value,
+          timestamp: Date.now()
+        };
+
+        const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
+        const fileUploads = {};
+
+        for (const id of fileFields) {
+          const file = document.getElementById(id).files[0];
+          if (file) {
+            const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(storageRef);
+            fileUploads[id] = url;
+          }
+        }
+
+        Object.assign(data, fileUploads);
+
+        const orderRef = ref(database, 'orders');
+        push(orderRef, data)
+          .then(() => {
+            alert("Pengajuan berhasil diajukan!");
+            document.getElementById("order-form").reset();
+            window.location.href = "terima_kasih.html";
+          })
+          .catch(err => alert("Gagal mengirim data: " + err.message));
+      });
+    });
+
+    function showStep(n) {
+      step = n;
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`step${i}`).classList.add("hidden");
+        document.getElementById(`step-indicator-${i}`).classList.remove("step-active");
+      }
+      document.getElementById(`step${n}`).classList.remove("hidden");
+      document.getElementById(`step-indicator-${n}`).classList.add("step-active");
+    }
+  </script>
 </head>
+
 <body>
   <div class="container">
-    <div class="logo"><img src="css/image.png"/></div>
+    <div class="logo">
+      <img src="css/image.png" />
+    </div>
     <div class="form-title">Form Pengajuan</div>
-    <div id="progress-indicator">Tahap 1 dari 3</div>
 
-    <form class="form-container" id="order-form">
-      <!-- Tahap 1 -->
-      <div id="step-1">
-        <label for="item">Jenis Pinjaman :</label>
+    <div class="step-indicator">
+      <span id="step-indicator-1">1. Informasi Pinjaman</span>
+      <span id="step-indicator-2">2. Data Pribadi</span>
+      <span id="step-indicator-3">3. Upload Dokumen</span>
+    </div>
+
+    <form id="order-form" class="form-container">
+      <!-- Step 1 -->
+      <div id="step1">
+        <label for="item">Jenis Pinjaman:</label>
         <select id="item" required>
           <option value="">-- Pilih Jenis Pinjaman --</option>
           <option value="Motor Baru">Motor Baru</option>
@@ -25,181 +150,78 @@
           <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
         </select><br><br>
 
-        <div id="vehicle-brand-container" style="display: none;">
-          <label for="vehicleBrand">Merk Kendaraan:</label>
-          <input type="text" id="vehicleBrand" placeholder="Contoh: Suzuki, Honda"/>
-        </div><br>
+        <label for="nominal">Nominal Pinjaman:</label>
+        <input type="text" id="nominal" placeholder="Contoh: 25 juta" required><br><br>
 
-        <label for="loanAmount">Nominal Pinjaman:</label>
-        <input type="text" id="loanAmount" required/><br><br>
-
-        <label for="downPayment">Uang Muka (DP):</label>
-        <input type="text" id="downPayment"/><br><br>
+        <label for="dp">DP:</label>
+        <input type="text" id="dp" placeholder="Contoh: 5 juta" required><br><br>
 
         <label for="installment">Angsuran Lain (jika ada):</label>
-        <input type="text" id="installment"/><br><br>
+        <input type="text" id="installment" placeholder="Contoh: Kredit HP 300 ribu"><br><br>
 
-        <button type="button" onclick="nextStep(2)">Lanjut</button>
+        <div id="merkKendaraanDiv" class="hidden">
+          <label for="merk">Merk Kendaraan:</label>
+          <input type="text" id="merk" placeholder="Contoh: Suzuki, Toyota, dll"><br><br>
+        </div>
+
+        <button type="button" id="next1">Lanjut</button>
       </div>
 
-      <!-- Tahap 2 -->
-      <div id="step-2" style="display: none;">
+      <!-- Step 2 -->
+      <div id="step2" class="hidden">
         <label for="name">Nama Lengkap:</label>
-        <input type="text" id="name" required/><br><br>
+        <input type="text" id="name" placeholder="Contoh: Budi Santoso" required><br><br>
 
         <label for="phone">Nomor Telepon:</label>
-        <input type="tel" id="phone" inputmode="numeric" pattern="\d*" required/><br><br>
+        <input type="tel" id="phone" placeholder="Contoh: 081234567890" required><br><br>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" required/><br><br>
+        <input type="email" id="email" placeholder="Contoh: budi@email.com" required><br><br>
 
         <label for="domicile">Alamat Domisili:</label>
-        <input type="text" id="domicile" required/><br><br>
+        <input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo" required><br><br>
 
         <label for="postalCode">Kode Pos:</label>
-        <input type="text" id="postalCode" maxlength="5" pattern="\d{5}" required/><br><br>
+        <input type="text" id="postalCode" maxlength="5" placeholder="Contoh: 60234" required><br><br>
 
         <label for="job">Jenis Pekerjaan:</label>
-        <input type="text" id="job"/><br><br>
+        <input type="text" id="job" placeholder="Contoh: Karyawan Swasta" required><br><br>
 
         <label for="income">Pendapatan per Bulan:</label>
-        <input type="text" id="income" required/><br><br>
+        <input type="text" id="income" placeholder="Contoh: 5 juta, 2.5 juta" required><br><br>
 
-        <button type="button" onclick="prevStep(1)">Kembali</button>
-        <button type="button" onclick="nextStep(3)">Lanjut</button>
+        <button type="button" id="back2">Kembali</button>
+        <button type="button" id="next2">Lanjut</button>
       </div>
 
-      <!-- Tahap 3 -->
-      <div id="step-3" style="display: none;">
-        <label>Unggah Foto KTP:</label>
-        <input type="file" id="ktp"/><br><br>
+      <!-- Step 3 -->
+      <div id="step3" class="hidden">
+        <label>Upload Foto KTP:</label>
+        <input type="file" id="ktp" accept="image/*"><br><br>
 
-        <label>Unggah Foto KK:</label>
-        <input type="file" id="kk"/><br><br>
+        <label>Upload Foto KK:</label>
+        <input type="file" id="kk" accept="image/*"><br><br>
 
-        <label>Unggah Slip Gaji:</label>
-        <input type="file" id="slipgaji"/><br><br>
+        <label>Upload Foto Slip Gaji:</label>
+        <input type="file" id="slipgaji" accept="image/*"><br><br>
 
-        <label>Unggah NPWP:</label>
-        <input type="file" id="npwp"/><br><br>
+        <label>Upload Foto NPWP:</label>
+        <input type="file" id="npwp" accept="image/*"><br><br>
 
-        <label>Unggah BPKB:</label>
-        <input type="file" id="bpkb"/><br><br>
+        <label>Upload Foto BPKB:</label>
+        <input type="file" id="bpkb" accept="image/*"><br><br>
 
-        <label>Unggah STNK:</label>
-        <input type="file" id="stnk"/><br><br>
+        <label>Upload Foto STNK:</label>
+        <input type="file" id="stnk" accept="image/*"><br><br>
 
-        <input type="checkbox" id="agreement" required/>
-        <label for="agreement">Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses.</label><br><br>
+        <label>
+          <input type="checkbox" id="consent"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses
+        </label><br><br>
 
-        <button type="button" onclick="prevStep(2)">Kembali</button>
-        <button type="submit" class="submit-button">Ajukan</button>
+        <button type="button" id="back3">Kembali</button>
+        <button type="submit" id="submitBtn" disabled>Ajukan</button>
       </div>
-
-      <input type="hidden" id="agentName"/>
-      <input type="hidden" id="agentEmail"/>
-      <input type="hidden" id="agentPhone"/>
     </form>
   </div>
-
-  <!-- Firebase & Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "API_KEY_KAMU",
-      authDomain: "PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://PROJECT_ID.firebaseio.com",
-      projectId: "PROJECT_ID",
-      storageBucket: "PROJECT_ID.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const storage = getStorage(app);
-    const form = document.getElementById("order-form");
-
-    // Handle tahap form
-    function nextStep(step) {
-      for (let i = 1; i <= 3; i++) {
-        document.getElementById(`step-${i}`).style.display = i === step ? "block" : "none";
-      }
-      document.getElementById("progress-indicator").textContent = `Tahap ${step} dari 3`;
-    }
-
-    function prevStep(step) {
-      nextStep(step);
-    }
-
-    // Tampilkan merk kendaraan hanya jika bukan AMANAH
-    document.getElementById("item").addEventListener("change", function () {
-      const merkContainer = document.getElementById("vehicle-brand-container");
-      merkContainer.style.display = this.value.includes("AMANAH") ? "none" : "block";
-    });
-
-    // Isi data dari URL
-    const urlParams = new URLSearchParams(window.location.search);
-    document.getElementById("agentName").value = urlParams.get("agentName") || "";
-    document.getElementById("agentEmail").value = urlParams.get("agentEmail") || "";
-    document.getElementById("agentPhone").value = urlParams.get("agentPhone") || "";
-
-    form.onsubmit = async function (event) {
-      event.preventDefault();
-      if (!document.getElementById("agreement").checked) {
-        alert("Silakan setujui pernyataan terlebih dahulu.");
-        return;
-      }
-
-      const data = {
-        agentName: document.getElementById("agentName").value,
-        agentEmail: document.getElementById("agentEmail").value,
-        agentPhone: document.getElementById("agentPhone").value,
-        item: document.getElementById("item").value,
-        vehicleBrand: document.getElementById("vehicleBrand").value,
-        loanAmount: document.getElementById("loanAmount").value,
-        downPayment: document.getElementById("downPayment").value,
-        installment: document.getElementById("installment").value,
-        name: document.getElementById("name").value,
-        phone: document.getElementById("phone").value,
-        email: document.getElementById("email").value,
-        domicile: document.getElementById("domicile").value,
-        postalCode: document.getElementById("postalCode").value,
-        job: document.getElementById("job").value,
-        income: document.getElementById("income").value,
-        timestamp: Date.now(),
-        uploads: {}
-      };
-
-      const files = {
-        ktp: document.getElementById("ktp").files[0],
-        kk: document.getElementById("kk").files[0],
-        slipgaji: document.getElementById("slipgaji").files[0],
-        npwp: document.getElementById("npwp").files[0],
-        bpkb: document.getElementById("bpkb").files[0],
-        stnk: document.getElementById("stnk").files[0]
-      };
-
-      for (const [key, file] of Object.entries(files)) {
-        if (file) {
-          const storagePath = `uploads/${Date.now()}-${file.name}`;
-          const fileRef = storageRef(storage, storagePath);
-          await uploadBytes(fileRef, file);
-          data.uploads[key] = storagePath;
-        }
-      }
-
-      push(ref(database, 'orders'), data)
-        .then(() => {
-          window.location.href = "terima_kasih.html";
-        })
-        .catch((error) => {
-          alert("Terjadi kesalahan saat mengirim data: " + error.message);
-        });
-    };
-  </script>
 </body>
 </html>
