@@ -8,123 +8,121 @@
 
   <!-- Firebase -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-      authDomain: "reseller-form-a616f.firebaseapp.com",
-      databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "reseller-form-a616f",
-      storageBucket: "reseller-form-a616f.appspot.com",
-      messagingSenderId: "194922134187",
-      appId: "1:194922134187:web:6e2421004dc4ba580195ee"
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
+    authDomain: "reseller-form-a616f.firebaseapp.com",
+    databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "reseller-form-a616f",
+    storageBucket: "reseller-form-a616f.appspot.com",
+    messagingSenderId: "194922134187",
+    appId: "1:194922134187:web:6e2421004dc4ba580195ee"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const storage = getStorage(app);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const agentName = urlParams.get("agentName");
+  const agentEmail = urlParams.get("agentEmail");
+  const agentPhone = urlParams.get("agentPhone");
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (agentName) document.getElementById("agentName").value = agentName;
+    if (agentEmail) document.getElementById("agentEmail").value = agentEmail;
+    if (agentPhone) document.getElementById("agentPhone").value = agentPhone;
+
+    const stage1 = document.getElementById("stage-1");
+    const stage2 = document.getElementById("stage-2");
+    const stage3 = document.getElementById("stage-3");
+    const indicator = document.getElementById("step-indicator");
+    const jenisPinjaman = document.getElementById("item");
+    const merkContainer = document.getElementById("merk-container");
+
+    jenisPinjaman.addEventListener("change", () => {
+      merkContainer.style.display = jenisPinjaman.value.includes("AMANAH") ? "none" : "block";
+    });
+
+    document.getElementById("next-1").onclick = () => {
+      stage1.style.display = "none";
+      stage2.style.display = "block";
+      indicator.innerText = "Tahap 2 dari 3";
+    };
+    document.getElementById("next-2").onclick = () => {
+      stage2.style.display = "none";
+      stage3.style.display = "block";
+      indicator.innerText = "Tahap 3 dari 3";
+    };
+    document.getElementById("back-2").onclick = () => {
+      stage2.style.display = "none";
+      stage1.style.display = "block";
+      indicator.innerText = "Tahap 1 dari 3";
+    };
+    document.getElementById("back-3").onclick = () => {
+      stage3.style.display = "none";
+      stage2.style.display = "block";
+      indicator.innerText = "Tahap 2 dari 3";
     };
 
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const storage = getStorage(app);
+    const form = document.getElementById("order-form");
+    const loadingIndicator = document.getElementById("loading-indicator");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const agentName = urlParams.get("agentName");
-    const agentEmail = urlParams.get("agentEmail");
-    const agentPhone = urlParams.get("agentPhone");
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      loadingIndicator.style.display = "block";
 
-    document.addEventListener("DOMContentLoaded", () => {
-      if (agentName) document.getElementById("agentName").value = agentName;
-      if (agentEmail) document.getElementById("agentEmail").value = agentEmail;
-      if (agentPhone) document.getElementById("agentPhone").value = agentPhone;
-
-      const stage1 = document.getElementById("stage-1");
-      const stage2 = document.getElementById("stage-2");
-      const stage3 = document.getElementById("stage-3");
-      const indicator = document.getElementById("step-indicator");
-      const jenisPinjaman = document.getElementById("item");
-      const merkContainer = document.getElementById("merk-container");
-
-      // Toggle input merk kendaraan
-      jenisPinjaman.addEventListener("change", () => {
-        merkContainer.style.display = jenisPinjaman.value.includes("AMANAH") ? "none" : "block";
-      });
-
-      // Navigasi antar tahap
-      document.getElementById("next-1").onclick = () => {
-        stage1.style.display = "none";
-        stage2.style.display = "block";
-        indicator.innerText = "Tahap 2 dari 3";
-      };
-      document.getElementById("next-2").onclick = () => {
-        stage2.style.display = "none";
-        stage3.style.display = "block";
-        indicator.innerText = "Tahap 3 dari 3";
-      };
-      document.getElementById("back-2").onclick = () => {
-        stage2.style.display = "none";
-        stage1.style.display = "block";
-        indicator.innerText = "Tahap 1 dari 3";
-      };
-      document.getElementById("back-3").onclick = () => {
-        stage3.style.display = "none";
-        stage2.style.display = "block";
-        indicator.innerText = "Tahap 2 dari 3";
+      const data = {
+        agentName: document.getElementById("agentName").value,
+        agentEmail: document.getElementById("agentEmail").value,
+        agentPhone: document.getElementById("agentPhone").value,
+        item: jenisPinjaman.value,
+        loanAmount: document.getElementById("loanAmount").value,
+        downPayment: document.getElementById("dp").value,
+        installment: document.getElementById("installment").value,
+        merk: document.getElementById("merk").value,
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        domicile: document.getElementById("domicile").value,
+        postalCode: document.getElementById("postalCode").value,
+        job: document.getElementById("job").value,
+        income: document.getElementById("income").value,
+        phone: document.getElementById("phone").value,
+        timestamp: Date.now()
       };
 
-      const form = document.getElementById("order-form");
-      const loadingIndicator = document.getElementById("loading-indicator"); // Get the loading indicator
+      const fileFields = ["ktp", "kk", "slip", "npwp", "bpkb", "stnk"];
+      const uploads = {};
 
-      form.onsubmit = async (e) => {
-        e.preventDefault();
-        
-        loadingIndicator.style.display = "block"; // Show the loading indicator
-
-        const data = {
-          agentName: document.getElementById("agentName").value,
-          agentEmail: document.getElementById("agentEmail").value,
-          agentPhone: document.getElementById("agentPhone").value,
-          item: jenisPinjaman.value,
-          loanAmount: document.getElementById("loanAmount").value,
-          downPayment: document.getElementById("dp").value,
-          installment: document.getElementById("installment").value,
-          merk: document.getElementById("merk").value,
-          name: document.getElementById("name").value,
-          email: document.getElementById("email").value,
-          domicile: document.getElementById("domicile").value,
-          postalCode: document.getElementById("postalCode").value,
-          job: document.getElementById("job").value,
-          income: document.getElementById("income").value,
-          phone: document.getElementById("phone").value,
-          timestamp: Date.now()
-        };
-
-        const fileFields = ["ktp", "kk", "slip", "npwp", "bpkb", "stnk"];
-        const uploads = {};
-
+      try {
         for (let field of fileFields) {
-          const file = document.getElementById(field).files[0];
-          if (file) {
+          const input = document.getElementById(field);
+          if (input.files.length > 0) {
+            const file = input.files[0];
             const fileRef = storageRef(storage, "uploads/" + Date.now() + "_" + file.name);
-            await uploadBytes(fileRef, file); // Upload the file
-            const url = await getDownloadURL(fileRef); // Get the file URL
-            uploads[field] = url; // Add the file URL to the data object
+            await uploadBytes(fileRef, file);
+            const url = await getDownloadURL(fileRef);
+            uploads[field] = url;
           }
         }
 
         Object.assign(data, uploads);
 
-        // Push the data to Firebase
-        push(ref(database, "orders"), data)
-          .then(() => {
-            loadingIndicator.style.display = "none"; // Hide the loading indicator
-            window.location.href = "terima_kasih.html";
-          })
-          .catch(err => {
-            loadingIndicator.style.display = "none"; // Hide the loading indicator in case of error
-            alert("Error: " + err.message);
-          });
-      };
-    });
-  </script>
+        await push(ref(database, "orders"), data);
+
+        loadingIndicator.style.display = "none";
+        window.location.href = "terima_kasih.html";
+      } catch (err) {
+        loadingIndicator.style.display = "none";
+        alert("Gagal mengunggah data: " + err.message);
+      }
+    };
+  });
+</script>
+
 
   <style>
     .step { display: none; }
