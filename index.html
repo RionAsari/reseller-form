@@ -88,30 +88,46 @@
 
       document.getElementById("loading").style.display = "block";
 
-      const uploadTasks = fileFields.map(async (id) => {
-        const fileInput = document.getElementById(id);
-        const file = fileInput.files[0];
-        const statusEl = document.getElementById(`upload-status-${id}`);
+const uploadTasks = fileFields.map(async (id) => {
+  const fileInput = document.getElementById(id);
+  const file = fileInput.files[0];
+  const statusEl = document.getElementById(`upload-status-${id}`);
 
-        if (file) {
-          if (file.size > 10 * 1024 * 1024) { // lebih dari 10MB
-            statusEl.textContent = "Ukuran file terlalu besar ❌";
-            throw new Error(`Ukuran file ${id} melebihi 10MB.`);
-          }
+  if (file) {
+    if (file.size > 10 * 1024 * 1024) { // lebih dari 10MB
+      statusEl.textContent = "Ukuran file terlalu besar ❌";
+      throw new Error(`Ukuran file ${id} melebihi 10MB.`);
+    }
 
-          try {
-            statusEl.textContent = "Mengunggah...";
-            const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
-            await uploadBytes(storageRef, file);
-            const url = await getDownloadURL(storageRef);
-            fileUploads[id] = url;
-            statusEl.textContent = "Selesai ✅";
-          } catch (error) {
-            statusEl.textContent = "Gagal ❌";
-            throw new Error(`Gagal mengupload file ${id}: ${error.message}`);
-          }
+    try {
+      statusEl.textContent = "Mengunggah...";
+      const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
+
+      // Gunakan uploadBytesResumable untuk unggahan bertahap
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
+        },
+        (error) => {
+          statusEl.textContent = "Gagal ❌";
+          throw new Error(`Gagal mengupload file ${id}: ${error.message}`);
+        },
+        async () => {
+          const url = await getDownloadURL(storageRef);
+          fileUploads[id] = url;
+          statusEl.textContent = "Selesai ✅";
         }
-      });
+      );
+    } catch (error) {
+      statusEl.textContent = "Gagal ❌";
+      throw error;
+    }
+  }
+});
 
       try {
         await Promise.all(uploadTasks); // tunggu semua selesai
