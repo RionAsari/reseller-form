@@ -101,9 +101,10 @@
 
           try {
             statusEl.textContent = "Mengunggah...";
-            const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
+            const ext = file.name.split('.').pop();
+            const uniqueName = `${id}_${new Date().getTime()}.${ext}`;
+            const storageRef = sRef(storage, `uploads/${uniqueName}`);
 
-            // Gunakan uploadBytesResumable untuk unggahan bertahap
             const uploadTask = uploadBytesResumable(storageRef, file);
 
             return new Promise((resolve, reject) => {
@@ -141,6 +142,7 @@
           }
         }
       });
+
 
       try {
         await Promise.all(uploadTasks); // tunggu semua selesai
