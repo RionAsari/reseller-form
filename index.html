@@ -112,23 +112,23 @@
               "state_changed",
               (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Progress: ${progress.toFixed(0)}%`);
+                console.log(`[${id}] Transferred: ${snapshot.bytesTransferred}, Total: ${snapshot.totalBytes}`);
                 statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
               },
               (error) => {
-                console.log("Error during upload:", error);
+                console.error(`[${id}] Upload error:`, error);
                 statusEl.textContent = "Gagal ❌";
                 reject(new Error(`Gagal mengupload file ${id}: ${error.message}`));
               },
               async () => {
                 try {
                   const url = await getDownloadURL(storageRef);
+                  console.log(`[${id}] URL berhasil: ${url}`);
                   fileUploads[id] = url;
-                  console.log(`File uploaded: ${url}`);
                   statusEl.textContent = "Selesai ✅";
                   resolve();
                 } catch (err) {
-                  console.log("Error getting download URL:", err);
+                  console.error(`[${id}] Gagal ambil URL:`, err);
                   statusEl.textContent = "Gagal ❌";
                   reject(new Error(`Gagal mendapatkan URL ${id}: ${err.message}`));
                 }
