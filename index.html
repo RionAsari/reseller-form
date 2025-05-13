@@ -38,6 +38,12 @@
     document.addEventListener("DOMContentLoaded", function () {
       showStep(1);
 
+      // Ambil data agent dari URL dan simpan di hidden input
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('agentName')) document.getElementById("agentName").value = urlParams.get('agentName');
+      if (urlParams.get('agentEmail')) document.getElementById("agentEmail").value = urlParams.get('agentEmail');
+      if (urlParams.get('agentPhone')) document.getElementById("agentPhone").value = urlParams.get('agentPhone');
+
       document.getElementById("item").addEventListener("change", function () {
         const merkDiv = document.getElementById("merkKendaraanDiv");
         if (this.value.includes("AMANAH")) {
@@ -71,6 +77,9 @@
         event.preventDefault();
 
         const data = {
+          agentName: document.getElementById("agentName").value,
+          agentEmail: document.getElementById("agentEmail").value,
+          agentPhone: document.getElementById("agentPhone").value,
           name: document.getElementById("name").value,
           email: document.getElementById("email").value.trim(),
           domicile: document.getElementById("domicile").value,
@@ -221,6 +230,12 @@
         <button type="button" id="back3">Kembali</button>
         <button type="submit" id="submitBtn" disabled>Ajukan</button>
       </div>
+
+      <!-- Hidden input untuk tracking agent -->
+      <input type="hidden" id="agentName">
+      <input type="hidden" id="agentEmail">
+      <input type="hidden" id="agentPhone">
+
     </form>
   </div>
 </body>
