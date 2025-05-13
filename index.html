@@ -11,7 +11,6 @@
     .step-indicator { margin-bottom: 20px; font-weight: bold; }
     .step-indicator span { margin-right: 10px; }
     .step-active { color: green; }
-    .progress-bar { width: 0%; height: 20px; background-color: green; }
   </style>
 
 <script type="module">
@@ -39,10 +38,28 @@
   document.addEventListener("DOMContentLoaded", function () {
     showStep(1);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('agentName')) document.getElementById("agentName").value = urlParams.get('agentName');
+    if (urlParams.get('agentEmail')) document.getElementById("agentEmail").value = urlParams.get('agentEmail');
+    if (urlParams.get('agentPhone')) document.getElementById("agentPhone").value = urlParams.get('agentPhone');
+
+    document.getElementById("item").addEventListener("change", function () {
+      const merkDiv = document.getElementById("merkKendaraanDiv");
+      if (this.value.includes("AMANAH")) {
+        merkDiv.classList.add("hidden");
+      } else {
+        merkDiv.classList.remove("hidden");
+      }
+    });
+
     document.getElementById("next1").addEventListener("click", () => showStep(2));
     document.getElementById("next2").addEventListener("click", () => showStep(3));
     document.getElementById("back2").addEventListener("click", () => showStep(1));
     document.getElementById("back3").addEventListener("click", () => showStep(2));
+
+    document.getElementById("consent").addEventListener("change", function () {
+      document.getElementById("submitBtn").disabled = !this.checked;
+    });
 
     document.getElementById("order-form").addEventListener("submit", async function (event) {
       event.preventDefault();
@@ -69,13 +86,12 @@
       const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
       const fileUploads = {};
 
-      document.getElementById("loading").style.display = "block"; // Show the loading indicator
+      document.getElementById("loading").style.display = "block";
 
       const uploadTasks = fileFields.map(async (id) => {
         const fileInput = document.getElementById(id);
         const file = fileInput.files[0];
         const statusEl = document.getElementById(`upload-status-${id}`);
-        const progressBar = document.getElementById(`progress-bar-${id}`);
 
         if (file) {
           if (file.size > 10 * 1024 * 1024) { // lebih dari 10MB
@@ -95,14 +111,12 @@
                 "state_changed",
                 (snapshot) => {
                   const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  progressBar.style.width = `${progress}%`;
                   console.log(`Progress: ${progress.toFixed(0)}%`);
                   statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
                 },
                 (error) => {
                   console.log("Error during upload:", error);
                   statusEl.textContent = "Gagal ❌";
-                  progressBar.style.width = `0%`; // Reset progress bar
                   reject(new Error(`Gagal mengupload file ${id}: ${error.message}`));
                 },
                 async () => {
@@ -111,12 +125,10 @@
                     fileUploads[id] = url;
                     console.log(`File uploaded: ${url}`);
                     statusEl.textContent = "Selesai ✅";
-                    progressBar.style.width = `100%`;
                     resolve();
                   } catch (err) {
                     console.log("Error getting download URL:", err);
                     statusEl.textContent = "Gagal ❌";
-                    progressBar.style.width = `0%`; // Reset progress bar
                     reject(new Error(`Gagal mendapatkan URL ${id}: ${err.message}`));
                   }
                 }
@@ -125,7 +137,6 @@
 
           } catch (error) {
             statusEl.textContent = "Gagal ❌";
-            progressBar.style.width = `0%`; // Reset progress bar
             throw error;
           }
         }
@@ -135,7 +146,7 @@
         await Promise.all(uploadTasks); // tunggu semua selesai
       } catch (err) {
         alert(err.message);
-        document.getElementById("loading").style.display = "none"; // Hide the loading indicator
+        document.getElementById("loading").style.display = "none";
         return;
       }
 
@@ -150,7 +161,7 @@
         })
         .catch(err => alert("Gagal mengirim data: " + err.message))
         .finally(() => {
-          document.getElementById("loading").style.display = "none"; // Hide the loading indicator
+          document.getElementById("loading").style.display = "none";
         });
     });
   });
@@ -241,35 +252,29 @@
 
       <!-- Step 3 -->
       <div id="step3" class="hidden">
-        <label>Upload Foto KTP:</label>
-        <input type="file" id="ktp" accept="image/*">
-        <div id="progress-bar-ktp" class="progress-bar"></div>
-        <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
+      <label>Upload Foto KTP:</label>
+      <input type="file" id="ktp" accept="image/*">
+      <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto KK:</label>
-        <input type="file" id="kk" accept="image/*">
-        <div id="progress-bar-kk" class="progress-bar"></div>
-        <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
+      <label>Upload Foto KK:</label>
+      <input type="file" id="kk" accept="image/*">
+      <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto Slip Gaji:</label>
-        <input type="file" id="slipgaji" accept="image/*">
-        <div id="progress-bar-slipgaji" class="progress-bar"></div>
-        <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
+      <label>Upload Foto Slip Gaji:</label>
+      <input type="file" id="slipgaji" accept="image/*">
+      <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto NPWP:</label>
-        <input type="file" id="npwp" accept="image/*">
-        <div id="progress-bar-npwp" class="progress-bar"></div>
-        <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
+      <label>Upload Foto NPWP:</label>
+      <input type="file" id="npwp" accept="image/*">
+      <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto BPKB:</label>
-        <input type="file" id="bpkb" accept="image/*">
-        <div id="progress-bar-bpkb" class="progress-bar"></div>
-        <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
+      <label>Upload Foto BPKB:</label>
+      <input type="file" id="bpkb" accept="image/*">
+      <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
 
-        <label>Upload Foto STNK:</label>
-        <input type="file" id="stnk" accept="image/*">
-        <div id="progress-bar-stnk" class="progress-bar"></div>
-        <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
+      <label>Upload Foto STNK:</label>
+      <input type="file" id="stnk" accept="image/*">
+      <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
 
         <label>
           <input type="checkbox" id="consent"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses
