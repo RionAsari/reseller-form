@@ -1,106 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="css/main.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Form Pengajuan</title>
-
-  <!-- Firebase scripts -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-      authDomain: "reseller-form-a616f.firebaseapp.com",
-      databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "reseller-form-a616f",
-      storageBucket: "reseller-form-a616f.appspot.com",
-      messagingSenderId: "194922134187",
-      appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-      measurementId: "G-NHLWZHWWEW"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const agentName = urlParams.get('agentName');
-    const agentEmail = urlParams.get('agentEmail');
-    const agentPhone = urlParams.get('agentPhone');
-
-    document.addEventListener("DOMContentLoaded", function () {
-      if (agentName) document.getElementById("agentName").value = agentName;
-      if (agentEmail) document.getElementById("agentEmail").value = agentEmail;
-      if (agentPhone) document.getElementById("agentPhone").value = agentPhone;
-    });
-
-    const form = document.getElementById("order-form");
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    form.onsubmit = function (event) {
-      event.preventDefault();
-
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value.trim();
-      const domicile = document.getElementById("domicile").value;
-      const postalCode = document.getElementById("postalCode").value;
-      const job = document.getElementById("job").value;
-      const income = document.getElementById("income").value.trim();
-      const installment = document.getElementById("installment").value;
-      const phone = document.getElementById("phone").value.trim();
-      const item = document.getElementById("item").value;
-
-      const agentName = document.getElementById("agentName").value;
-      const agentEmail = document.getElementById("agentEmail").value;
-      const agentPhone = document.getElementById("agentPhone").value;
-
-      if (!/^\d{5}$/.test(postalCode)) {
-        alert("Kode Pos harus terdiri dari 5 angka!");
-        return;
-      }
-
-      if (!/^\d+$/.test(phone)) {
-        alert("Nomor telepon harus hanya angka!");
-        return;
-      }
-
-      if (!emailRegex.test(email)) {
-        alert("Format email pelanggan tidak valid!");
-        return;
-      }
-
-      if (agentEmail && !emailRegex.test(agentEmail)) {
-        alert("Format email agent tidak valid!");
-        return;
-      }
-
-      const orderRef = ref(database, 'orders');
-      push(orderRef, {
-        agentName,
-        agentEmail,
-        agentPhone,
-        name,
-        email,
-        domicile,
-        postalCode,
-        job,
-        income,
-        installment,
-        phone,
-        item,
-        timestamp: Date.now()
-      })
-        .then(() => {
-          window.location.replace("terima_kasih.html");
-          form.reset();
-        })
-        .catch((error) => {
-          alert("Error: " + error.message);
-        });
-    };
-  </script>
+  <link rel="stylesheet" href="css/main.css"/>
+  <style>
+    .hidden { display: none; }
+    .step-indicator { font-weight: bold; margin-bottom: 10px; }
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+    .submit-button:disabled { background-color: #ccc; cursor: not-allowed; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -108,48 +19,129 @@
       <img src="css/image.png" />
     </div>
     <div class="form-title">Form Pengajuan</div>
-    <form class="form-container" id="order-form">
 
-      <label for="name">Nama Lengkap :</label>
-      <input type="text" id="name" placeholder="Contoh: Budi Santoso" required><br><br>
+    <div class="step-indicator" id="step-indicator">Tahap 1 dari 3</div>
 
-      <label for="email">Email :</label>
-      <input type="email" id="email" placeholder="Contoh: budi@email.com" required><br><br>
+    <form id="order-form">
+      <!-- Step 1 -->
+      <div class="form-step active" id="step-1">
+        <label for="item">Jenis Pinjaman:</label>
+        <select id="item" required onchange="checkJenisPinjaman()">
+          <option value="">-- Pilih Jenis Pinjaman --</option>
+          <option value="Motor Baru">Motor Baru</option>
+          <option value="Motor Bekas">Motor Bekas</option>
+          <option value="Mobil Baru">Mobil Baru</option>
+          <option value="Mobil Bekas">Mobil Bekas</option>
+          <option value="AMANAH">AMANAH (Adira Multi Dana Syariah)</option>
+        </select><br><br>
 
-      <label for="domicile">Alamat Domisili :</label>
-      <input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo" required><br><br>
+        <div id="merkField" class="hidden">
+          <label for="merk">Merk Kendaraan:</label>
+          <input type="text" id="merk" placeholder="Contoh: Suzuki, Toyota"/><br><br>
+        </div>
 
-      <label for="postalCode">Kode Pos :</label>
-      <input type="text" id="postalCode" maxlength="5" pattern="\d{5}" title="Masukkan 5 angka" placeholder="Contoh: 60234" required><br><br>
+        <label for="amount">Nominal Pinjaman:</label>
+        <input type="text" id="amount" required><br><br>
 
-      <label for="job">Jenis Pekerjaan :</label>
-      <input type="text" id="job" placeholder="Contoh: Karyawan Swasta"><br><br>
+        <label for="dp">DP (uang muka):</label>
+        <input type="text" id="dp" required><br><br>
 
-      <label for="income">Pendapatan per Bulan:</label>
-      <input type="text" id="income" placeholder="Contoh: 5 juta, 2.5 juta" required><br><br>
+        <label for="installment">Angsuran Lain (jika ada):</label>
+        <input type="text" id="installment"><br><br>
 
-      <label for="installment">Angsuran Lain (jika ada):</label>
-      <input type="text" id="installment" placeholder="Contoh: Kredit HP 300 ribu"><br><br>
+        <button type="button" onclick="nextStep()">Lanjut</button>
+      </div>
 
-      <label for="phone">Nomor Telepon :</label>
-      <input type="tel" id="phone" inputmode="numeric" pattern="\d*" placeholder="Contoh: 081234567890" required><br><br>
+      <!-- Step 2 -->
+      <div class="form-step" id="step-2">
+        <label for="name">Nama Lengkap:</label>
+        <input type="text" id="name" required><br><br>
 
-      <label for="item">Jenis Pinjaman :</label>
-      <select id="item" required>
-        <option value="">-- Pilih Jenis Pinjaman --</option>
-        <option value="Motor Baru">Motor Baru</option>
-        <option value="Motor Bekas">Motor Bekas</option>
-        <option value="Mobil Baru">Mobil Baru</option>
-        <option value="Mobil Bekas">Mobil Bekas</option>
-        <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
-      </select><br><br>
+        <label for="phone">Nomor Telepon:</label>
+        <input type="tel" id="phone" required pattern="\d+"><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br><br>
+
+        <label for="domicile">Alamat Domisili:</label>
+        <input type="text" id="domicile" required><br><br>
+
+        <label for="postalCode">Kode Pos:</label>
+        <input type="text" id="postalCode" required pattern="\d{5}" maxlength="5"><br><br>
+
+        <label for="job">Jenis Pekerjaan:</label>
+        <input type="text" id="job"><br><br>
+
+        <label for="income">Pendapatan per Bulan:</label>
+        <input type="text" id="income" required><br><br>
+
+        <button type="button" onclick="prevStep()">Kembali</button>
+        <button type="button" onclick="nextStep()">Lanjut</button>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="form-step" id="step-3">
+        <label>Upload Foto KTP:</label><input type="file" id="ktp" required><br><br>
+        <label>Upload Foto KK:</label><input type="file" id="kk" required><br><br>
+        <label>Upload Slip Gaji:</label><input type="file" id="slip" required><br><br>
+        <label>Upload NPWP:</label><input type="file" id="npwp" required><br><br>
+        <label>Upload BPKB:</label><input type="file" id="bpkb" required><br><br>
+        <label>Upload STNK:</label><input type="file" id="stnk" required><br><br>
+
+        <label>
+          <input type="checkbox" id="agreement" onchange="toggleSubmit()"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses.
+        </label><br><br>
+
+        <button type="button" onclick="prevStep()">Kembali</button>
+        <button type="submit" id="submitBtn" class="submit-button" disabled>Ajukan</button>
+      </div>
 
       <input type="hidden" id="agentName">
       <input type="hidden" id="agentEmail">
       <input type="hidden" id="agentPhone">
-
-      <button class="submit-button">Kirim</button>
     </form>
   </div>
+
+  <script>
+    let currentStep = 1;
+
+    function updateStepDisplay() {
+      document.querySelectorAll(".form-step").forEach((el, i) => {
+        el.classList.toggle("active", i + 1 === currentStep);
+      });
+      document.getElementById("step-indicator").textContent = `Tahap ${currentStep} dari 3`;
+    }
+
+    function nextStep() {
+      if (currentStep < 3) {
+        currentStep++;
+        updateStepDisplay();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepDisplay();
+      }
+    }
+
+    function checkJenisPinjaman() {
+      const jenis = document.getElementById("item").value;
+      const merkField = document.getElementById("merkField");
+      merkField.classList.toggle("hidden", jenis === "AMANAH");
+    }
+
+    function toggleSubmit() {
+      const checkbox = document.getElementById("agreement");
+      document.getElementById("submitBtn").disabled = !checkbox.checked;
+    }
+
+    document.getElementById("order-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Data berhasil diajukan!");
+      // Tambahkan logic Firebase di sini seperti sebelumnya
+    });
+  </script>
 </body>
 </html>
