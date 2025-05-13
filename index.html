@@ -106,7 +106,9 @@
           if (file) {
             try {
               const storageRef = sRef(storage, `uploads/${Date.now()}_${file.name}`);
+              // Tunggu sampai upload selesai
               await uploadBytes(storageRef, file);
+              // Ambil URL file setelah upload selesai
               const url = await getDownloadURL(storageRef);
               fileUploads[id] = url;
             } catch (error) {
