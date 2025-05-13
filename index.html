@@ -136,11 +136,77 @@
       const checkbox = document.getElementById("agreement");
       document.getElementById("submitBtn").disabled = !checkbox.checked;
     }
+  </script>
 
-    document.getElementById("order-form").addEventListener("submit", function (e) {
+  <!-- Firebase SDK & Submit Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const storage = getStorage(app);
+
+    async function uploadFile(file, path) {
+      const fileRef = sRef(storage, path);
+      await uploadBytes(fileRef, file);
+      return await getDownloadURL(fileRef);
+    }
+
+    document.getElementById("order-form").addEventListener("submit", async function (e) {
       e.preventDefault();
-      alert("Data berhasil diajukan!");
-      // Tambahkan logic Firebase di sini seperti sebelumnya
+
+      try {
+        const timestamp = Date.now();
+
+        const [ktpUrl, kkUrl, slipUrl, npwpUrl, bpkbUrl, stnkUrl] = await Promise.all([
+          uploadFile(document.getElementById("ktp").files[0], `uploads/${timestamp}_ktp.jpg`),
+          uploadFile(document.getElementById("kk").files[0], `uploads/${timestamp}_kk.jpg`),
+          uploadFile(document.getElementById("slip").files[0], `uploads/${timestamp}_slip.jpg`),
+          uploadFile(document.getElementById("npwp").files[0], `uploads/${timestamp}_npwp.jpg`),
+          uploadFile(document.getElementById("bpkb").files[0], `uploads/${timestamp}_bpkb.jpg`),
+          uploadFile(document.getElementById("stnk").files[0], `uploads/${timestamp}_stnk.jpg`)
+        ]);
+
+        const data = {
+          item: document.getElementById("item").value,
+          merk: document.getElementById("merk")?.value ?? "",
+          amount: document.getElementById("amount").value,
+          dp: document.getElementById("dp").value,
+          installment: document.getElementById("installment").value,
+          name: document.getElementById("name").value,
+          phone: document.getElementById("phone").value,
+          email: document.getElementById("email").value,
+          domicile: document.getElementById("domicile").value,
+          postalCode: document.getElementById("postalCode").value,
+          job: document.getElementById("job").value,
+          income: document.getElementById("income").value,
+          agentName: document.getElementById("agentName").value,
+          agentEmail: document.getElementById("agentEmail").value,
+          agentPhone: document.getElementById("agentPhone").value,
+          ktpUrl, kkUrl, slipUrl, npwpUrl, bpkbUrl, stnkUrl,
+          submittedAt: new Date().toISOString()
+        };
+
+        await push(ref(database, 'pengajuan'), data);
+        alert("Data berhasil dikirim!");
+        document.getElementById("order-form").reset();
+        window.location.href = "terima_kasih.html"; // opsional
+      } catch (err) {
+        console.error(err);
+        alert("Gagal mengirim data. Silakan coba lagi.");
+      }
     });
   </script>
 </body>
