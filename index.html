@@ -1,155 +1,205 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="css/main.css" rel="stylesheet" type="text/css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Form Pengajuan</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <div class="container">
+    <div class="logo"><img src="css/image.png"/></div>
+    <div class="form-title">Form Pengajuan</div>
+    <div id="progress-indicator">Tahap 1 dari 3</div>
 
-  <!-- Firebase scripts -->
+    <form class="form-container" id="order-form">
+      <!-- Tahap 1 -->
+      <div id="step-1">
+        <label for="item">Jenis Pinjaman :</label>
+        <select id="item" required>
+          <option value="">-- Pilih Jenis Pinjaman --</option>
+          <option value="Motor Baru">Motor Baru</option>
+          <option value="Motor Bekas">Motor Bekas</option>
+          <option value="Mobil Baru">Mobil Baru</option>
+          <option value="Mobil Bekas">Mobil Bekas</option>
+          <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
+        </select><br><br>
+
+        <div id="vehicle-brand-container" style="display: none;">
+          <label for="vehicleBrand">Merk Kendaraan:</label>
+          <input type="text" id="vehicleBrand" placeholder="Contoh: Suzuki, Honda"/>
+        </div><br>
+
+        <label for="loanAmount">Nominal Pinjaman:</label>
+        <input type="text" id="loanAmount" required/><br><br>
+
+        <label for="downPayment">Uang Muka (DP):</label>
+        <input type="text" id="downPayment"/><br><br>
+
+        <label for="installment">Angsuran Lain (jika ada):</label>
+        <input type="text" id="installment"/><br><br>
+
+        <button type="button" onclick="nextStep(2)">Lanjut</button>
+      </div>
+
+      <!-- Tahap 2 -->
+      <div id="step-2" style="display: none;">
+        <label for="name">Nama Lengkap:</label>
+        <input type="text" id="name" required/><br><br>
+
+        <label for="phone">Nomor Telepon:</label>
+        <input type="tel" id="phone" inputmode="numeric" pattern="\d*" required/><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required/><br><br>
+
+        <label for="domicile">Alamat Domisili:</label>
+        <input type="text" id="domicile" required/><br><br>
+
+        <label for="postalCode">Kode Pos:</label>
+        <input type="text" id="postalCode" maxlength="5" pattern="\d{5}" required/><br><br>
+
+        <label for="job">Jenis Pekerjaan:</label>
+        <input type="text" id="job"/><br><br>
+
+        <label for="income">Pendapatan per Bulan:</label>
+        <input type="text" id="income" required/><br><br>
+
+        <button type="button" onclick="prevStep(1)">Kembali</button>
+        <button type="button" onclick="nextStep(3)">Lanjut</button>
+      </div>
+
+      <!-- Tahap 3 -->
+      <div id="step-3" style="display: none;">
+        <label>Unggah Foto KTP:</label>
+        <input type="file" id="ktp"/><br><br>
+
+        <label>Unggah Foto KK:</label>
+        <input type="file" id="kk"/><br><br>
+
+        <label>Unggah Slip Gaji:</label>
+        <input type="file" id="slipgaji"/><br><br>
+
+        <label>Unggah NPWP:</label>
+        <input type="file" id="npwp"/><br><br>
+
+        <label>Unggah BPKB:</label>
+        <input type="file" id="bpkb"/><br><br>
+
+        <label>Unggah STNK:</label>
+        <input type="file" id="stnk"/><br><br>
+
+        <input type="checkbox" id="agreement" required/>
+        <label for="agreement">Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses.</label><br><br>
+
+        <button type="button" onclick="prevStep(2)">Kembali</button>
+        <button type="submit" class="submit-button">Ajukan</button>
+      </div>
+
+      <input type="hidden" id="agentName"/>
+      <input type="hidden" id="agentEmail"/>
+      <input type="hidden" id="agentPhone"/>
+    </form>
+  </div>
+
+  <!-- Firebase & Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-      authDomain: "reseller-form-a616f.firebaseapp.com",
-      databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "reseller-form-a616f",
-      storageBucket: "reseller-form-a616f.appspot.com",
-      messagingSenderId: "194922134187",
-      appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-      measurementId: "G-NHLWZHWWEW"
+      apiKey: "API_KEY_KAMU",
+      authDomain: "PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://PROJECT_ID.firebaseio.com",
+      projectId: "PROJECT_ID",
+      storageBucket: "PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const storage = getStorage(app);
+    const form = document.getElementById("order-form");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const agentName = urlParams.get('agentName');
-    const agentEmail = urlParams.get('agentEmail');
-    const agentPhone = urlParams.get('agentPhone');
+    // Handle tahap form
+    function nextStep(step) {
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`step-${i}`).style.display = i === step ? "block" : "none";
+      }
+      document.getElementById("progress-indicator").textContent = `Tahap ${step} dari 3`;
+    }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      if (agentName) document.getElementById("agentName").value = agentName;
-      if (agentEmail) document.getElementById("agentEmail").value = agentEmail;
-      if (agentPhone) document.getElementById("agentPhone").value = agentPhone;
+    function prevStep(step) {
+      nextStep(step);
+    }
+
+    // Tampilkan merk kendaraan hanya jika bukan AMANAH
+    document.getElementById("item").addEventListener("change", function () {
+      const merkContainer = document.getElementById("vehicle-brand-container");
+      merkContainer.style.display = this.value.includes("AMANAH") ? "none" : "block";
     });
 
-    const form = document.getElementById("order-form");
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Isi data dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById("agentName").value = urlParams.get("agentName") || "";
+    document.getElementById("agentEmail").value = urlParams.get("agentEmail") || "";
+    document.getElementById("agentPhone").value = urlParams.get("agentPhone") || "";
 
-    form.onsubmit = function (event) {
+    form.onsubmit = async function (event) {
       event.preventDefault();
-
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value.trim();
-      const domicile = document.getElementById("domicile").value;
-      const postalCode = document.getElementById("postalCode").value;
-      const job = document.getElementById("job").value;
-      const income = document.getElementById("income").value.trim();
-      const installment = document.getElementById("installment").value;
-      const phone = document.getElementById("phone").value.trim();
-      const item = document.getElementById("item").value;
-
-      const agentName = document.getElementById("agentName").value;
-      const agentEmail = document.getElementById("agentEmail").value;
-      const agentPhone = document.getElementById("agentPhone").value;
-
-      if (!/^\d{5}$/.test(postalCode)) {
-        alert("Kode Pos harus terdiri dari 5 angka!");
+      if (!document.getElementById("agreement").checked) {
+        alert("Silakan setujui pernyataan terlebih dahulu.");
         return;
       }
 
-      if (!/^\d+$/.test(phone)) {
-        alert("Nomor telepon harus hanya angka!");
-        return;
+      const data = {
+        agentName: document.getElementById("agentName").value,
+        agentEmail: document.getElementById("agentEmail").value,
+        agentPhone: document.getElementById("agentPhone").value,
+        item: document.getElementById("item").value,
+        vehicleBrand: document.getElementById("vehicleBrand").value,
+        loanAmount: document.getElementById("loanAmount").value,
+        downPayment: document.getElementById("downPayment").value,
+        installment: document.getElementById("installment").value,
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        domicile: document.getElementById("domicile").value,
+        postalCode: document.getElementById("postalCode").value,
+        job: document.getElementById("job").value,
+        income: document.getElementById("income").value,
+        timestamp: Date.now(),
+        uploads: {}
+      };
+
+      const files = {
+        ktp: document.getElementById("ktp").files[0],
+        kk: document.getElementById("kk").files[0],
+        slipgaji: document.getElementById("slipgaji").files[0],
+        npwp: document.getElementById("npwp").files[0],
+        bpkb: document.getElementById("bpkb").files[0],
+        stnk: document.getElementById("stnk").files[0]
+      };
+
+      for (const [key, file] of Object.entries(files)) {
+        if (file) {
+          const storagePath = `uploads/${Date.now()}-${file.name}`;
+          const fileRef = storageRef(storage, storagePath);
+          await uploadBytes(fileRef, file);
+          data.uploads[key] = storagePath;
+        }
       }
 
-      if (!emailRegex.test(email)) {
-        alert("Format email pelanggan tidak valid!");
-        return;
-      }
-
-      if (agentEmail && !emailRegex.test(agentEmail)) {
-        alert("Format email agent tidak valid!");
-        return;
-      }
-
-      const orderRef = ref(database, 'orders');
-      push(orderRef, {
-        agentName,
-        agentEmail,
-        agentPhone,
-        name,
-        email,
-        domicile,
-        postalCode,
-        job,
-        income,
-        installment,
-        phone,
-        item,
-        timestamp: Date.now()
-      })
+      push(ref(database, 'orders'), data)
         .then(() => {
-          window.location.replace("terima_kasih.html");
-          form.reset();
+          window.location.href = "terima_kasih.html";
         })
         .catch((error) => {
-          alert("Error: " + error.message);
+          alert("Terjadi kesalahan saat mengirim data: " + error.message);
         });
     };
   </script>
-</head>
-<body>
-  <div class="container">
-    <div class="logo">
-      <img src="css/image.png" />
-    </div>
-    <div class="form-title">Form Pengajuan</div>
-    <form class="form-container" id="order-form">
-
-      <label for="name">Nama Lengkap :</label>
-      <input type="text" id="name" placeholder="Contoh: Budi Santoso" required><br><br>
-
-      <label for="email">Email :</label>
-      <input type="email" id="email" placeholder="Contoh: budi@email.com" required><br><br>
-
-      <label for="domicile">Alamat Domisili :</label>
-      <input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo" required><br><br>
-
-      <label for="postalCode">Kode Pos :</label>
-      <input type="text" id="postalCode" maxlength="5" pattern="\d{5}" title="Masukkan 5 angka" placeholder="Contoh: 60234" required><br><br>
-
-      <label for="job">Jenis Pekerjaan :</label>
-      <input type="text" id="job" placeholder="Contoh: Karyawan Swasta"><br><br>
-
-      <label for="income">Pendapatan per Bulan:</label>
-      <input type="text" id="income" placeholder="Contoh: 5 juta, 2.5 juta" required><br><br>
-
-      <label for="installment">Angsuran Lain (jika ada):</label>
-      <input type="text" id="installment" placeholder="Contoh: Kredit HP 300 ribu"><br><br>
-
-      <label for="phone">Nomor Telepon :</label>
-      <input type="tel" id="phone" inputmode="numeric" pattern="\d*" placeholder="Contoh: 081234567890" required><br><br>
-
-      <label for="item">Jenis Pinjaman :</label>
-      <select id="item" required>
-        <option value="">-- Pilih Jenis Pinjaman --</option>
-        <option value="Motor Baru">Motor Baru</option>
-        <option value="Motor Bekas">Motor Bekas</option>
-        <option value="Mobil Baru">Mobil Baru</option>
-        <option value="Mobil Bekas">Mobil Bekas</option>
-        <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
-      </select><br><br>
-
-      <input type="hidden" id="agentName">
-      <input type="hidden" id="agentEmail">
-      <input type="hidden" id="agentPhone">
-
-      <button class="submit-button">Kirim</button>
-    </form>
-  </div>
 </body>
 </html>
