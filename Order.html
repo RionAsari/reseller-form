@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Data Pesanan dari Agent</title>
+  <title>Data Pengajuan dari Agent</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -37,7 +37,7 @@
   </style>
 </head>
 <body>
-  <h1>Pesanan dari Agent</h1>
+  <h1>Pengajuan dari Agent</h1>
   <div id="orders-list"></div>
 
   <script type="module">
@@ -90,7 +90,7 @@
       ordersList.innerHTML = '';
 
       if (!data) {
-        ordersList.innerHTML = '<p>Tidak ada data pesanan.</p>';
+        ordersList.innerHTML = '<p>Tidak ada data pengajuan.</p>';
         return;
       }
 
@@ -105,16 +105,20 @@
           <p><strong>Nama Agent:</strong> ${order.resellerName || '-'}</p>
           <p><strong>Email Agent:</strong> ${order.resellerEmail || '-'}</p>
           <p><strong>Telepon Agent:</strong> ${order.resellerPhone || '-'}</p>
-          <p><strong>Nama Pelanggan:</strong> ${order.name || '-'}</p>
-          <p><strong>Email Pelanggan:</strong> ${order.email || '-'}</p>
+          <hr>
+          <p><strong>Nama Lengkap:</strong> ${order.name || '-'}</p>
+          <p><strong>Nomor Telepon:</strong> ${order.phone || '-'}</p>
+          <p><strong>Email:</strong> ${order.email || '-'}</p>
           <p><strong>Alamat Domisili:</strong> ${order.domicile || '-'}</p>
           <p><strong>Kode Pos:</strong> ${order.postalCode || '-'}</p>
           <p><strong>Jenis Pekerjaan:</strong> ${order.job || '-'}</p>
-          <p><strong>Pendapatan per Bulan:</strong> ${order.income ? 'Rp ' + formatRupiah(order.income) : '-'}</p>
-          <p><strong>Angsuran Lain:</strong> ${order.installment || '-'}</p>
-          <p><strong>Telepon:</strong> ${order.phone || '-'}</p>
+          <p><strong>Pendapatan per Bulan:</strong> Rp ${formatRupiah(order.income)}</p>
           <p><strong>Jenis Pinjaman:</strong> ${order.item || '-'}</p>
-          <p><strong>Waktu Pemesanan:</strong> ${formatDate(order.timestamp)}</p>
+          <p><strong>Merk Kendaraan:</strong> ${order.merk || '-'}</p>
+          <p><strong>Nominal Pinjaman:</strong> Rp ${formatRupiah(order.amount)}</p>
+          <p><strong>DP (Uang Muka):</strong> Rp ${formatRupiah(order.dp)}</p>
+          <p><strong>Angsuran Lain:</strong> ${order.installment || '-'}</p>
+          <p><strong>Waktu Pengajuan:</strong> ${formatDate(order.timestamp)}</p>
         `;
 
         const orderElement = document.createElement('div');
@@ -123,7 +127,7 @@
       });
 
       if (ordersList.innerHTML === '') {
-        ordersList.innerHTML = '<p>Tidak ada data pesanan untuk agent ini.</p>';
+        ordersList.innerHTML = '<p>Tidak ada data pengajuan untuk agent ini.</p>';
       }
     }, (error) => {
       ordersList.innerHTML = `<p>Gagal mengambil data: ${error.message}</p>`;
