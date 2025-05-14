@@ -95,3 +95,55 @@ p {
     font-size: 1.2em;
     color: #555;
 }
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.stepper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+    background-color: #ccc;
+    z-index: 0;
+    transform: translateY(-50%);
+}
+
+.step {
+    position: relative;
+    z-index: 1;
+    background-color: white;
+    border: 3px solid #ccc;
+    color: #ccc;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.step.active {
+    border-color: #00FF00;
+    color: #00FF00;
+}
+
+.step.completed {
+    background-color: #00FF00;
+    border-color: #00FF00;
+    color: white;
+}
+
+.step.completed::before {
+    content: '✓';
+    font-size: 18px;
+}
