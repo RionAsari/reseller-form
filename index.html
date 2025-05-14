@@ -84,9 +84,24 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("order-form").addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const data = {
-      // ... kode data object tetap sama ...
-    };
+      const data = {
+        agentName: document.getElementById("agentName").value,
+        agentEmail: document.getElementById("agentEmail").value,
+        agentPhone: document.getElementById("agentPhone").value,
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value.trim(),
+        domicile: document.getElementById("domicile").value,
+        postalCode: document.getElementById("postalCode").value,
+        job: document.getElementById("job").value,
+        income: document.getElementById("income").value.trim(),
+        installment: document.getElementById("installment").value,
+        phone: document.getElementById("phone").value.trim(),
+        item: document.getElementById("item").value,
+        nominal: document.getElementById("nominal").value,
+        dp: document.getElementById("dp").value,
+        merk: document.getElementById("merk").value,
+        timestamp: Date.now()
+      };
 
     const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
     const fileUploads = {};
@@ -336,7 +351,7 @@ function showStep(n) {
 
           <div class="button-group">
     <button type="button" id="back3" class="back-button">Kembali</button>
-    <button type="submit" id="submitBtn" class="next-button" disabled>Ajukan</button>
+    <button type="submit" id="submitBtn" disabled>Ajukan</button>
   </div>
 </div>
 
