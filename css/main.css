@@ -176,3 +176,18 @@ p {
     transform: translateX(-50%);
 }
 
+.custom-file-upload {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.custom-file-upload img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}

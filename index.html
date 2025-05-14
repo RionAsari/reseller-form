@@ -83,26 +83,28 @@
         timestamp: Date.now()
       };
 
-      const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
-      const fileUploads = {};
+  const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
 
-      document.getElementById("loading").style.display = "block";
-      document.getElementById("ktp").addEventListener("change", function() {
-  const fileInput = document.getElementById("ktp");
-  const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
-  const icon = document.getElementById("ktp-icon");
+  fileFields.forEach(function(id) {
+    const fileInput = document.getElementById(id);
+    const icon = document.getElementById(`${id}-icon`);
+    const labelText = document.getElementById(`${id}-label-text`);
+    const statusEl = document.getElementById(`upload-status-${id}`);
 
-  if (fileName) {
-    // Change icon to 'Img_box_fill.png'
-    icon.src = "https://github.com/RionAsari/reseller-form/blob/main/css/Img_box_fill.png";
-    // Show file name
-    document.getElementById("upload-status-ktp").textContent = fileName;
-  } else {
-    // Revert to original icon
-    icon.src = "https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png";
-    document.getElementById("upload-status-ktp").textContent = "";
-  }
-});
+    fileInput.addEventListener("change", function () {
+      const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+
+      if (fileName) {
+        icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Img_box_fill.png";
+        labelText.textContent = fileName;
+        statusEl.textContent = fileName;
+      } else {
+        icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png";
+        labelText.textContent = "Pilih File";
+        statusEl.textContent = "";
+      }
+    });
+  });
 
       const uploadTasks = fileFields.map(async (id) => {
         const fileInput = document.getElementById(id);
@@ -289,8 +291,13 @@ function showStep(n) {
       <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
 
       <label>Unggah Foto KK:</label>
-      <input type="file" id="kk" accept="image/*">
-      <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
+<label class="custom-file-upload" for="ktp">
+  <img id="ktp-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
+  <span id="ktp-label-text">Pilih File</span>
+</label>
+<input type="file" id="ktp" accept="image/*" style="display: none;" />
+<span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
+
 
       <label>Unggah Foto Slip Gaji:</label>
       <input type="file" id="slipgaji" accept="image/*">
