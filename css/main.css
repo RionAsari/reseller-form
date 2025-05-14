@@ -2,10 +2,10 @@ body {
     font-family: Arial, sans-serif;
     background-color: #00FF00;
     margin: 0;
-    padding: 40px 0; /* Biar ada jarak di atas & bawah */
+    padding: 40px 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Taruh konten di atas, bukan tengah */
+    align-items: flex-start; 
     min-height: 100vh;
     box-sizing: border-box;
 }
@@ -13,7 +13,7 @@ body {
 .container {
     background-color: white;
     width: 100%;
-    max-width: 450px; /* diperlebar */
+    max-width: 450px;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
@@ -27,7 +27,7 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-    padding-top: 10px; /* jarak agar nggak nabrak atap */
+    padding-top: 10px; 
 }
 
 .logo img {
@@ -55,14 +55,23 @@ body {
 }
 
 .form-container input,
-.form-container select {
+.form-container select,
+.form-container button {
     width: 100%;
     padding: 10px;
     border: none;
     border-radius: 5px;
-    margin-bottom: 15px;
+    margin-bottom: 15px; 
     box-sizing: border-box;
     font-size: 14px;
+}
+
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="tel"],
+.form-container select {
+    margin-bottom: 20px; 
 }
 
 .submit-button {
