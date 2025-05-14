@@ -119,15 +119,16 @@ p {
   content: "";
   position: absolute;
   top: 18px;
-  right: -50%;
+  left: 50%;
   height: 4px;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.45); /* default line */
+  background-color: rgba(0, 0, 0, 0.45);
   z-index: -1;
+  transform: translateX(0%);
 }
 
 .step.completed:not(:last-child)::after {
-  background-color: #0E5C36; /* completed line */
+  background-color: #0E5C36; 
 }
 
 .circle {
@@ -145,21 +146,18 @@ p {
   transition: all 0.3s ease;
 }
 
-/* Jika step aktif (sedang diisi) */
 .step.active .circle {
   background-color: white;
   border-color: #0E5C36;
   color: black;
 }
 
-/* Jika step sudah selesai */
 .step.completed .circle {
   background-color: white;
   border-color: #0E5C36;
   color: black;
 }
 
-/* Jika step belum dimulai */
 .step.inactive .circle {
   background-color: white;
   border-color: rgba(0, 0, 0, 0.45);
