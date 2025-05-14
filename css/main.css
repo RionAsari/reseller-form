@@ -176,18 +176,23 @@ p {
     transform: translateX(-50%);
 }
 
-.custom-file-upload {
-  display: inline-flex;
+.file-input-container {
+  display: flex;
   align-items: center;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  border-radius: 4px;
-  background-color: #f9f9f9;
+  gap: 8px;
+  margin: 5px 0;
 }
 
-.custom-file-upload img {
+.file-icon {
   width: 20px;
   height: 20px;
-  margin-right: 8px;
+}
+
+.custom-file-label {
+  cursor: pointer;
+  color: blue;
+}
+
+.hidden-input {
+  display: none;
 }
