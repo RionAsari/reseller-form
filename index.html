@@ -87,24 +87,20 @@
       const fileUploads = {};
 
       document.getElementById("loading").style.display = "block";
-document.getElementById("ktp").addEventListener("change", function() {
+      document.getElementById("ktp").addEventListener("change", function() {
   const fileInput = document.getElementById("ktp");
   const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
   const icon = document.getElementById("ktp-icon");
-  const container = document.getElementById("ktp-container");
-  const statusEl = document.getElementById("upload-status-ktp");
 
   if (fileName) {
     // Change icon to 'Img_box_fill.png'
-    icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Img_box_fill.png";
-    // Show file name and hide the container around the file input
-    statusEl.textContent = fileName;
-    container.querySelector("span").style.display = "none"; // Hide "Pilih File" text
+    icon.src = "https://github.com/RionAsari/reseller-form/blob/main/css/Img_box_fill.png";
+    // Show file name
+    document.getElementById("upload-status-ktp").textContent = fileName;
   } else {
-    // Revert to original icon and reset file name
-    icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png";
-    statusEl.textContent = "";
-    container.querySelector("span").style.display = "inline"; // Show "Pilih File" text
+    // Revert to original icon
+    icon.src = "https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png";
+    document.getElementById("upload-status-ktp").textContent = "";
   }
 });
 
