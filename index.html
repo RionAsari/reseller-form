@@ -43,21 +43,14 @@
     if (urlParams.get('agentEmail')) document.getElementById("agentEmail").value = urlParams.get('agentEmail');
     if (urlParams.get('agentPhone')) document.getElementById("agentPhone").value = urlParams.get('agentPhone');
 
-  document.getElementById("item").addEventListener("change", function () {
-    const merkDiv = document.getElementById("merkKendaraanDiv");
-    const nominalField = document.getElementById("nominal");
-    
-    if (this.value.includes("AMANAH")) {
-      merkDiv.classList.add("hidden");
-    } else {
-      merkDiv.classList.remove("hidden");
-    }
-
-    if (!this.value.includes("AMANAH")) {
-      nominalField.insertAdjacentElement('afterend', merkDiv);
-    }
-  });
-
+    document.getElementById("item").addEventListener("change", function () {
+      const merkDiv = document.getElementById("merkKendaraanDiv");
+      if (this.value.includes("AMANAH")) {
+        merkDiv.classList.add("hidden");
+      } else {
+        merkDiv.classList.remove("hidden");
+      }
+    });
 
     document.getElementById("next1").addEventListener("click", () => showStep(2));
     document.getElementById("next2").addEventListener("click", () => showStep(3));
