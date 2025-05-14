@@ -209,3 +209,48 @@ p {
   left: 0;
   cursor: pointer;
 }
+
+/* Tombol */
+.next-button {
+  background: #0E5C36;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  float: right;
+  transition: all 0.3s ease;
+}
+
+.back-button {
+  background: #E67D13;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  float: left;
+  transition: all 0.3s ease;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  gap: 15px;
+}
+
+/* Hover effects */
+.next-button:hover {
+  background: #0d4a2c;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:hover {
+  background: #c46910;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
