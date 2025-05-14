@@ -87,6 +87,22 @@
       const fileUploads = {};
 
       document.getElementById("loading").style.display = "block";
+      document.getElementById("ktp").addEventListener("change", function() {
+  const fileInput = document.getElementById("ktp");
+  const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+  const icon = document.getElementById("ktp-icon");
+
+  if (fileName) {
+    // Change icon to 'Img_box_fill.png'
+    icon.src = "https://github.com/RionAsari/reseller-form/blob/main/css/Img_box_fill.png";
+    // Show file name
+    document.getElementById("upload-status-ktp").textContent = fileName;
+  } else {
+    // Revert to original icon
+    icon.src = "https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png";
+    document.getElementById("upload-status-ktp").textContent = "";
+  }
+});
 
       const uploadTasks = fileFields.map(async (id) => {
         const fileInput = document.getElementById(id);
@@ -272,38 +288,59 @@ function showStep(n) {
       <input type="file" id="ktp" accept="image/*">
       <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto KK:</label>
-      <input type="file" id="kk" accept="image/*">
-      <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
+     <!-- Step 3 with file input for KTP -->
+<label>Unggah Foto KTP:</label>
+<div class="file-input-container">
+  <img id="ktp-icon" src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png" alt="icon" class="file-icon" />
+  <input type="file" id="ktp" accept="image/*">
+  <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span>
+</div>
+<br><br>
 
-      <label>Unggah Foto Slip Gaji:</label>
-      <input type="file" id="slipgaji" accept="image/*">
-      <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
+<label>Unggah Foto Slip Gaji:</label>
+<div class="file-input-container">
+  <img id="slipgaji-icon" src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png" alt="icon" class="file-icon" />
+  <input type="file" id="slipgaji" accept="image/*">
+  <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span>
+</div>
+<br><br>
 
-      <label>Unggah Foto NPWP:</label>
-      <input type="file" id="npwp" accept="image/*">
-      <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
+<label>Unggah Foto NPWP:</label>
+<div class="file-input-container">
+  <img id="npwp-icon" src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png" alt="icon" class="file-icon" />
+  <input type="file" id="npwp" accept="image/*">
+  <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span>
+</div>
+<br><br>
 
-      <label>Unggah Foto BPKB:</label>
-      <input type="file" id="bpkb" accept="image/*">
-      <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
+<label>Unggah Foto BPKB:</label>
+<div class="file-input-container">
+  <img id="bpkb-icon" src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png" alt="icon" class="file-icon" />
+  <input type="file" id="bpkb" accept="image/*">
+  <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span>
+</div>
+<br><br>
 
-      <label>Unggah Foto STNK:</label>
-      <input type="file" id="stnk" accept="image/*">
-      <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
+<label>Unggah Foto STNK:</label>
+<div class="file-input-container">
+  <img id="stnk-icon" src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png" alt="icon" class="file-icon" />
+  <input type="file" id="stnk" accept="image/*">
+  <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span>
+</div>
+<br><br>
 
-        <label>
-          <input type="checkbox" id="consent"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses
-        </label><br><br>
+<label>
+  <input type="checkbox" id="consent"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses
+</label><br><br>
 
-        <button type="button" id="back3">Kembali</button>
-        <button type="submit" id="submitBtn" disabled>Ajukan</button>
-      </div>
+<button type="button" id="back3">Kembali</button>
+<button type="submit" id="submitBtn" disabled>Ajukan</button>
+</div>
 
-      <input type="hidden" id="agentName">
-      <input type="hidden" id="agentEmail">
-      <input type="hidden" id="agentPhone">
-    </form>
-  </div>
+<input type="hidden" id="agentName">
+<input type="hidden" id="agentEmail">
+<input type="hidden" id="agentPhone">
+</form>
+</div>
 </body>
 </html>
