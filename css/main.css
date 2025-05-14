@@ -122,37 +122,52 @@ p {
   right: -50%;
   height: 4px;
   width: 100%;
-  background-color: #ccc;
+  background-color: rgba(0, 0, 0, 0.45); /* default line */
   z-index: -1;
 }
 
 .step.completed:not(:last-child)::after {
-  background-color: #4CAF50;
+  background-color: #0E5C36; /* completed line */
 }
 
 .circle {
   height: 36px;
   width: 36px;
   border-radius: 50%;
-  background-color: #ccc;
-  color: white;
+  background-color: white;
+  color: black;
+  border: 2px solid #0E5C36;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   margin-bottom: 5px;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
 }
 
+/* Jika step aktif (sedang diisi) */
 .step.active .circle {
-  background-color: #2196F3;
+  background-color: white;
+  border-color: #0E5C36;
+  color: black;
 }
 
+/* Jika step sudah selesai */
 .step.completed .circle {
-  background-color: #4CAF50;
+  background-color: white;
+  border-color: #0E5C36;
+  color: black;
+}
+
+/* Jika step belum dimulai */
+.step.inactive .circle {
+  background-color: white;
+  border-color: rgba(0, 0, 0, 0.45);
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .label {
   font-size: 12px;
+  color: #333;
 }
 
