@@ -91,7 +91,7 @@
       const uploadTasks = fileFields.map(async (id) => {
         const fileInput = document.getElementById(id);
         const file = fileInput.files[0];
-        console.log(file); // Tambahan untuk debugging
+        console.log(file);
         const statusEl = document.getElementById(`upload-status-${id}`);
 
         if (file) {
@@ -139,27 +139,27 @@
       });
 
 
-      try {
-        await Promise.all(uploadTasks); // tunggu semua selesai
-      } catch (err) {
-        alert(err.message);
-        document.getElementById("loading").style.display = "none";
-        return;
-      }
+  try {
+    await Promise.all(uploadTasks); 
+  } catch (err) {
+    alert(err.message);
+    document.getElementById("loading").style.display = "none";
+    return;
+  }
 
-      Object.assign(data, fileUploads);
+  Object.assign(data, fileUploads);
 
-      const orderRef = ref(database, 'orders');
-      push(orderRef, data)
-        .then(() => {
-          alert("Pengajuan berhasil diajukan!");
-          document.getElementById("order-form").reset();
-          window.location.href = "terima_kasih.html";
-        })
-        .catch(err => alert("Gagal mengirim data: " + err.message))
-        .finally(() => {
-          document.getElementById("loading").style.display = "none";
-        });
+  const orderRef = ref(database, 'orders');
+  push(orderRef, data)
+    .then(() => {
+      alert("Pengajuan berhasil diajukan!");
+      document.getElementById("order-form").reset();
+      window.location.replace("terima_kasih.html");
+    })
+    .catch(err => alert("Gagal mengirim data: " + err.message))
+    .finally(() => {
+      document.getElementById("loading").style.display = "none";
+    });
     });
   });
 
@@ -188,7 +188,7 @@
       <span id="step-indicator-3">3. Upload Dokumen</span>
     </div>
 
-    <div id="loading" style="display:none; color: blue;">Sedang memproses...</div> <!-- Indikator Loading -->
+    <div id="loading" style="display:none; color: blue;">Sedang memproses...</div> 
 
     <form id="order-form" class="form-container">
       <!-- Step 1 -->
@@ -220,7 +220,6 @@
         <button type="button" id="next1">Lanjut</button>
       </div>
 
-      <!-- Step 2 -->
       <div id="step2" class="hidden">
         <label for="name">Nama Lengkap:</label>
         <input type="text" id="name" placeholder="Contoh: Budi Santoso" required><br><br>
@@ -247,7 +246,6 @@
         <button type="button" id="next2">Lanjut</button>
       </div>
 
-      <!-- Step 3 -->
       <div id="step3" class="hidden">
       <label>Upload Foto KTP:</label>
       <input type="file" id="ktp" accept="image/*">
@@ -281,7 +279,6 @@
         <button type="submit" id="submitBtn" disabled>Ajukan</button>
       </div>
 
-      <!-- Hidden input untuk tracking agent -->
       <input type="hidden" id="agentName">
       <input type="hidden" id="agentEmail">
       <input type="hidden" id="agentPhone">
