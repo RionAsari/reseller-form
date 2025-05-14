@@ -83,28 +83,31 @@
         timestamp: Date.now()
       };
 
-  const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
+const fileUploads = {}; // Jangan lupa tambahkan ini di luar fungsi untuk nyimpan URL
 
-  fileFields.forEach(function(id) {
-    const fileInput = document.getElementById(id);
-    const icon = document.getElementById(`${id}-icon`);
-    const labelText = document.getElementById(`${id}-label-text`);
-    const statusEl = document.getElementById(`upload-status-${id}`);
+const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
 
-    fileInput.addEventListener("change", function () {
-      const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+fileFields.forEach(function(id) {
+  const fileInput = document.getElementById(id);
+  const icon = document.getElementById(`${id}-icon`);
+  const labelText = document.getElementById(`${id}-label-text`);
+  const statusEl = document.getElementById(`upload-status-${id}`);
 
-      if (fileName) {
-        icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Img_box_fill.png";
-        labelText.textContent = fileName;
-        statusEl.textContent = fileName;
-      } else {
-        icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png";
-        labelText.textContent = "Pilih File";
-        statusEl.textContent = "";
-      }
-    });
+  fileInput.addEventListener("change", function () {
+    const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+
+    if (fileName) {
+      icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Img_box_fill.png";
+      labelText.textContent = fileName;
+      statusEl.textContent = fileName;
+    } else {
+      icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png";
+      labelText.textContent = "Pilih File";
+      statusEl.textContent = "";
+    }
   });
+});
+
 
       const uploadTasks = fileFields.map(async (id) => {
         const fileInput = document.getElementById(id);
