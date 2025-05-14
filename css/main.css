@@ -73,29 +73,17 @@ body {
     margin-bottom: 5px;
 }
 
-/* Form elements */
 .form-container input,
 .form-container select,
-.form-container textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px; /* boleh atur sesuai selera input */
-    margin-bottom: 15px;
-    box-sizing: border-box;
-    font-size: 14px;
-}
-
-/* Button (biar bisa lonjong / terminator shape) */
+.form-container textarea,
 .form-container button {
     width: 100%;
-    padding: 12px 30px;
+    padding: 10px;
+    border-radius: 5px;
     margin-bottom: 15px;
-    font-size: 14px;
     box-sizing: border-box;
-    border-radius: 999px;
+    font-size: 14px;
 }
-
-
 
 .form-container input[type="text"],
 .form-container input[type="email"],
