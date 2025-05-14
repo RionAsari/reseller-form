@@ -95,62 +95,62 @@ p {
     color: #555;
 }
 
-/* Stepper Style */
 .step-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    position: relative;
-    max-width: 100%;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
 }
 
 .step {
-    display: flex;
-    align-items: center;
-    position: relative;
-    flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
 }
 
 .step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    height: 4px;
-    background-color: #ddd;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    z-index: 0;
-    transform: translateY(-50%);
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #ddd;
+  z-index: 0;
+  transform: translateY(-50%);
 }
 
-.step:last-child::after {
-    content: none;
+.step.completed:not(:last-child)::after {
+  background-color: #4CAF50;
 }
 
 .circle {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #ddd;
-    color: #000;
-    text-align: center;
-    line-height: 30px;
-    z-index: 1;
-    font-weight: bold;
-    position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ddd;
+  color: #000;
+  text-align: center;
+  line-height: 30px;
+  z-index: 1;
+  font-weight: bold;
+  position: relative;
+  border: 2px solid transparent;
 }
 
 .step.active .circle {
-    background-color: #4CAF50;
-    color: white;
+  background-color: #4CAF50;
+  color: white;
 }
 
 .step.completed .circle {
-    background-color: #4CAF50;
-    color: white;
+  background-color: #4CAF50;
+  color: white;
 }
+
 
 .step.completed::after {
     background-color: #4CAF50;
