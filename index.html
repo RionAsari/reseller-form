@@ -35,7 +35,13 @@
 
   let step = 1;
 
-  document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
+    // Cegah akses kembali ke form setelah submit
+    if (sessionStorage.getItem("sudahSubmit")) {
+      window.location.href = "terima_kasih.html";
+      return;
+    }
+
     showStep(1);
 
     const urlParams = new URLSearchParams(window.location.search);
