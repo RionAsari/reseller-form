@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #00FF00;
+    background-color: #00FF00;  /* Latar belakang hijau */
     margin: 0;
     padding: 40px 0;
     display: flex;
@@ -10,19 +10,21 @@ body {
     box-sizing: border-box;
 }
 
-.container {
-    background-color: white;
-    width: 100%;
-    max-width: 450px;
-    padding: 25px;
+/* Menghapus container putih */
+.scrollable-form {
+    background-color: #90EE90;  /* Latar belakang hijau terang untuk form */
     border-radius: 10px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    max-height: 420px;  /* Sesuaikan jika perlu */
+    overflow-y: auto;
+    text-align: left;
+    width: 100%;
+    max-width: 450px;  /* Lebar maksimal */
     box-sizing: border-box;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);  /* Untuk efek bayangan */
 }
 
+/* Bagian logo */
 .logo {
     width: 100%;
     display: flex;
@@ -37,17 +39,7 @@ body {
     height: auto;
 }
 
-/* Scrollable form section including title */
-.scrollable-form {
-    background-color: #90EE90;
-    border-radius: 10px;
-    padding: 20px;
-    max-height: 420px; /* sesuaikan jika perlu */
-    overflow-y: auto;
-    text-align: left;
-    flex: 1;
-}
-
+/* Judul form */
 .form-title {
     font-size: 24px;
     font-weight: bold;
@@ -55,6 +47,7 @@ body {
     text-align: center;
 }
 
+/* Bagian form */
 .form-container {
     padding: 0;
     margin: 0;
@@ -85,6 +78,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* Tombol submit */
 .submit-button {
     font-weight: bold;
     background-color: #00FF00;
@@ -107,6 +101,7 @@ p {
     color: #555;
 }
 
+/* STEP INDICATOR */
 .step-container {
     display: flex;
     justify-content: space-between;
@@ -128,11 +123,11 @@ p {
     position: absolute;
     top: 50%;
     left: 50%;
-    right: -50%;
+    width: 100%;
     height: 4px;
     background-color: rgba(0, 0, 0, 0.45);
     z-index: 0;
-    transform: translateY(-50%);
+    transform: translateX(50%) translateY(-50%);
 }
 
 .step.completed:not(:last-child)::after {
