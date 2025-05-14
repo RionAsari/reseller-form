@@ -176,13 +176,3 @@ p {
     transform: translateX(-50%);
 }
 
-.file-input-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.file-icon {
-  width: 20px; /* Adjust size */
-  height: 20px; /* Adjust size */
-}
