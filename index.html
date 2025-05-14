@@ -163,27 +163,27 @@
     });
   });
 
-    function showStep(n) {
-      step = n;
-      for (let i = 1; i <= 3; i++) {
-        document.getElementById(`step${i}`).classList.add("hidden");
+function showStep(n) {
+  step = n;
+  for (let i = 1; i <= 3; i++) {
+    const stepEl = document.getElementById(`step${i}`);
+    const box = document.getElementById(`step-box-${i}`);
+    const circle = document.getElementById(`circle-${i}`);
 
-        const box = document.getElementById(`step-box-${i}`);
-        const circle = document.getElementById(`circle-${i}`);
-        box.classList.remove("active", "completed");
-        circle.textContent = i;
-      }
+    stepEl.classList.add("hidden");
+    box.classList.remove("active", "completed");
+    circle.textContent = i;
+  }
 
-      document.getElementById(`step${n}`).classList.remove("hidden");
-      document.getElementById(`step-box-${n}`).classList.add("active");
+  document.getElementById(`step${n}`).classList.remove("hidden");
+  document.getElementById(`step-box-${n}`).classList.add("active");
 
-      for (let j = 1; j < n; j++) {
-        const box = document.getElementById(`step-box-${j}`);
-        const circle = document.getElementById(`circle-${j}`);
-        box.classList.add("completed");
-        circle.textContent = "✔";
-      }
-    }
+  for (let j = 1; j < n; j++) {
+    document.getElementById(`step-box-${j}`).classList.add("completed");
+    document.getElementById(`circle-${j}`).textContent = "✔";
+  }
+}
+
 </script>
 </head>
 
