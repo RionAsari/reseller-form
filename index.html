@@ -163,15 +163,27 @@
     });
   });
 
-  function showStep(n) {
-    step = n;
-    for (let i = 1; i <= 3; i++) {
-      document.getElementById(`step${i}`).classList.add("hidden");
-      document.getElementById(`step-indicator-${i}`).classList.remove("step-active");
+    function showStep(n) {
+      step = n;
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`step${i}`).classList.add("hidden");
+
+        const box = document.getElementById(`step-box-${i}`);
+        const circle = document.getElementById(`circle-${i}`);
+        box.classList.remove("active", "completed");
+        circle.textContent = i;
+      }
+
+      document.getElementById(`step${n}`).classList.remove("hidden");
+      document.getElementById(`step-box-${n}`).classList.add("active");
+
+      for (let j = 1; j < n; j++) {
+        const box = document.getElementById(`step-box-${j}`);
+        const circle = document.getElementById(`circle-${j}`);
+        box.classList.add("completed");
+        circle.textContent = "✔";
+      }
     }
-    document.getElementById(`step${n}`).classList.remove("hidden");
-    document.getElementById(`step-indicator-${n}`).classList.add("step-active");
-  }
 </script>
 </head>
 
@@ -182,10 +194,19 @@
     </div>
     <div class="form-title">Form Pengajuan</div>
 
-    <div class="stepper">
-      <div class="step completed" id="step1">1</div>
-      <div class="step active" id="step2">2</div>
-      <div class="step" id="step3">3</div>
+    <div class="step-container">
+      <div class="step" id="step-box-1">
+        <div class="circle" id="circle-1">1</div>
+        <div class="label">Informasi Pinjaman</div>
+      </div>
+      <div class="step" id="step-box-2">
+        <div class="circle" id="circle-2">2</div>
+        <div class="label">Data Pribadi</div>
+      </div>
+      <div class="step" id="step-box-3">
+        <div class="circle" id="circle-3">3</div>
+        <div class="label">Upload Dokumen</div>
+      </div>
     </div>
 
     <div id="loading" style="display:none; color: blue;">Sedang memproses...</div> 
