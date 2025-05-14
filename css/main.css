@@ -111,15 +111,14 @@ p {
   flex: 1;
 }
 
-/* Garis penghubung */
 .step:not(:last-child)::after {
   content: "";
   position: absolute;
   top: 50%;
-  right: 0;
-  width: 100%;
+  left: 50%;
+  right: -50%;
   height: 4px;
-  background-color: rgba(0, 0, 0, 0.45); /* hitam transparan */
+  background-color: rgba(0, 0, 0, 0.45);
   z-index: 0;
   transform: translateY(-50%);
 }
