@@ -79,11 +79,12 @@ body {
 .form-container button {
     width: 100%;
     padding: 10px;
-    border-radius: 5px;
+    /* border-radius: 5px;  <= HAPUS BARIS INI */
     margin-bottom: 15px;
     box-sizing: border-box;
     font-size: 14px;
 }
+
 
 .form-container input[type="text"],
 .form-container input[type="email"],
