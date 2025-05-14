@@ -214,72 +214,54 @@ p {
   cursor: pointer;
 }
 
-/* Tombol Flowchart Terminator */
-.next-button, .back-button, #submitBtn {
-    padding: 12px 35px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    min-width: 120px;
+/* Style untuk tombol flowchart terminator */
+.back-button,
+.next-button,
+.submit-button {
+  border: none;
+  border-radius: 999px; /* bentuk lonjong/terminator */
+  padding: 12px 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* shadow */
+  text-align: center;
 }
 
-/* Bentuk terminator (rounded rectangle) */
-.next-button {
-    background: #0E5C36;
-    color: white;
-    border-radius: 30px 8px 8px 30px;
-    margin-left: auto;
-}
-
+/* Warna dan posisi tombol spesifik */
 .back-button {
-    background: #E67D13;
-    color: white;
-    border-radius: 8px 30px 30px 8px;
+  background: #E67D13;
+  color: white;
+  float: left;
 }
 
-/* Hover effects */
-.next-button:hover {
-    background: #0d4a2c;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+.next-button {
+  background: #0E5C36;
+  color: white;
+  float: right;
 }
 
+.submit-button {
+  background-color: #00FF00;
+  color: black;
+  width: 100%;
+}
+
+/* Hover efek flowchart style */
 .back-button:hover {
-    background: #c46910;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  background: #c46910;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
-/* Tombol Ajukan */
-#submitBtn {
-    background: #0E5C36;
-    color: white;
-    border-radius: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.next-button:hover {
+  background: #0d4a2c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
-/* Container tombol */
-.button-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    gap: 15px;
-    position: relative;
-}
-
-/* Garis penghubung antar tombol (opsional) */
-.button-group::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #0E5C36;
-    z-index: -1;
+.submit-button:hover {
+  background-color: #00cc00;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
