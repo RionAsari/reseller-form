@@ -285,35 +285,62 @@ function showStep(n) {
         <button type="button" id="next2">Lanjut</button>
       </div>
 
-      <div id="step3" class="hidden">
-      <label>Unggah Foto KTP:</label>
-      <input type="file" id="ktp" accept="image/*">
-      <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
+     <div id="step3" class="hidden">
+  <!-- Unggah KTP -->
+  <label>Unggah Foto KTP:</label>
+  <label class="custom-file-upload" for="ktp">
+    <img id="ktp-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
+    <span id="ktp-label-text">Pilih File</span>
+  </label>
+  <input type="file" id="ktp" accept="image/*" style="display: none;" />
+  <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto KK:</label>
-<label class="custom-file-upload" for="ktp">
-  <img id="ktp-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
-  <span id="ktp-label-text">Pilih File</span>
-</label>
-<input type="file" id="ktp" accept="image/*" style="display: none;" />
-<span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
+  <!-- Unggah KK -->
+  <label>Unggah Foto KK:</label>
+  <label class="custom-file-upload" for="kk">
+    <img id="kk-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
+    <span id="kk-label-text">Pilih File</span>
+  </label>
+  <input type="file" id="kk" accept="image/*" style="display: none;" />
+  <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
 
+  <!-- Unggah Slip Gaji -->
+  <label>Unggah Foto Slip Gaji:</label>
+  <label class="custom-file-upload" for="slipgaji">
+    <img id="slipgaji-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
+    <span id="slipgaji-label-text">Pilih File</span>
+  </label>
+  <input type="file" id="slipgaji" accept="image/*" style="display: none;" />
+  <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto Slip Gaji:</label>
-      <input type="file" id="slipgaji" accept="image/*">
-      <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
+  <!-- Unggah NPWP -->
+  <label>Unggah Foto NPWP:</label>
+  <label class="custom-file-upload" for="npwp">
+    <img id="npwp-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
+    <span id="npwp-label-text">Pilih File</span>
+  </label>
+  <input type="file" id="npwp" accept="image/*" style="display: none;" />
+  <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto NPWP:</label>
-      <input type="file" id="npwp" accept="image/*">
-      <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
+  <!-- Unggah BPKB -->
+  <label>Unggah Foto BPKB:</label>
+  <label class="custom-file-upload" for="bpkb">
+    <img id="bpkb-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
+    <span id="bpkb-label-text">Pilih File</span>
+  </label>
+  <input type="file" id="bpkb" accept="image/*" style="display: none;" />
+  <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto BPKB:</label>
-      <input type="file" id="bpkb" accept="image/*">
-      <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
+  <!-- Unggah STNK -->
+  <label>Unggah Foto STNK:</label>
+  <label class="custom-file-upload" for="stnk">
+    <img id="stnk-icon" src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" alt="Icon" />
+    <span id="stnk-label-text">Pilih File</span>
+  </label>
+  <input type="file" id="stnk" accept="image/*" style="display: none;" />
+  <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
+</div>
 
-      <label>Unggah Foto STNK:</label>
-      <input type="file" id="stnk" accept="image/*">
-      <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
 
         <label>
           <input type="checkbox" id="consent"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses
