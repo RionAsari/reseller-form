@@ -93,6 +93,7 @@
         const file = fileInput.files[0];
         console.log(file);
         const statusEl = document.getElementById(`upload-status-${id}`);
+        const iconEl = document.querySelector(`#${id} + img`);
 
         if (file) {
           if (file.size > 10 * 1024 * 1024) {
@@ -126,6 +127,7 @@
                   console.log(`[${id}] URL berhasil: ${url}`);
                   fileUploads[id] = url;
                   statusEl.textContent = "Selesai ✅";
+                  iconEl.src = 'https://github.com/RionAsari/reseller-form/blob/main/css/Img_box_fill.png?raw=true'; // Change icon
                   resolve();
                 } catch (err) {
                   console.error(`[${id}] Gagal ambil URL:`, err);
@@ -138,28 +140,27 @@
         }
       });
 
+      try {
+        await Promise.all(uploadTasks); 
+      } catch (err) {
+        alert(err.message);
+        document.getElementById("loading").style.display = "none";
+        return;
+      }
 
-  try {
-    await Promise.all(uploadTasks); 
-  } catch (err) {
-    alert(err.message);
-    document.getElementById("loading").style.display = "none";
-    return;
-  }
+      Object.assign(data, fileUploads);
 
-  Object.assign(data, fileUploads);
-
-  const orderRef = ref(database, 'orders');
-  push(orderRef, data)
-    .then(() => {
-      alert("Pengajuan berhasil diajukan!");
-      document.getElementById("order-form").reset();
-      window.location.replace("terima_kasih.html");
-    })
-    .catch(err => alert("Gagal mengirim data: " + err.message))
-    .finally(() => {
-      document.getElementById("loading").style.display = "none";
-    });
+      const orderRef = ref(database, 'orders');
+      push(orderRef, data)
+        .then(() => {
+          alert("Pengajuan berhasil diajukan!");
+          document.getElementById("order-form").reset();
+          window.location.replace("terima_kasih.html");
+        })
+        .catch(err => alert("Gagal mengirim data: " + err.message))
+        .finally(() => {
+          document.getElementById("loading").style.display = "none";
+        });
     });
   });
 
@@ -183,7 +184,6 @@ function showStep(n) {
     document.getElementById(`circle-${j}`).textContent = "✔";
   }
 }
-
 </script>
 </head>
 
@@ -269,37 +269,37 @@ function showStep(n) {
 
       <div id="step3" class="hidden">
 <label for="ktp" class="file-upload-label">
-  <img src="upload-icon.png" alt="Upload Icon" class="upload-icon"> Unggah Foto KTP
+  <img src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png?raw=true" alt="Upload Icon" class="upload-icon"> Unggah Foto KTP
   <input type="file" id="ktp" accept="image/*" class="file-input">
 </label>
 <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
 
 <label for="kk" class="file-upload-label">
-  <img src="upload-icon.png" alt="Upload Icon" class="upload-icon"> Unggah Foto KK
+  <img src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png?raw=true" alt="Upload Icon" class="upload-icon"> Unggah Foto KK
   <input type="file" id="kk" accept="image/*" class="file-input">
 </label>
 <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
 
 <label for="slipgaji" class="file-upload-label">
-  <img src="upload-icon.png" alt="Upload Icon" class="upload-icon"> Unggah Foto Slip Gaji
+  <img src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png?raw=true" alt="Upload Icon" class="upload-icon"> Unggah Foto Slip Gaji
   <input type="file" id="slipgaji" accept="image/*" class="file-input">
 </label>
 <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
 
 <label for="npwp" class="file-upload-label">
-  <img src="upload-icon.png" alt="Upload Icon" class="upload-icon"> Unggah Foto NPWP
+  <img src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png?raw=true" alt="Upload Icon" class="upload-icon"> Unggah Foto NPWP
   <input type="file" id="npwp" accept="image/*" class="file-input">
 </label>
-<span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
+<span id="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png?raw=true" style="font-size: 14px; color: blue;"></span><br><br>
 
 <label for="bpkb" class="file-upload-label">
-  <img src="upload-icon.png" alt="Upload Icon" class="upload-icon"> Unggah Foto BPKB
+  <img src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png?raw=true" alt="Upload Icon" class="upload-icon"> Unggah Foto BPKB
   <input type="file" id="bpkb" accept="image/*" class="file-input">
 </label>
 <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
 
 <label for="stnk" class="file-upload-label">
-  <img src="upload-icon.png" alt="Upload Icon" class="upload-icon"> Unggah Foto STNK
+  <img src="https://github.com/RionAsari/reseller-form/blob/main/css/Icon.png?raw=true" alt="Upload Icon" class="upload-icon"> Unggah Foto STNK
   <input type="file" id="stnk" accept="image/*" class="file-input">
 </label>
 <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
