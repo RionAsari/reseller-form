@@ -157,11 +157,12 @@
 
       const orderRef = ref(database, 'orders');
       push(orderRef, data)
-        .then(() => {
-          alert("Pengajuan berhasil diajukan!");
-          document.getElementById("order-form").reset();
-          window.location.href = "terima_kasih.html";
-        })
+      .then(() => {
+        sessionStorage.setItem("sudahSubmit", "true"); // Tambahkan ini
+        alert("Pengajuan berhasil diajukan!");
+        document.getElementById("order-form").reset();
+        window.location.href = "terima_kasih.html";
+      })
         .catch(err => alert("Gagal mengirim data: " + err.message))
         .finally(() => {
           document.getElementById("loading").style.display = "none";
