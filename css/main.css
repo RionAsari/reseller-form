@@ -214,47 +214,72 @@ p {
   cursor: pointer;
 }
 
-/* Tombol */
+/* Tombol Flowchart Terminator */
+.next-button, .back-button, #submitBtn {
+    padding: 12px 35px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+}
+
+/* Bentuk terminator (rounded rectangle) */
 .next-button {
-  background: #0E5C36;
-  color: white;
-  padding: 12px 30px;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  float: right;
-  transition: all 0.3s ease;
+    background: #0E5C36;
+    color: white;
+    border-radius: 30px 8px 8px 30px;
+    margin-left: auto;
 }
 
 .back-button {
-  background: #E67D13;
-  color: white;
-  padding: 12px 30px;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  float: left;
-  transition: all 0.3s ease;
-}
-
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 25px;
-  gap: 15px;
+    background: #E67D13;
+    color: white;
+    border-radius: 8px 30px 30px 8px;
 }
 
 /* Hover effects */
 .next-button:hover {
-  background: #0d4a2c;
-  transform: translateY(-2px);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    background: #0d4a2c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .back-button:hover {
-  background: #c46910;
-  transform: translateY(-2px);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    background: #c46910;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Tombol Ajukan */
+#submitBtn {
+    background: #0E5C36;
+    color: white;
+    border-radius: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Container tombol */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+    position: relative;
+}
+
+/* Garis penghubung antar tombol (opsional) */
+.button-group::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #0E5C36;
+    z-index: -1;
 }
