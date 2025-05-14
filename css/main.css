@@ -175,42 +175,25 @@ p {
     left: 50%;
     transform: translateX(-50%);
 }
-/* Gaya untuk input file */
-.file-upload-label {
+
+.custom-file-input {
+  position: relative;
   display: flex;
   align-items: center;
-  background-color: white;
-  border: 2px solid #0E5C36; /* Outline hijau */
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.custom-file-input input[type="file"] {
+  position: absolute;
+  opacity: 0;
   width: 100%;
-  margin-bottom: 15px;
+  height: 100%;
+  left: 0;
+  cursor: pointer;
 }
 
-.file-upload-label:hover {
-  border-color: #00FF00; /* Mengubah warna border saat hover */
-}
-
-.file-input {
-  display: none; /* Menyembunyikan input file asli */
-}
-
-.upload-icon {
+.file-icon {
   width: 20px;
   height: 20px;
-  margin-right: 10px;
 }
-
-/* Tampilan untuk status upload */
-#upload-status-ktp,
-#upload-status-kk,
-#upload-status-slipgaji,
-#upload-status-npwp,
-#upload-status-bpkb,
-#upload-status-stnk {
-  font-size: 14px;
-  color: blue;
-}
-

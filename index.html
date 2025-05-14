@@ -84,6 +84,24 @@
       };
 
       const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
+
+fileFields.forEach((id) => {
+  const input = document.getElementById(id);
+  input.addEventListener('change', function () {
+    const file = this.files[0];
+    const label = document.getElementById(`label-${id}`);
+    const icon = document.getElementById(`icon-${id}`);
+
+    if (file) {
+      label.textContent = file.name;
+      icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Img_box_fill.png";
+    } else {
+      label.textContent = "Pilih File";
+      icon.src = "https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png";
+    }
+  });
+});
+
       const fileUploads = {};
 
       document.getElementById("loading").style.display = "block";
@@ -267,30 +285,53 @@ function showStep(n) {
         <button type="button" id="next2">Lanjut</button>
       </div>
 
-      <div id="step3" class="hidden">
-      <label>Unggah Foto KTP:</label>
-      <input type="file" id="ktp" accept="image/*">
-      <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
+  <label>Unggah Foto KTP:</label>
+  <div class="custom-file-input">
+    <img src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" class="file-icon" id="icon-ktp">
+    <span id="label-ktp">Pilih File</span>
+    <input type="file" id="ktp" accept="image/*">
+  </div>
+  <span id="upload-status-ktp" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto KK:</label>
-      <input type="file" id="kk" accept="image/*">
-      <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
+  <label>Unggah Foto KK:</label>
+  <div class="custom-file-input">
+    <img src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" class="file-icon" id="icon-kk">
+    <span id="label-kk">Pilih File</span>
+    <input type="file" id="kk" accept="image/*">
+  </div>
+  <span id="upload-status-kk" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto Slip Gaji:</label>
-      <input type="file" id="slipgaji" accept="image/*">
-      <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
+  <label>Unggah Foto Slip Gaji:</label>
+  <div class="custom-file-input">
+    <img src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" class="file-icon" id="icon-slipgaji">
+    <span id="label-slipgaji">Pilih File</span>
+    <input type="file" id="slipgaji" accept="image/*">
+  </div>
+  <span id="upload-status-slipgaji" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto NPWP:</label>
-      <input type="file" id="npwp" accept="image/*">
-      <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
+  <label>Unggah Foto NPWP:</label>
+  <div class="custom-file-input">
+    <img src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" class="file-icon" id="icon-npwp">
+    <span id="label-npwp">Pilih File</span>
+    <input type="file" id="npwp" accept="image/*">
+  </div>
+  <span id="upload-status-npwp" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto BPKB:</label>
-      <input type="file" id="bpkb" accept="image/*">
-      <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
+  <label>Unggah Foto BPKB:</label>
+  <div class="custom-file-input">
+    <img src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" class="file-icon" id="icon-bpkb">
+    <span id="label-bpkb">Pilih File</span>
+    <input type="file" id="bpkb" accept="image/*">
+  </div>
+  <span id="upload-status-bpkb" style="font-size: 14px; color: blue;"></span><br><br>
 
-      <label>Unggah Foto STNK:</label>
-      <input type="file" id="stnk" accept="image/*">
-      <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
+  <label>Unggah Foto STNK:</label>
+  <div class="custom-file-input">
+    <img src="https://raw.githubusercontent.com/RionAsari/reseller-form/main/css/Icon.png" class="file-icon" id="icon-stnk">
+    <span id="label-stnk">Pilih File</span>
+    <input type="file" id="stnk" accept="image/*">
+  </div>
+  <span id="upload-status-stnk" style="font-size: 14px; color: blue;"></span><br><br>
 
         <label>
           <input type="checkbox" id="consent"> Dengan ini saya menyatakan data yang saya berikan benar adanya dan bersedia diproses
