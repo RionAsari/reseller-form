@@ -52,18 +52,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Event listeners untuk navigasi step
   document.getElementById("next1").addEventListener("click", () => showStep(2));
   document.getElementById("next2").addEventListener("click", () => showStep(3));
   document.getElementById("back2").addEventListener("click", () => showStep(1));
   document.getElementById("back3").addEventListener("click", () => showStep(2));
 
-  // Event listener untuk checkbox consent
   document.getElementById("consent").addEventListener("change", function () {
     document.getElementById("submitBtn").disabled = !this.checked;
   });
 
-  // Event listener untuk file input (DIPINDAHKAN KE LUAR DARI SUBMIT HANDLER)
   document.querySelectorAll('.file-input').forEach(input => {
     input.addEventListener('change', function() {
       const container = this.closest('.file-input-container');
@@ -80,10 +77,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Submit handler
   document.getElementById("order-form").addEventListener("submit", async function (event) {
     event.preventDefault();
-
+      const now = new Date();
+      const tanggal = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getFullYear()}`;
       const data = {
         agentName: document.getElementById("agentName").value,
         agentEmail: document.getElementById("agentEmail").value,
@@ -100,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
         nominal: document.getElementById("nominal").value,
         dp: document.getElementById("dp").value,
         merk: document.getElementById("merk").value,
-        timestamp: Date.now()
+        tanggal: new Date().toLocaleDateString("id-ID")
       };
 
     const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
