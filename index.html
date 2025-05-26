@@ -364,7 +364,7 @@ function showStep(n) {
         <input type="text" id="installment" placeholder="Contoh: Kredit HP 300 ribu"><br><br>
 
         <div class="button-group">
-    <button type="button" id="next1" class="next-button">Lanjut</button>  // Ganti ini
+    <button type="button" id="next1" class="next-button">Lanjut</button>
   </div>
 </div>
 
@@ -466,42 +466,14 @@ function showStep(n) {
 
           <div class="button-group">
     <button type="button" id="back3" class="back-button">Kembali</button>
-    <button type="button" id="submitBtn" disabled>Ajukan</button>
+    <button type="submit" id="submitBtn" disabled>Ajukan</button>
   </div>
 </div>
-// Tampilkan popup saat klik tombol Ajukan
-document.getElementById("submitBtn").addEventListener("click", () => {
-  document.getElementById("confirmPopup").style.display = "flex";
-});
-
-// Tombol Cek Ulang: tutup popup
-document.getElementById("btnCheck").addEventListener("click", () => {
-  document.getElementById("confirmPopup").style.display = "none";
-});
-
-// Tombol Ajukan Sekarang: submit form asli secara manual
-document.getElementById("btnSubmit").addEventListener("click", () => {
-  document.getElementById("confirmPopup").style.display = "none";
-  // Trigger submit asli:
-  document.getElementById("order-form").submit();
-});
 
       <input type="hidden" id="agentName">
       <input type="hidden" id="agentEmail">
       <input type="hidden" id="agentPhone">
     </form>
   </div>
-  <div id="confirmPopup" class="popup-overlay">
-  <div class="popup-box">
-    <div class="popup-header">Ajukan Sekarang?</div>
-    <div class="popup-text">
-      Pastikan data yang Sahabat isi sudah benar.
-      Pengajuan yang sudah dikirim tidak dapat diubah.
-    </div>
-    <button id="btnCheck" class="popup-button check">Cek Ulang</button>
-    <button id="btnSubmit" class="popup-button submit">Ajukan Sekarang</button> 
-  </div>
-</div>
-
 </body>
 </html>
