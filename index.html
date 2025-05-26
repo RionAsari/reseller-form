@@ -308,6 +308,23 @@ function showStep(n) {
   if (n === 3) {
     updateDocumentVisibility(); 
   }
+  // Tombol Submit di Step 3 diganti fungsinya untuk munculkan popup
+document.getElementById("submitBtn").addEventListener("click", function (e) {
+  e.preventDefault();
+  document.getElementById("confirmationPopup").classList.remove("hidden");
+});
+
+// Tombol "Cek Ulang" tutup popup
+document.getElementById("checkAgainBtn").addEventListener("click", function () {
+  document.getElementById("confirmationPopup").classList.add("hidden");
+});
+
+// Tombol "Ajukan Sekarang" submit form secara manual
+document.getElementById("confirmSubmitBtn").addEventListener("click", function () {
+  document.getElementById("confirmationPopup").classList.add("hidden");
+  document.getElementById("order-form").requestSubmit();
+});
+
 }
 
 </script>
@@ -466,7 +483,7 @@ function showStep(n) {
 
           <div class="button-group">
     <button type="button" id="back3" class="back-button">Kembali</button>
-    <button type="submit" id="submitBtn" disabled>Ajukan</button>
+    <button type="button" id="submitBtn" disabled>Ajukan</button>
   </div>
 </div>
 
@@ -475,5 +492,20 @@ function showStep(n) {
       <input type="hidden" id="agentPhone">
     </form>
   </div>
+  <!-- Popup Konfirmasi -->
+<div id="confirmationPopup" class="popup-overlay hidden">
+  <div class="popup-box">
+    <h2 class="popup-header">Ajukan Sekarang?</h2>
+    <p class="popup-text">
+      Pastikan data yang Sahabat isi sudah benar. <br />
+      Pengajuan yang sudah dikirim tidak dapat diubah.
+    </p>
+    <div class="popup-buttons">
+      <button id="checkAgainBtn" class="back-button">Cek Ulang</button>
+      <button id="confirmSubmitBtn" class="next-button">Ajukan Sekarang</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
