@@ -263,18 +263,16 @@ p {
     width: auto; 
     margin-left: auto; 
 }
-.input-error {
-  border: 2px solid red;
-  background-color: #ffe6e6;
-}
-
-.error-message {
-  color: red;
-  font-size: 13px;
-  margin-top: 5px;
-}
+  .input-error {
+    border: 2px solid red !important;
+  }
 
   .label-error {
     color: red !important;
   }
-  
+
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+  }
