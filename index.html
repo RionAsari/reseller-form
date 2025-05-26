@@ -61,6 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const isAmanah = selected.includes("AMANAH");
     bpkbSection.style.display = isAmanah ? "block" : "none";
     stnkSection.style.display = isAmanah ? "block" : "none";
+      if (!isAmanah) {
+    document.getElementById("bpkb").value = "";
+    document.getElementById("stnk").value = "";
+
+    document.getElementById("upload-status-bpkb").textContent = "";
+    document.getElementById("upload-status-stnk").textContent = "";
+  }
   }
 
   // Saat pilihan item berubah
@@ -72,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
     showStep(3);
   });
 
-  document.getElementById("next2").addEventListener("click", () => showStep(3));
+
   document.getElementById("back2").addEventListener("click", () => showStep(1));
   document.getElementById("back3").addEventListener("click", () => showStep(2));
 
