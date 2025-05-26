@@ -263,6 +263,11 @@ p {
     width: auto; 
     margin-left: auto; 
 }
+#submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
   .input-error {
     border: 2px solid red !important;
   }
@@ -276,3 +281,4 @@ p {
     font-size: 12px;
     margin-top: 4px;
   }
+  

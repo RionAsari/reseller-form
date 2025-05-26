@@ -252,7 +252,7 @@ document.getElementById("next2").addEventListener("click", () => {
               } catch (err) {
                 statusEl.textContent = "Gagal ❌";
                 reject(new Error(`Gagal mendapatkan URL ${id}: ${err.message}`));
-                updateDocumentVisibility(); // Tambahkan ini di akhir DOMContentLoaded
+                updateDocumentVisibility(); 
               }
             }
           );
@@ -306,7 +306,7 @@ function showStep(n) {
   }
 
   if (n === 3) {
-    updateDocumentVisibility(); // Periksa ulang jenis pinjaman saat masuk step 3
+    updateDocumentVisibility(); 
   }
 }
 
