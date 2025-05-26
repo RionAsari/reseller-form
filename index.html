@@ -306,26 +306,27 @@ function showStep(n) {
   }
 
   if (n === 3) {
-    updateDocumentVisibility(); 
+    updateDocumentVisibility();
   }
-  // Tombol Submit di Step 3 diganti fungsinya untuk munculkan popup
-document.getElementById("submitBtn").addEventListener("click", function (e) {
-  e.preventDefault();
-  document.getElementById("confirmationPopup").classList.remove("hidden");
-});
-
-// Tombol "Cek Ulang" tutup popup
-document.getElementById("checkAgainBtn").addEventListener("click", function () {
-  document.getElementById("confirmationPopup").classList.add("hidden");
-});
-
-// Tombol "Ajukan Sekarang" submit form secara manual
-document.getElementById("confirmSubmitBtn").addEventListener("click", function () {
-  document.getElementById("confirmationPopup").classList.add("hidden");
-  document.getElementById("order-form").requestSubmit();
-});
-
 }
+
+// Tambahkan event listener SEKALI SAJA saat DOM siap
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("submitBtn").addEventListener("click", function (e) {
+    e.preventDefault();
+    document.getElementById("confirmationPopup").classList.remove("hidden");
+  });
+
+  document.getElementById("checkAgainBtn").addEventListener("click", function () {
+    document.getElementById("confirmationPopup").classList.add("hidden");
+  });
+
+  document.getElementById("confirmSubmitBtn").addEventListener("click", function () {
+    document.getElementById("confirmationPopup").classList.add("hidden");
+    document.getElementById("order-form").requestSubmit();
+  });
+});
+
 
 </script>
 </head>
