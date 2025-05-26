@@ -53,6 +53,25 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("next1").addEventListener("click", () => showStep(2));
+    const bpkbSection = document.getElementById("bpkb").closest(".file-input-container").parentElement;
+  const stnkSection = document.getElementById("stnk").closest(".file-input-container").parentElement;
+
+  function toggleFileRequirements() {
+    const selected = document.getElementById("item").value;
+    const isAmanah = selected.includes("AMANAH");
+    bpkbSection.style.display = isAmanah ? "block" : "none";
+    stnkSection.style.display = isAmanah ? "block" : "none";
+  }
+
+  // Saat pilihan item berubah
+  document.getElementById("item").addEventListener("change", toggleFileRequirements);
+
+  // Saat ke step 3
+  document.getElementById("next2").addEventListener("click", () => {
+    toggleFileRequirements(); // Panggil saat mau ke step 3
+    showStep(3);
+  });
+
   document.getElementById("next2").addEventListener("click", () => showStep(3));
   document.getElementById("back2").addEventListener("click", () => showStep(1));
   document.getElementById("back3").addEventListener("click", () => showStep(2));
