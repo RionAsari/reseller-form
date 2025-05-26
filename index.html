@@ -52,10 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  document.getElementById("next1").addEventListener("click", () => {
-  const input = document.getElementById(id);
-  const inputLabel = document.querySelector(`label[for="${id}"]`);
-
+document.getElementById("next1").addEventListener("click", () => {
   const fields = [
     { id: "item", label: "Jenis Pinjaman" },
     { id: "nominal", label: "Nominal Pinjaman" },
@@ -69,39 +66,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let valid = true;
 
-  ffields.forEach(({ id, label }) => {
-  const input = document.getElementById(id);
-  const inputLabel = document.querySelector(`label[for="${id}"]`);
+  fields.forEach(({ id, label }) => {
+    const input = document.getElementById(id);
+    const inputLabel = document.querySelector(`label[for="${id}"]`);
 
-  input.classList.remove("input-error");
-  if (inputLabel) {
-    inputLabel.classList.remove("label-error");
-  }
+    input.classList.remove("input-error");
+    if (inputLabel) inputLabel.classList.remove("label-error");
 
-  const prevError = input.nextElementSibling;
-  if (prevError && prevError.classList.contains("error-message")) {
-    prevError.remove();
-  }
-
-  if (!input.value.trim()) {
-    valid = false;
-    input.classList.add("input-error");
-    if (inputLabel) {
-      inputLabel.classList.add("label-error");
+    const prevError = input.nextElementSibling;
+    if (prevError && prevError.classList.contains("error-message")) {
+      prevError.remove();
     }
 
-    const error = document.createElement("div");
-    error.className = "error-message";
-    error.innerText = `${label} harus diisi`;
-    input.insertAdjacentElement("afterend", error);
-  }
-});
+    if (!input.value.trim()) {
+      valid = false;
+      input.classList.add("input-error");
+      if (inputLabel) inputLabel.classList.add("label-error");
 
+      const error = document.createElement("div");
+      error.className = "error-message";
+      error.innerText = `${label} harus diisi`;
+      input.insertAdjacentElement("afterend", error);
+    }
+  });
 
   if (valid) {
     showStep(2);
   }
 });
+
 
   const updateDocumentVisibility = () => {
   const itemValue = document.getElementById("item").value;
