@@ -52,7 +52,48 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  document.getElementById("next1").addEventListener("click", () => showStep(2));
+  document.getElementById("next1").addEventListener("click", () => {
+  // Bersihkan error sebelumnya
+  const fields = [
+    { id: "item", label: "Jenis Pinjaman" },
+    { id: "nominal", label: "Nominal Pinjaman" },
+    { id: "dp", label: "DP" }
+  ];
+
+  const isAmanah = document.getElementById("item").value.includes("AMANAH");
+  if (!isAmanah) {
+    fields.push({ id: "merk", label: "Merk Kendaraan" });
+  }
+
+  let valid = true;
+
+  fields.forEach(({ id, label }) => {
+    const input = document.getElementById(id);
+
+    // Hapus pesan error sebelumnya
+    input.classList.remove("input-error");
+    const prevError = input.nextElementSibling;
+    if (prevError && prevError.classList.contains("error-message")) {
+      prevError.remove();
+    }
+
+    if (!input.value.trim()) {
+      valid = false;
+      input.classList.add("input-error");
+
+      // Tambahkan pesan error baru
+      const error = document.createElement("div");
+      error.className = "error-message";
+      error.innerText = `${label} wajib diisi`;
+      input.insertAdjacentElement("afterend", error);
+    }
+  });
+
+  if (valid) {
+    showStep(2);
+  }
+});
+
   const updateDocumentVisibility = () => {
   const itemValue = document.getElementById("item").value;
   const isAmanah = itemValue.includes("AMANAH");
