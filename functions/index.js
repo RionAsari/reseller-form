@@ -16,7 +16,6 @@ exports.submitForm = functions.https.onRequest((req, res) => {
     try {
       const data = req.body;
 
-      // Simpan ke database
       const ref = database.ref("orders");
       await ref.push(data);
 
