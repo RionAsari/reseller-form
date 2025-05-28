@@ -18,17 +18,6 @@
   import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
   import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAsnbwmKyJaN9GA--95k_bhwTeYyoIkvE4",
-    authDomain: "reseller-form-a616f.firebaseapp.com",
-    databaseURL: "https://reseller-form-a616f-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "reseller-form-a616f",
-    storageBucket: "reseller-form-a616f.firebasestorage.app",
-    messagingSenderId: "194922134187",
-    appId: "1:194922134187:web:6e2421004dc4ba580195ee",
-    measurementId: "G-NHLWZHWWEW"
-  };
-
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app);
   const storage = getStorage(app);
@@ -271,18 +260,28 @@ document.getElementById("next2").addEventListener("click", () => {
 
   Object.assign(data, fileUploads);
 
-  const orderRef = ref(database, 'orders');
-  push(orderRef, data)
-    .then(() => {
+ fetch("https://us-central1-nama-proyek.cloudfunctions.net/submitForm", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
       alert("Pengajuan berhasil diajukan!");
       document.getElementById("order-form").reset();
       window.location.replace("terima_kasih.html");
-    })
-    .catch(err => alert("Gagal mengirim data: " + err.message))
-    .finally(() => {
-      document.getElementById("loading").style.display = "none";
-    });
-    });
+    } else {
+      throw new Error(result.error);
+    }
+  })
+  .catch(err => alert("Gagal mengirim data: " + err.message))
+  .finally(() => {
+    document.getElementById("loading").style.display = "none";
+  });
+});
   });
 
 function showStep(n) {
