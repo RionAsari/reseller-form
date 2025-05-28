@@ -12,20 +12,31 @@ const bucket = admin.storage().bucket();
 const app = express();
 app.use(cors({ origin: true }));
 
-// Pakai multer untuk parsing file
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.post("/", upload.any(), async (req, res) => {
-  try {
-    const data = JSON.parse(req.body.data); // data asli dari form
-    const fileUploads = {};
+  if (!req.body.data) {
+    return res.status(400).json({ success: false, error: "Missing data field" });
+  }
 
-    for (const file of req.files) {
-      const fileName = `uploads/${file.fieldname}_${Date.now()}`;
-      const fileUpload = bucket.file(fileName);
-      await fileUpload.save(file.buffer, { contentType: file.mimetype });
-      await fileUpload.makePublic(); // optional
-      fileUploads[file.fieldname] = fileUpload.publicUrl(); // public link
+  let data;
+  try {
+    data = JSON.parse(req.body.data);
+  } catch (e) {
+    return res.status(400).json({ success: false, error: "Invalid JSON in data field" });
+  }
+
+  const fileUploads = {};
+
+  try {
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const fileName = `uploads/${file.fieldname}_${Date.now()}`;
+        const fileUpload = bucket.file(fileName);
+        await fileUpload.save(file.buffer, { contentType: file.mimetype });
+        await fileUpload.makePublic(); // pastikan storage rules memperbolehkan ini
+        fileUploads[file.fieldname] = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+      }
     }
 
     const finalData = { ...data, ...fileUploads };
