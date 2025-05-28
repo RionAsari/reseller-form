@@ -211,13 +211,9 @@ document.getElementById("next2").addEventListener("click", () => {
         statusEl.textContent = "Mengunggah...";
         const ext = file.name.split('.').pop();
         const uniqueName = `${id}_${new Date().getTime()}.${ext}`;
-        const storageRef = sRef(storage, `uploads/${uniqueName}`);
-
-        const uploadTask = uploadBytesResumable(storageRef, file);
 
         return new Promise((resolve, reject) => {
-          uploadTask.on(
-            "state_changed",
+
             (snapshot) => {
               const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
               statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
@@ -228,7 +224,6 @@ document.getElementById("next2").addEventListener("click", () => {
             },
             async () => {
               try {
-                const url = await getDownloadURL(storageRef);
                 fileUploads[id] = url;
                 statusEl.textContent = "Selesai ✅";
                 resolve();
@@ -238,7 +233,6 @@ document.getElementById("next2").addEventListener("click", () => {
                 updateDocumentVisibility(); 
               }
             }
-          );
         });
       }
     });
