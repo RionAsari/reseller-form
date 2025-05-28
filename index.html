@@ -17,8 +17,50 @@
 
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
 
-  let step = 1;
+const storage = getStorage();
 
+  let step = 1;
+function uploadFileToStorage(file, id) {
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      reject(new Error("File tidak tersedia"));
+      return;
+    }
+    if (file.size > 1 * 1024 * 1024) {
+      reject(new Error(`Ukuran file ${id} melebihi 1MB.`));
+      return;
+    }
+
+    const statusEl = document.getElementById(`upload-status-${id}`);
+    if (statusEl) statusEl.textContent = "Mengunggah...";
+
+    const ext = file.name.split('.').pop();
+    const uniqueName = `${id}_${Date.now()}.${ext}`;
+    const storageRef = ref(storage, `uploads/${uniqueName}`);
+
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        if (statusEl) statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
+      },
+      (error) => {
+        if (statusEl) statusEl.textContent = "Gagal ❌";
+        reject(new Error(`Gagal mengupload file ${id}: ${error.message}`));
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          if (statusEl) statusEl.textContent = "Selesai ✅";
+          resolve(downloadURL);
+        }).catch((err) => {
+          if (statusEl) statusEl.textContent = "Gagal mendapatkan URL ❌";
+          reject(new Error(`Gagal mendapatkan URL ${id}: ${err.message}`));
+        });
+      }
+    );
+  });
+}
 document.addEventListener("DOMContentLoaded", function () {
   showStep(1);
 
@@ -169,121 +211,69 @@ document.getElementById("next2").addEventListener("click", () => {
     });
   });
 
-  document.getElementById("order-form").addEventListener("submit", async function (event) {
-    event.preventDefault();
-      const now = new Date();
-      const tanggal = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth()+1).toString().padStart(2, '0')}-${now.getFullYear()}`;
-      const data = {
-        agentName: document.getElementById("agentName").value,
-        agentEmail: document.getElementById("agentEmail").value,
-        agentPhone: document.getElementById("agentPhone").value,
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value.trim(),
-        domicile: document.getElementById("domicile").value,
-        postalCode: document.getElementById("postalCode").value,
-        job: document.getElementById("job").value,
-        income: document.getElementById("income").value.trim(),
-        installment: document.getElementById("installment").value,
-        phone: document.getElementById("phone").value.trim(),
-        item: document.getElementById("item").value,
-        nominal: document.getElementById("nominal").value,
-        dp: document.getElementById("dp").value,
-        merk: document.getElementById("merk").value,
-        tanggal: tanggal
-      };
+document.getElementById("order-form").addEventListener("submit", async function (event) {
+  event.preventDefault();
+  const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
+  const fileUploads = {};
 
-    const fileFields = ['ktp', 'kk', 'slipgaji', 'npwp', 'bpkb', 'stnk'];
-    const fileUploads = {};
-
-    document.getElementById("loading").style.display = "block";
-
-const storage = getStorage();
-
-const uploadTasks = fileFields.map(async (id) => {
-  const fileInput = document.getElementById(id);
-  const file = fileInput.files[0];
-  const statusEl = document.getElementById(`upload-status-${id}`);
-
-  if (file) {
-    if (file.size > 1 * 1024 * 1024) { // max 1 MB
-      statusEl.textContent = "Ukuran file terlalu besar ❌";
-      throw new Error(`Ukuran file ${id} melebihi 1MB.`);
-    }
-
-    statusEl.textContent = "Mengunggah...";
-    const ext = file.name.split('.').pop();
-    const uniqueName = `${id}_${Date.now()}.${ext}`;
-    const storageRef = ref(storage, `uploads/${uniqueName}`);
-
-    return new Promise((resolve, reject) => {
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
-        },
-        (error) => {
-          statusEl.textContent = "Gagal ❌";
-          reject(new Error(`Gagal mengupload file ${id}: ${error.message}`));
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            fileUploads[id] = downloadURL; // Simpan URL ke objek fileUploads
-            statusEl.textContent = "Selesai ✅";
-            resolve();
-          }).catch((err) => {
-            statusEl.textContent = "Gagal mendapatkan URL ❌";
-            reject(new Error(`Gagal mendapatkan URL ${id}: ${err.message}`));
-          });
-        }
-      );
-    });
-  }
-});
-
-
+  document.getElementById("loading").style.display = "block";
 
   try {
-    await Promise.all(uploadTasks); 
+    for (const id of fileFields) {
+      const fileInput = document.getElementById(id);
+      if (fileInput.files[0]) {
+        const downloadURL = await uploadFileToStorage(fileInput.files[0], id);
+        fileUploads[id] = downloadURL;
+      }
+    }
   } catch (err) {
     alert(err.message);
     document.getElementById("loading").style.display = "none";
     return;
   }
 
-  Object.assign(data, fileUploads);
-const formData = new FormData();
-formData.append("data", JSON.stringify(data));
-fileFields.forEach((id) => {
-  const fileInput = document.getElementById(id);
-  if (fileInput.files[0]) {
-    formData.append(id, fileInput.files[0]);
-  }
+  // Gabungkan data form dengan URL file hasil upload
+  const data = {
+    agentName: document.getElementById("agentName").value,
+    agentEmail: document.getElementById("agentEmail").value,
+    agentPhone: document.getElementById("agentPhone").value,
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value.trim(),
+    domicile: document.getElementById("domicile").value,
+    postalCode: document.getElementById("postalCode").value,
+    job: document.getElementById("job").value,
+    income: document.getElementById("income").value.trim(),
+    installment: document.getElementById("installment").value,
+    phone: document.getElementById("phone").value.trim(),
+    item: document.getElementById("item").value,
+    nominal: document.getElementById("nominal").value,
+    dp: document.getElementById("dp").value,
+    merk: document.getElementById("merk").value,
+    tanggal: new Date().toLocaleDateString('id-ID'),
+    ...fileUploads
+  };
+
+  fetch("https://submitform-bo5j4ddanq-uc.a.run.app", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.success) {
+      alert("Pengajuan berhasil diajukan!");
+      document.getElementById("order-form").reset();
+      window.location.replace("terima_kasih.html");
+    } else {
+      throw new Error(result.error);
+    }
+  })
+  .catch(err => alert("Gagal mengirim data: " + err.message))
+  .finally(() => {
+    document.getElementById("loading").style.display = "none";
+  });
 });
 
-fetch("https://submitform-bo5j4ddanq-uc.a.run.app", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data)
-})
-.then(response => response.json())
-.then(result => {
-  if (result.success) {
-    alert("Pengajuan berhasil diajukan!");
-    document.getElementById("order-form").reset();
-    window.location.replace("terima_kasih.html");
-  } else {
-    throw new Error(result.error);
-  }
-})
-.catch(err => alert("Gagal mengirim data: " + err.message))
-.finally(() => {
-  document.getElementById("loading").style.display = "none";
-});
-});
   });
 
 function showStep(n) {
