@@ -15,6 +15,7 @@
 
 <script type="module">
 
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
 
   let step = 1;
 
@@ -196,46 +197,51 @@ document.getElementById("next2").addEventListener("click", () => {
 
     document.getElementById("loading").style.display = "block";
 
-    const uploadTasks = fileFields.map(async (id) => {
-      const fileInput = document.getElementById(id);
-      const file = fileInput.files[0];
-      console.log(file);
-      const statusEl = document.getElementById(`upload-status-${id}`);
+const storage = getStorage();
 
-      if (file) {
-        if (file.size > 1 * 1024 * 1024) {
-          statusEl.textContent = "Ukuran file terlalu besar ❌";
-          throw new Error(`Ukuran file ${id} melebihi 10MB.`);
+const uploadTasks = fileFields.map(async (id) => {
+  const fileInput = document.getElementById(id);
+  const file = fileInput.files[0];
+  const statusEl = document.getElementById(`upload-status-${id}`);
+
+  if (file) {
+    if (file.size > 1 * 1024 * 1024) { // max 1 MB
+      statusEl.textContent = "Ukuran file terlalu besar ❌";
+      throw new Error(`Ukuran file ${id} melebihi 1MB.`);
+    }
+
+    statusEl.textContent = "Mengunggah...";
+    const ext = file.name.split('.').pop();
+    const uniqueName = `${id}_${Date.now()}.${ext}`;
+    const storageRef = ref(storage, `uploads/${uniqueName}`);
+
+    return new Promise((resolve, reject) => {
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
+        },
+        (error) => {
+          statusEl.textContent = "Gagal ❌";
+          reject(new Error(`Gagal mengupload file ${id}: ${error.message}`));
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            fileUploads[id] = downloadURL; // Simpan URL ke objek fileUploads
+            statusEl.textContent = "Selesai ✅";
+            resolve();
+          }).catch((err) => {
+            statusEl.textContent = "Gagal mendapatkan URL ❌";
+            reject(new Error(`Gagal mendapatkan URL ${id}: ${err.message}`));
+          });
         }
-
-        statusEl.textContent = "Mengunggah...";
-        const ext = file.name.split('.').pop();
-        const uniqueName = `${id}_${new Date().getTime()}.${ext}`;
-
-        return new Promise((resolve, reject) => {
-
-            (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              statusEl.textContent = `Mengunggah... ${progress.toFixed(0)}%`;
-            },
-            (error) => {
-              statusEl.textContent = "Gagal ❌";
-              reject(new Error(`Gagal mengupload file ${id}: ${error.message}`));
-            },
-            async () => {
-              try {
-                fileUploads[id] = url;
-                statusEl.textContent = "Selesai ✅";
-                resolve();
-              } catch (err) {
-                statusEl.textContent = "Gagal ❌";
-                reject(new Error(`Gagal mendapatkan URL ${id}: ${err.message}`));
-                updateDocumentVisibility(); 
-              }
-            }
-        });
-      }
+      );
     });
+  }
+});
+
 
 
   try {
