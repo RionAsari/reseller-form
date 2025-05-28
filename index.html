@@ -260,27 +260,27 @@ document.getElementById("next2").addEventListener("click", () => {
 
   Object.assign(data, fileUploads);
 
- fetch("https://us-central1-nama-proyek.cloudfunctions.net/submitForm", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => response.json())
-  .then(result => {
-    if (result.success) {
-      alert("Pengajuan berhasil diajukan!");
-      document.getElementById("order-form").reset();
-      window.location.replace("terima_kasih.html");
-    } else {
-      throw new Error(result.error);
-    }
-  })
-  .catch(err => alert("Gagal mengirim data: " + err.message))
-  .finally(() => {
-    document.getElementById("loading").style.display = "none";
-  });
+fetch("https://us-central1-reseller-form-a616f.cloudfunctions.net/submitForm", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+})
+.then(response => response.json())
+.then(result => {
+  if (result.success) {
+    alert("Pengajuan berhasil diajukan!");
+    document.getElementById("order-form").reset();
+    window.location.replace("terima_kasih.html");
+  } else {
+    throw new Error(result.error);
+  }
+})
+.catch(err => alert("Gagal mengirim data: " + err.message))
+.finally(() => {
+  document.getElementById("loading").style.display = "none";
+});
 });
   });
 
