@@ -1,28 +1,41 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const cors = require("cors")({ origin: true });
+const express = require("express");
+const multer = require("multer");
+const cors = require("cors");
 
 admin.initializeApp();
 
 const database = admin.database();
-const storage = admin.storage();
+const bucket = admin.storage().bucket();
 
-exports.submitForm = functions.https.onRequest((req, res) => {
-  cors(req, res, async () => {
-    if (req.method !== "POST") {
-      return res.status(405).send("Method Not Allowed");
+const app = express();
+app.use(cors({ origin: true }));
+
+// Pakai multer untuk parsing file
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.post("/", upload.any(), async (req, res) => {
+  try {
+    const data = JSON.parse(req.body.data); // data asli dari form
+    const fileUploads = {};
+
+    for (const file of req.files) {
+      const fileName = `uploads/${file.fieldname}_${Date.now()}`;
+      const fileUpload = bucket.file(fileName);
+      await fileUpload.save(file.buffer, { contentType: file.mimetype });
+      await fileUpload.makePublic(); // optional
+      fileUploads[file.fieldname] = fileUpload.publicUrl(); // public link
     }
 
-    try {
-      const data = req.body;
+    const finalData = { ...data, ...fileUploads };
+    await database.ref("orders").push(finalData);
 
-      const ref = database.ref("orders");
-      await ref.push(data);
-
-      return res.status(200).send({ success: true, message: "Data submitted" });
-    } catch (error) {
-      console.error("Error:", error);
-      return res.status(500).send({ success: false, error: error.message });
-    }
-  });
+    res.status(200).json({ success: true, message: "Data submitted" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
+
+exports.submitForm = functions.https.onRequest(app);

@@ -14,13 +14,7 @@
   </style>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-  import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  const storage = getStorage(app);
 
   let step = 1;
 
@@ -259,6 +253,14 @@ document.getElementById("next2").addEventListener("click", () => {
   }
 
   Object.assign(data, fileUploads);
+const formData = new FormData();
+formData.append("data", JSON.stringify(data));
+fileFields.forEach((id) => {
+  const fileInput = document.getElementById(id);
+  if (fileInput.files[0]) {
+    formData.append(id, fileInput.files[0]);
+  }
+});
 
 fetch("https://submitform-bo5j4ddanq-uc.a.run.app", {
   method: "POST",
