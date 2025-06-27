@@ -154,6 +154,21 @@ document.getElementById("next2").addEventListener("click", () => {
       error.className = "error-message";
       error.innerText = `${label} harus diisi`;
       input.insertAdjacentElement("afterend", error);
+      return; 
+    }
+
+    if (id === "phone") {
+      const phoneValue = input.value.trim();
+      if (phoneValue.length < 10 || phoneValue.length > 14) {
+        valid = false;
+        input.classList.add("input-error");
+        if (inputLabel) inputLabel.classList.add("label-error");
+
+        const error = document.createElement("div");
+        error.className = "error-message";
+        error.innerText = "Nomor Telepon harus 10–14 digit";
+        input.insertAdjacentElement("afterend", error);
+      }
     }
   });
 
@@ -161,6 +176,7 @@ document.getElementById("next2").addEventListener("click", () => {
     showStep(3);
   }
 });
+
 
   document.getElementById("back2").addEventListener("click", () => showStep(1));
   document.getElementById("back3").addEventListener("click", () => showStep(2));
