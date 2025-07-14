@@ -219,7 +219,7 @@ p {
 .back-button,
 .next-button,
 #submitBtn {
-    padding: 14px 35px;
+    padding: 14px;
     border: none;
     cursor: pointer;
     font-weight: bold;
@@ -227,11 +227,12 @@ p {
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border-radius: 25px;
-    min-width: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1; 
 }
+
 
 .back-button {
     background: #E67D13;
@@ -259,10 +260,7 @@ p {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
 }
 
-#submitBtn {
-    width: auto; 
-    margin-left: auto; 
-}
+
 #submitBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
