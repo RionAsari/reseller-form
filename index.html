@@ -66,7 +66,6 @@ document.getElementById("next1").addEventListener("click", () => {
 
   let valid = true;
 
-
   fields.forEach(({ id, label }) => {
     const input = document.getElementById(id);
     const inputLabel = document.querySelector(`label[for="${id}"]`);
@@ -88,39 +87,8 @@ document.getElementById("next1").addEventListener("click", () => {
       error.className = "error-message";
       error.innerText = `${label} harus diisi`;
       input.insertAdjacentElement("afterend", error);
-    } else if ((id === "nominal" || id === "dp") && !isNumberInput(input.value)) {
-      valid = false;
-      input.classList.add("input-error");
-      if (inputLabel) inputLabel.classList.add("label-error");
-
-      const error = document.createElement("div");
-      error.className = "error-message";
-      error.innerText = `${label} harus berupa angka`;
-      input.insertAdjacentElement("afterend", error);
     }
   });
-
-  const angsuranLain = document.getElementById("installment");
-  const angsuranLabel = document.querySelector(`label[for="installment"]`);
-
-  angsuranLain.classList.remove("input-error");
-  if (angsuranLabel) angsuranLabel.classList.remove("label-error");
-
-  const prevAngsuranError = angsuranLain.nextElementSibling;
-  if (prevAngsuranError && prevAngsuranError.classList.contains("error-message")) {
-    prevAngsuranError.remove();
-  }
-
-  if (angsuranLain.value.trim() && !isNumberInput(angsuranLain.value)) {
-    valid = false;
-    angsuranLain.classList.add("input-error");
-    if (angsuranLabel) angsuranLabel.classList.add("label-error");
-
-    const error = document.createElement("div");
-    error.className = "error-message";
-    error.innerText = `Angsuran Lain harus berupa angka jika diisi`;
-    angsuranLain.insertAdjacentElement("afterend", error);
-  }
 
   if (valid) {
     showStep(2);
