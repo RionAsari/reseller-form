@@ -153,6 +153,11 @@ document.getElementById("next2").addEventListener("click", () => {
   fields.forEach(({ id, label }) => {
     const input = document.getElementById(id);
     const inputLabel = document.querySelector(`label[for="${id}"]`);
+    // Batasi hanya angka di input phone
+document.getElementById("phone").addEventListener("input", function () {
+  this.value = this.value.replace(/\D/g, ""); // hapus semua non-digit
+});
+
 
     input.classList.remove("input-error");
     if (inputLabel) inputLabel.classList.remove("label-error");
@@ -451,7 +456,15 @@ document.addEventListener("DOMContentLoaded", function () {
         <input type="text" id="name" placeholder="Contoh: Budi Santoso" required><br><br>
 
         <label for="phone">Nomor Telepon:</label>
-        <input type="tel" id="phone" placeholder="Contoh: 081234567890" required><br><br>
+<input 
+  type="tel" 
+  id="phone" 
+  placeholder="Contoh: 081234567890" 
+  inputmode="numeric" 
+  pattern="\d*" 
+  required
+>
+<br><br>
 
         <label for="email">Email:</label>
         <input type="email" id="email" placeholder="Contoh: budi@email.com" required><br><br>
