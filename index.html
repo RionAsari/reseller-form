@@ -187,6 +187,20 @@ document.getElementById("next2").addEventListener("click", () => {
         input.insertAdjacentElement("afterend", error);
       }
     }
+        if (id === "email") {
+      const emailValue = input.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailValue)) {
+        valid = false;
+        input.classList.add("input-error");
+        if (inputLabel) inputLabel.classList.add("label-error");
+
+        const error = document.createElement("div");
+        error.className = "error-message";
+        error.innerText = "Format Email tidak valid (contoh: nama@email.com)";
+        input.insertAdjacentElement("afterend", error);
+      }
+    }
  if (id === "income") {
       if (isNaN(input.value) || Number(input.value) <= 0) {
         valid = false;
