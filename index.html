@@ -51,10 +51,10 @@ document.addEventListener("DOMContentLoaded", function () {
       merkDiv.classList.remove("hidden");
     }
   });
-// Hanya izinkan angka di phone dan income
+
 ["phone", "income"].forEach(function (id) {
   document.getElementById(id).addEventListener("input", function () {
-    this.value = this.value.replace(/\D/g, ""); // hapus semua non-digit
+    this.value = this.value.replace(/\D/g, ""); 
   });
 });
 
@@ -84,7 +84,7 @@ fields.forEach(({ id, label }) => {
     prevError.remove();
   }
 
-  // Cek wajib diisi
+
   if (!input.value.trim()) {
     valid = false;
     input.classList.add("input-error");
@@ -97,7 +97,7 @@ fields.forEach(({ id, label }) => {
     return;
   }
 
-  // Validasi angka khusus nominal & dp
+
   if (id === "nominal" || id === "dp") {
     if (isNaN(input.value) || Number(input.value) <= 0) {
       valid = false;
@@ -144,11 +144,16 @@ fields.forEach(({ id, label }) => {
 document.getElementById("item").addEventListener("change", updateDocumentVisibility);
 
 document.getElementById("next2").addEventListener("click", () => {
-  const fields = [
-    { id: "name", label: "Nama Lengkap" },
-    { id: "phone", label: "Nomor Telepon" },
-    { id: "email", label: "Email" },
-    { id: "domicile", label: "Alamat Domisili" },
+ const fields = [
+  { id: "name", label: "Nama Lengkap" },
+  { id: "phone", label: "Nomor Telepon" },
+  { id: "email", label: "Email" },
+  { id: "domicile", label: "Alamat Domisili" },
+  { id: "kelurahan", label: "Kelurahan" },
+  { id: "kecamatan", label: "Kecamatan" },
+  { id: "rt", label: "RT" },
+  { id: "rw", label: "RW" },
+
     { id: "postalCode", label: "Kode Pos" },
     { id: "job", label: "Jenis Pekerjaan" },
     { id: "income", label: "Pendapatan per Bulan" }
@@ -159,9 +164,9 @@ document.getElementById("next2").addEventListener("click", () => {
   fields.forEach(({ id, label }) => {
     const input = document.getElementById(id);
     const inputLabel = document.querySelector(`label[for="${id}"]`);
-    // Batasi hanya angka di input phone
+
 document.getElementById("phone").addEventListener("input", function () {
-  this.value = this.value.replace(/\D/g, ""); // hapus semua non-digit
+  this.value = this.value.replace(/\D/g, ""); 
 });
 
 
@@ -475,8 +480,21 @@ document.addEventListener("DOMContentLoaded", function () {
         <label for="email">Email:</label>
         <input type="email" id="email" placeholder="Contoh: budi@email.com" required><br><br>
 
-        <label for="domicile">Alamat Domisili:</label>
-        <input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo" required><br><br>
+<label for="domicile">Alamat Domisili:</label>
+<input type="text" id="domicile" placeholder="Contoh: Jl. Kenanga No.5, Sidoarjo" required><br><br>
+
+<label for="kelurahan">Kelurahan:</label>
+<input type="text" id="kelurahan" placeholder="Contoh: Sidokare" required><br><br>
+
+<label for="kecamatan">Kecamatan:</label>
+<input type="text" id="kecamatan" placeholder="Contoh: Sidoarjo" required><br><br>
+
+<label for="rt">RT:</label>
+<input type="text" id="rt" placeholder="Contoh: 05" maxlength="3" required><br><br>
+
+<label for="rw">RW:</label>
+<input type="text" id="rw" placeholder="Contoh: 02" maxlength="3" required><br><br>
+
 
         <label for="postalCode">Kode Pos:</label>
         <input type="text" id="postalCode" maxlength="5" placeholder="Contoh: 60234" required><br><br>
