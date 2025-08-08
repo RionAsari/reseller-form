@@ -52,11 +52,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-document.getElementById("next1").addEventListener("click", () => {
+ddocument.getElementById("next1").addEventListener("click", () => {
   const fields = [
     { id: "item", label: "Jenis Pinjaman" },
-    { id: "nominal", label: "Nominal Pinjaman" },
-    { id: "dp", label: "DP" }
+    { id: "nominal", label: "Nominal Pinjaman", numeric: true },
+    { id: "dp", label: "DP", numeric: true }
   ];
 
   const isAmanah = document.getElementById("item").value.includes("AMANAH");
@@ -66,7 +66,7 @@ document.getElementById("next1").addEventListener("click", () => {
 
   let valid = true;
 
-  fields.forEach(({ id, label }) => {
+  fields.forEach(({ id, label, numeric }) => {
     const input = document.getElementById(id);
     const inputLabel = document.querySelector(`label[for="${id}"]`);
 
@@ -87,13 +87,45 @@ document.getElementById("next1").addEventListener("click", () => {
       error.className = "error-message";
       error.innerText = `${label} harus diisi`;
       input.insertAdjacentElement("afterend", error);
+    } else if (numeric && isNaN(input.value.trim())) {
+      valid = false;
+      input.classList.add("input-error");
+      if (inputLabel) inputLabel.classList.add("label-error");
+
+      const error = document.createElement("div");
+      error.className = "error-message";
+      error.innerText = `${label} harus berupa angka`;
+      input.insertAdjacentElement("afterend", error);
     }
   });
+
+  // Validasi angsuran lain kalau diisi
+  const installment = document.getElementById("installment");
+  const instLabel = document.querySelector(`label[for="installment"]`);
+  installment.classList.remove("input-error");
+  if (instLabel) instLabel.classList.remove("label-error");
+
+  const prevErrorInst = installment.nextElementSibling;
+  if (prevErrorInst && prevErrorInst.classList.contains("error-message")) {
+    prevErrorInst.remove();
+  }
+
+  if (installment.value.trim() && isNaN(installment.value.trim())) {
+    valid = false;
+    installment.classList.add("input-error");
+    if (instLabel) instLabel.classList.add("label-error");
+
+    const error = document.createElement("div");
+    error.className = "error-message";
+    error.innerText = "Angsuran Lain harus berupa angka";
+    installment.insertAdjacentElement("afterend", error);
+  }
 
   if (valid) {
     showStep(2);
   }
 });
+
 
 
   const updateDocumentVisibility = () => {
@@ -382,19 +414,20 @@ document.addEventListener("DOMContentLoaded", function () {
           <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
         </select><br><br>
 
-        <label for="nominal">Nominal Pinjaman:</label>
-        <input type="text" id="nominal" placeholder="Contoh: 25 juta" required><br><br>
+       <label for="nominal">Nominal Pinjaman:</label>
+<input type="number" id="nominal" placeholder="Contoh: 25000000" required inputmode="numeric"><br><br>
 
-        <div id="merkKendaraanDiv" class="hidden">
-          <label for="merk">Merk Kendaraan:</label>
-          <input type="text" id="merk" placeholder="Contoh: Suzuki, Toyota, dll"><br><br>
-        </div>
+<div id="merkKendaraanDiv" class="hidden">
+  <label for="merk">Merk Kendaraan:</label>
+  <input type="text" id="merk" placeholder="Contoh: Suzuki, Toyota, dll"><br><br>
+</div>
 
-        <label for="dp">DP:</label>
-        <input type="text" id="dp" placeholder="Contoh: 5 juta" required><br><br>
+<label for="dp">DP:</label>
+<input type="number" id="dp" placeholder="Contoh: 5000000" required inputmode="numeric"><br><br>
 
-        <label for="installment">Angsuran Lain (jika ada):</label>
-        <input type="text" id="installment" placeholder="Contoh: Kredit HP 300 ribu"><br><br>
+<label for="installment">Angsuran Lain (jika ada):</label>
+<input type="number" id="installment" placeholder="Contoh: 300000" inputmode="numeric"><br><br>
+
 
         <div class="button-group">
     <button type="button" id="next1" class="next-button">Lanjut</button>
