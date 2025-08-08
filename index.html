@@ -51,6 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
       merkDiv.classList.remove("hidden");
     }
   });
+// Hanya izinkan angka di phone dan income
+["phone", "income"].forEach(function (id) {
+  document.getElementById(id).addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, ""); // hapus semua non-digit
+  });
+});
 
 document.getElementById("next1").addEventListener("click", () => {
   const fields = [
@@ -460,7 +466,7 @@ document.addEventListener("DOMContentLoaded", function () {
   type="tel" 
   id="phone" 
   placeholder="Contoh: 081234567890" 
-  inputmode="number" 
+  inputmode="numeric" 
   pattern="\d*" 
   required
 >
