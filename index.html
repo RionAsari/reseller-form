@@ -52,11 +52,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-ddocument.getElementById("next1").addEventListener("click", () => {
+document.getElementById("next1").addEventListener("click", () => {
   const fields = [
     { id: "item", label: "Jenis Pinjaman" },
-    { id: "nominal", label: "Nominal Pinjaman", numeric: true },
-    { id: "dp", label: "DP", numeric: true }
+    { id: "nominal", label: "Nominal Pinjaman" },
+    { id: "dp", label: "DP" }
   ];
 
   const isAmanah = document.getElementById("item").value.includes("AMANAH");
@@ -66,66 +66,51 @@ ddocument.getElementById("next1").addEventListener("click", () => {
 
   let valid = true;
 
-  fields.forEach(({ id, label, numeric }) => {
-    const input = document.getElementById(id);
-    const inputLabel = document.querySelector(`label[for="${id}"]`);
+fields.forEach(({ id, label }) => {
+  const input = document.getElementById(id);
+  const inputLabel = document.querySelector(`label[for="${id}"]`);
 
-    input.classList.remove("input-error");
-    if (inputLabel) inputLabel.classList.remove("label-error");
+  input.classList.remove("input-error");
+  if (inputLabel) inputLabel.classList.remove("label-error");
 
-    const prevError = input.nextElementSibling;
-    if (prevError && prevError.classList.contains("error-message")) {
-      prevError.remove();
-    }
-
-    if (!input.value.trim()) {
-      valid = false;
-      input.classList.add("input-error");
-      if (inputLabel) inputLabel.classList.add("label-error");
-
-      const error = document.createElement("div");
-      error.className = "error-message";
-      error.innerText = `${label} harus diisi`;
-      input.insertAdjacentElement("afterend", error);
-    } else if (numeric && isNaN(input.value.trim())) {
-      valid = false;
-      input.classList.add("input-error");
-      if (inputLabel) inputLabel.classList.add("label-error");
-
-      const error = document.createElement("div");
-      error.className = "error-message";
-      error.innerText = `${label} harus berupa angka`;
-      input.insertAdjacentElement("afterend", error);
-    }
-  });
-
-  // Validasi angsuran lain kalau diisi
-  const installment = document.getElementById("installment");
-  const instLabel = document.querySelector(`label[for="installment"]`);
-  installment.classList.remove("input-error");
-  if (instLabel) instLabel.classList.remove("label-error");
-
-  const prevErrorInst = installment.nextElementSibling;
-  if (prevErrorInst && prevErrorInst.classList.contains("error-message")) {
-    prevErrorInst.remove();
+  const prevError = input.nextElementSibling;
+  if (prevError && prevError.classList.contains("error-message")) {
+    prevError.remove();
   }
 
-  if (installment.value.trim() && isNaN(installment.value.trim())) {
+  // Cek wajib diisi
+  if (!input.value.trim()) {
     valid = false;
-    installment.classList.add("input-error");
-    if (instLabel) instLabel.classList.add("label-error");
+    input.classList.add("input-error");
+    if (inputLabel) inputLabel.classList.add("label-error");
 
     const error = document.createElement("div");
     error.className = "error-message";
-    error.innerText = "Angsuran Lain harus berupa angka";
-    installment.insertAdjacentElement("afterend", error);
+    error.innerText = `${label} harus diisi`;
+    input.insertAdjacentElement("afterend", error);
+    return;
   }
+
+  // Validasi angka khusus nominal & dp
+  if (id === "nominal" || id === "dp") {
+    if (isNaN(input.value) || Number(input.value) <= 0) {
+      valid = false;
+      input.classList.add("input-error");
+      if (inputLabel) inputLabel.classList.add("label-error");
+
+      const error = document.createElement("div");
+      error.className = "error-message";
+      error.innerText = `${label} harus berupa angka valid`;
+      input.insertAdjacentElement("afterend", error);
+    }
+  }
+});
+
 
   if (valid) {
     showStep(2);
   }
 });
-
 
 
   const updateDocumentVisibility = () => {
@@ -414,8 +399,8 @@ document.addEventListener("DOMContentLoaded", function () {
           <option value="AMANAH (Adira Multi Dana Syariah)">AMANAH (Adira Multi Dana Syariah)</option>
         </select><br><br>
 
-       <label for="nominal">Nominal Pinjaman:</label>
-<input type="number" id="nominal" placeholder="Contoh: 25000000" required inputmode="numeric"><br><br>
+<label for="nominal">Nominal Pinjaman:</label>
+<input type="number" id="nominal" placeholder="Contoh: 25000000" required><br><br>
 
 <div id="merkKendaraanDiv" class="hidden">
   <label for="merk">Merk Kendaraan:</label>
@@ -423,10 +408,10 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
 
 <label for="dp">DP:</label>
-<input type="number" id="dp" placeholder="Contoh: 5000000" required inputmode="numeric"><br><br>
+<input type="number" id="dp" placeholder="Contoh: 5000000" required><br><br>
 
 <label for="installment">Angsuran Lain (jika ada):</label>
-<input type="number" id="installment" placeholder="Contoh: 300000" inputmode="numeric"><br><br>
+<input type="number" id="installment" placeholder="Contoh: 300000"><br><br>
 
 
         <div class="button-group">
