@@ -187,6 +187,18 @@ document.getElementById("next2").addEventListener("click", () => {
         input.insertAdjacentElement("afterend", error);
       }
     }
+ if (id === "income") {
+      if (isNaN(input.value) || Number(input.value) <= 0) {
+        valid = false;
+        input.classList.add("input-error");
+        if (inputLabel) inputLabel.classList.add("label-error");
+
+        const error = document.createElement("div");
+        error.className = "error-message";
+        error.innerText = `${label} harus berupa angka valid`;
+        input.insertAdjacentElement("afterend", error);
+      }
+    }
   });
 
   if (valid) {
