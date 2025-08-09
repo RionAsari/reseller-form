@@ -40,7 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('agentName')) document.getElementById("agentName").value = urlParams.get('agentName');
-  if (urlParams.get('agentEmail')) document.getElementById("agentEmail").value = urlParams.get('agentEmail');
+  if (urlParams.get('agentEmail')) {
+  const decodedEmail = atob(urlParams.get('agentEmail'));
+  document.getElementById("agentEmail").value = decodedEmail;
+}
+
   if (urlParams.get('agentPhone')) document.getElementById("agentPhone").value = urlParams.get('agentPhone');
 
   document.getElementById("item").addEventListener("change", function () {
