@@ -45,7 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("agentEmail").value = decodedEmail;
 }
 
-  if (urlParams.get('agentPhone')) document.getElementById("agentPhone").value = urlParams.get('agentPhone');
+  if (urlParams.get('agentPhone')) {
+  const decodedPhone = atob(urlParams.get('agentPhone'));
+  document.getElementById("agentPhone").value = decodedPhone;
+}
 
   document.getElementById("item").addEventListener("change", function () {
     const merkDiv = document.getElementById("merkKendaraanDiv");
