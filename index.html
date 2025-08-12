@@ -149,6 +149,11 @@ fields.forEach(({ id, label }) => {
 };
 
 document.getElementById("item").addEventListener("change", updateDocumentVisibility);
+["phone", "rt", "rw"].forEach(function (id) {
+  document.getElementById(id).addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, ""); // Hapus semua selain angka
+  });
+});
 
 document.getElementById("next2").addEventListener("click", () => {
  const fields = [
@@ -502,10 +507,10 @@ document.addEventListener("DOMContentLoaded", function () {
 <input type="text" id="kecamatan" placeholder="Contoh: Sidoarjo" required><br><br>
 
 <label for="rt">RT:</label>
-<input type="text" id="rt" placeholder="Contoh: 05" maxlength="3" required><br><br>
+<input type="text" id="rt" placeholder="Contoh: 05" maxlength="3" inputmode="numeric" pattern="\d*" required><br><br>
 
 <label for="rw">RW:</label>
-<input type="text" id="rw" placeholder="Contoh: 02" maxlength="3" required><br><br>
+<input type="text" id="rw" placeholder="Contoh: 02" maxlength="3" inputmode="numeric" pattern="\d*" required><br><br>
 
 
         <label for="postalCode">Kode Pos:</label>
