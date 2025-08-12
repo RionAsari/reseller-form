@@ -181,6 +181,15 @@ document.getElementById("phone").addEventListener("input", function () {
   this.value = this.value.replace(/\D/g, ""); 
 });
 
+document.getElementById("postalCode").addEventListener("input", function () {
+
+  this.value = this.value.replace(/\D/g, "");
+
+  if (this.value.length > 5) {
+    this.value = this.value.slice(0, 5);
+  }
+});
+
 
     input.classList.remove("input-error");
     if (inputLabel) inputLabel.classList.remove("label-error");
@@ -215,6 +224,20 @@ document.getElementById("phone").addEventListener("input", function () {
         input.insertAdjacentElement("afterend", error);
       }
     }
+    if (id === "postalCode") {
+  const code = input.value.trim();
+  if (code.length !== 5) {
+    valid = false;
+    input.classList.add("input-error");
+    if (inputLabel) inputLabel.classList.add("label-error");
+
+    const error = document.createElement("div");
+    error.className = "error-message";
+    error.innerText = "Kode Pos harus 5 digit angka";
+    input.insertAdjacentElement("afterend", error);
+  }
+}
+
         if (id === "email") {
       const emailValue = input.value.trim();
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -513,8 +536,18 @@ document.addEventListener("DOMContentLoaded", function () {
 <input type="text" id="rw" placeholder="Contoh: 02" maxlength="3" inputmode="numeric" pattern="\d*" required><br><br>
 
 
-        <label for="postalCode">Kode Pos:</label>
-        <input type="number" id="postalCode" maxlength="5" placeholder="Contoh: 60234" required><br><br>
+<label for="postalCode">Kode Pos:</label>
+<input 
+  type="text" 
+  id="postalCode" 
+  placeholder="Contoh: 60234" 
+  inputmode="numeric" 
+  pattern="\d{5}" 
+  maxlength="5" 
+  required
+>
+<br><br>
+
 
         <label for="job">Jenis Pekerjaan:</label>
         <input type="text" id="job" placeholder="Contoh: Karyawan Swasta" required><br><br>
